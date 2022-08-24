@@ -47,7 +47,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             var ObjPainter = new PainterAssociationData();
             ObjPainter.RegionalHeads = regionalHeadData;
@@ -291,7 +291,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             var ObjPainter = new PainterAssociationData();
             ObjPainter.RegionalHeads = regionalHeadData;

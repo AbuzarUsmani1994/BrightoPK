@@ -129,14 +129,14 @@
                                     </div>
 
 
-                                    <div class="control-group" style="margin-bottom: 0px;margin-top: 4px; ">
+                                    @*<div class="control-group" style="margin-bottom: 0px;margin-top: 4px; ">
                                         <label class="control-label">Range  *</label>
                                         <div class="controls" style="margin-left: 0px">
                                             @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Rangess, "ID", "Type"), new { @class = "", style = "220px" })
                                             @Html.ValidationMessageFor(model => model.RangeID)
                                             @Html.HiddenFor(model => model.RangeID)
                                         </div>
-                                    </div>
+                                    </div>*@
 
                                     <div class="control-group" style="margin-bottom: 0px; margin-top: 4px;">
 
@@ -164,7 +164,7 @@
 
 
                                     <div class="control-group" style="margin-bottom: 0px">
-                                        <label class="control-label" style="">Distributor Code (SAP Code)</label>
+                                        <label class="control-label" style="">Distributor Code *</label>
                                         <div class="controls" style="margin-left: 0px">
                                             @Html.EditorFor(model => model.RetailerCode)
                                         </div>

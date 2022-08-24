@@ -25,15 +25,12 @@ namespace FOS.Web.UI.Controllers.API
 
                 DateTime dtFromToday = dtFromTodayUtc.Date;
                 DateTime todate = dtFromToday.AddDays(1);
-                DateTime fromdate = todate.AddDays(-30);
+                DateTime fromdate = todate.AddDays(-10);
 
                 if (SOID > 0)
                 {
                     object[] param = { SOID };
 
-
-                    if (RangeID == 6)
-                    {
 
                         var result = dbContext.sp_GetDistributorListInDSR(SOID, fromdate, todate).ToList();
 
@@ -45,36 +42,8 @@ namespace FOS.Web.UI.Controllers.API
 
                             });
                         }
-                    }
-                    else if(RangeID==7)
-                    {
-                        var result = dbContext.sp_GetDistributorListInDSRRangeB(SOID, fromdate, todate).ToList();
-
-                        if (result != null && result.Count > 0)
-                        {
-                            return Ok(new
-                            {
-                                DistributorRelatedToSO = result
-
-                            });
-                        }
-
-                    }
-                    else 
-                    {
-                        var result = dbContext.sp_GetDistributorListInDSRRangeC(SOID, fromdate, todate).ToList();
-
-                        if (result != null && result.Count > 0)
-                        {
-                            return Ok(new
-                            {
-                                DistributorRelatedToSO = result
-
-                            });
-                        }
-
-                    }
-
+                  
+              
                 }
             }
             catch (Exception ex)

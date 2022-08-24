@@ -47,6 +47,8 @@ namespace FOS.Web.UI.Controllers.API
                             SOID = SO.ID,
                             Name = SO.Name,
                             RoleID = 66,
+                            SORoleID = SO.SORoleID,
+                            SORoleName = db.SOTypes.Where(x => x.ID == SO.SORoleID).Select(x => x.Name).FirstOrDefault(),
                             RegionalHeadID = SO.RegionalHeadID,
                             Token = Token,
                             RegionID = db.RegionalHeadRegions.Where(x => x.RegionHeadID == SO.RegionalHeadID).Select(x => x.RegionID).FirstOrDefault(),
@@ -57,10 +59,18 @@ namespace FOS.Web.UI.Controllers.API
                             MainCatg = new CommonController().MainCat((int)SO.RangeID),
                             RetailerClass = new CommonController().RetailerType(),
                             RetailerType = new CommonController().RetailerType1(),
+                            SORegions = new CommonController().Soregions(SO.RegionalHeadID),
+                            SOCities= new CommonController().SoCities(SO.RegionalHeadID),
+                            DistributorList = new CommonController().SoDistributor(SO.RegionalHeadID),
                             ReportType = new CommonController().Reporttype(),
                             SalesOfficer = new CommonController().SalesOfficers(SO.RegionalHeadID, SO.ID),
                             SalesOfficerNames = new CommonController().SalesOfficersNames(SO.ID),
                             Followupreasons= new CommonController().FollowUp(),
+                            NoSaleReason = new CommonController().NoSale(),
+                            RsmDcoumentbeforevisit = new CommonController().RSMDoc(),
+                            CompititorBrands = new CommonController().ComBrands(),
+                            MMCItems = new CommonController().MMCItemsList(),
+                            SOVisitTypes = new CommonController().SOVisittypes(),
                             Retailers =db.Retailers.Where(x=>x.IsActive==true).Count(),
                             Distributors= db.Dealers.Where(x => x.IsActive == true).Count(),
                             RetailersOrders= (from lm in db.JobsDetails
@@ -153,6 +163,8 @@ namespace FOS.Web.UI.Controllers.API
     {
         public string Name { get; set; }
         public int SOID { get; set; }
+        public int? SORoleID { get; set; }
+        public string SORoleName { get; set; }
         public int? RegionalHeadID { get; set; }
         public String Token { get; set; }
         public int RoleID { get; set; }
@@ -172,6 +184,9 @@ namespace FOS.Web.UI.Controllers.API
         //public List<int> Retailers { get; set; }
         public List<MainCategories> MainCatg { get; set; }
         public List<RetailerType> RetailerClass { get; set; }
+        public List<RetailerType> SORegions { get; set; }
+        public List<RetailerType> DistributorList { get; set; }
+        public List<RetailerType> SOCities { get; set; }
         public List<RetailerType> Range { get; set; }
         public List<RetailerType> RetailerType { get; set; }
         public List<RetailerType> ReportType { get; set; }
@@ -179,6 +194,11 @@ namespace FOS.Web.UI.Controllers.API
         public List<AllSaleOfficers> SalesOfficerNames { get; set; }
 
         public List<City> Followupreasons { get; set; }
+        public List<City> NoSaleReason { get; set; }
+        public List<City> RsmDcoumentbeforevisit { get; set; }
+        public List<City> CompititorBrands { get; set; }
+        public List<MMCItems> MMCItems { get; set; }
+        public List<City> SOVisitTypes { get; set; }
     }
     public class LoginRequest
     {
@@ -190,6 +210,34 @@ namespace FOS.Web.UI.Controllers.API
     {
         public int ID { get; set; }
         public string Name { get; set; }
+    }
+
+    public class MMCItems
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public decimal? Quantity { get; set; }
+        public int? Carton { get; set; }
+        public int? Danda { get; set; }
+
+        public string OrderQuantity { get; set; }
+        public string StockQuantity { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public int Packing { get; set; }
+        public int? SortOn { get; set; }
+    }
+
+    public class MMCFollowUpReasonDetail
+    {
+        
+        public string ItemName { get; set; }
+        public string OrderQuantity { get; set; }
+        public string StockQuantity { get; set; }
+      
+        public DateTime? VisitDate { get; set; }
+        public string ReasonForNoSale { get; set; }
+        public int? ReasonForNoSaleID { get; set; }
     }
 
     public class Regions

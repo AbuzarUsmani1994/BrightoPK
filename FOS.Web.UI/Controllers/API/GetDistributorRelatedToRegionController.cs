@@ -16,7 +16,7 @@ namespace FOS.Web.UI.Controllers.API
 
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int RegionID, int CityID, int RangeID)
+        public IHttpActionResult Get(int RegionID, int RangeID)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
@@ -29,7 +29,7 @@ namespace FOS.Web.UI.Controllers.API
                     object[] param = { RegionID };
 
 
-                    var result = db.Dealers.Where(x => x.RegionID == RegionID && x.IsActive==true  && x.RangeID == RangeID).ToList();
+                    var result = db.Dealers.Where(x => x.RegionID == RegionID  && x.IsActive==true  && x.RangeID == RangeID).ToList();
 
                     foreach (var item in result)
                     {

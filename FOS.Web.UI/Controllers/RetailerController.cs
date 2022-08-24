@@ -44,7 +44,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadDataa = new List<RegionalHeadData>();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadDataa= FOS.Setup.ManageRegionalHead.GetTerritorialRegionaList(userID);
 
             List<DealerData> DealerObj = ManageDealer.GetDealerListBySaleOfficerID(objSaleOff.ID);
@@ -203,7 +203,7 @@ namespace FOS.Web.UI.Controllers
                 int RegionalheadID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
 
                
-                    dtsource = ManageRetailer.GetRetailerForGrid(param.StartingDate1, param.StartingDate2,param.RegionID,param.CityID);
+                    dtsource = ManageRetailer.GetRetailerForGrid(param.RegionID,param.CityID);
                 
                
 
@@ -636,7 +636,7 @@ namespace FOS.Web.UI.Controllers
             List<MainCategories> Ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = Ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
             {

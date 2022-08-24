@@ -246,7 +246,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)

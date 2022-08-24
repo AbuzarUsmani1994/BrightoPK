@@ -23,6 +23,8 @@ namespace FOS.DataLayer
             this.ItemGroupDetails = new HashSet<ItemGroupDetail>();
             this.StockInvoices = new HashSet<StockInvoice>();
             this.DispatchInVans = new HashSet<DispatchInVan>();
+            this.TBL_CurrentStock = new HashSet<TBL_CurrentStock>();
+            this.Tbl_OurBrandRate = new HashSet<Tbl_OurBrandRate>();
         }
     
         public int ItemID { get; set; }
@@ -55,5 +57,9 @@ namespace FOS.DataLayer
         public virtual ICollection<StockInvoice> StockInvoices { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DispatchInVan> DispatchInVans { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TBL_CurrentStock> TBL_CurrentStock { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_OurBrandRate> Tbl_OurBrandRate { get; set; }
     }
 }

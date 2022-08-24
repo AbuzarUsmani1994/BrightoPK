@@ -22,6 +22,8 @@ namespace FOS.DataLayer
             this.JobsDetails = new HashSet<JobsDetail>();
             this.Retailers = new HashSet<Retailer>();
             this.DelieveryBoys = new HashSet<DelieveryBoy>();
+            this.DispatchInVanMasters = new HashSet<DispatchInVanMaster>();
+            this.Tbl_RSMSummary = new HashSet<Tbl_RSMSummary>();
         }
     
         public int TID { get; set; }
@@ -71,5 +73,9 @@ namespace FOS.DataLayer
         public virtual ICollection<Retailer> Retailers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DelieveryBoy> DelieveryBoys { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DispatchInVanMaster> DispatchInVanMasters { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_RSMSummary> Tbl_RSMSummary { get; set; }
     }
 }

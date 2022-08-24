@@ -251,12 +251,12 @@ namespace FOS.Setup
                 //             }).OrderBy(x => x.MainCategoryName).ToList();
 
 
-                region = dbContext.MainCategories.Where(rhr => rhr.IsActive == true).Select
+                region = dbContext.Regions.Where(rhr => rhr.IsActive == true).Select
                          (
                              u => new MainCategories
                              {
-                                 ID = u.MainCategID,
-                                 MainCategoryName = u.MainCategDesc,
+                                 ID = u.ID,
+                                 MainCategoryName = u.Name,
                              }).OrderBy(x => x.MainCategoryName).ToList();
 
 
@@ -1011,6 +1011,32 @@ namespace FOS.Setup
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
                     TypeData = dbContext.SODesignations
+                            .Select(
+                                u => new RegionalHeadTypeData
+                                {
+                                    ID = u.ID,
+                                    Type = u.Name,
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return TypeData;
+        }
+
+
+        public static List<RegionalHeadTypeData> GetSOTypes()
+        {
+            List<RegionalHeadTypeData> TypeData = new List<RegionalHeadTypeData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    TypeData = dbContext.SOTypes
                             .Select(
                                 u => new RegionalHeadTypeData
                                 {

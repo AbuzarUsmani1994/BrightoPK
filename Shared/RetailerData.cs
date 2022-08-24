@@ -132,6 +132,7 @@ namespace FOS.Shared
 
         public List<RegionalHeadData> Regionss { get; set; }
         public List<MainCategories> Range { get; set; }
+        public List<MainCategories> RegionsList { get; set; }
         public IEnumerable<RegionData> Ranges { get; set; }
         public IEnumerable<RegionalHeadTypeData> Rangess { get; set; }
         public List<AreaData> Areas { get; set; }

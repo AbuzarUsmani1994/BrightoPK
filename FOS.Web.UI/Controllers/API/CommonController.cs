@@ -245,7 +245,7 @@ namespace FOS.Web.UI.Controllers.API
             {
                 cty = new CustomersForCheckin();
                 cty.ID = dbCty.ID;
-                cty.ShopName = dbCty.ShopName;
+                cty.ShopName = dbCty.ID + "/" + " " + dbCty.ShopName;
                 cty.ISActive = dbCty.IsActive;
 
                 CustomerValidate.Add(cty);
@@ -287,7 +287,7 @@ namespace FOS.Web.UI.Controllers.API
             MainCategories cty;
             if (RangeID != 0)
             {
-                var dbMainCat = db.MainCategories.Where(c => c.IsActive == true && c.MainCategID == RangeID).ToList();
+                var dbMainCat = db.MainCategories.Where(c => c.IsActive == true).ToList();
 
                 foreach (var dbCty in dbMainCat)
                 {
@@ -355,6 +355,62 @@ namespace FOS.Web.UI.Controllers.API
             }
 
             return MAinCat;
+        }
+
+
+        public List<RetailerType> Soregions(int? ID)
+        {
+            List<RetailerType> MAinCat = new List<RetailerType>();
+            RetailerType cty;
+
+            var dbMainCat = db.RegionalHeadRegions.Where(c => c.RegionHeadID == ID).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new RetailerType();
+
+                var name = db.Regions.Where(x => x.ID == dbCty.RegionID).FirstOrDefault();
+                cty.ID = name.ID;
+                cty.Name = name.Name;
+
+                MAinCat.Add(cty);
+            }
+
+            return MAinCat;
+        }
+
+        public List<RetailerType> SoCities(int? ID)
+        {
+            List<RetailerType> MAinCat = new List<RetailerType>();
+            RetailerType cty;
+
+            var dbMainCat = db.RegionalHeadRegions.Where(c => c.RegionHeadID == ID).Select(c=>c.RegionID).FirstOrDefault();
+
+            var cities = db.Cities.Where(x => x.RegionID == dbMainCat).Select(x => new RetailerType
+            {
+                ID=x.ID,
+                Name=x.Name
+
+            }).ToList();
+
+            return cities;
+        }
+
+        public List<RetailerType> SoDistributor(int? ID)
+        {
+            List<RetailerType> MAinCat = new List<RetailerType>();
+            RetailerType cty;
+
+            var dbMainCat = db.RegionalHeadRegions.Where(c => c.RegionHeadID == ID).Select(c => c.RegionID).FirstOrDefault();
+
+            var cities = db.Dealers.Where(x => x.RegionID == dbMainCat).Select(x => new RetailerType
+            {
+                ID = x.ID,
+                Name = x.ShopName
+
+            }).ToList();
+
+            return cities;
         }
         public List<RetailerType> Reporttype()
         {
@@ -438,9 +494,143 @@ namespace FOS.Web.UI.Controllers.API
             return MAinCat.OrderBy(x => x.Name).ToList();
         }
 
+        public List<City> NoSale()
+        {
+            List<City> MAinCat = new List<City>();
+            City cty;
+            List<City> list;
 
 
 
+            //string SOName = "";
+            var dbMainCat = db.Tbl_NoSaleReason.Where(c => c.IsActive == true).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new City();
+                cty.ID = dbCty.ID;
+                cty.Name = dbCty.Name;
+
+                MAinCat.Add(cty);
+            }
+
+
+
+
+
+            return MAinCat.OrderBy(x => x.Name).ToList();
+        }
+
+        public List<City> RSMDoc()
+        {
+            List<City> MAinCat = new List<City>();
+            City cty;
+            List<City> list;
+
+
+
+            //string SOName = "";
+            var dbMainCat = db.Tbl_ChecklistBeforeVisit.Where(c => c.IsActive == true).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new City();
+                cty.ID = dbCty.ID;
+                cty.Name = dbCty.Name;
+
+                MAinCat.Add(cty);
+            }
+
+
+
+
+
+            return MAinCat.OrderBy(x => x.Name).ToList();
+        }
+
+        public List<City> ComBrands()
+        {
+            List<City> MAinCat = new List<City>();
+            City cty;
+            List<City> list;
+
+
+
+            //string SOName = "";
+            var dbMainCat = db.TBL_CompititorBrandsForDropDown.Where(c => c.IsActive == true).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new City();
+                cty.ID = dbCty.ID;
+                cty.Name = dbCty.Name;
+
+                MAinCat.Add(cty);
+            }
+
+
+
+
+
+            return MAinCat.OrderBy(x => x.ID).ToList();
+        }
+
+
+        public List<MMCItems> MMCItemsList()
+        {
+            List<MMCItems> MAinCat = new List<MMCItems>();
+            MMCItems cty;
+            List<MMCItems> list;
+
+
+
+            //string SOName = "";
+            var dbMainCat = db.Items.Where(c => c.IsActive == true).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new MMCItems();
+                cty.ID = dbCty.ItemID;
+                cty.Name = dbCty.ItemName;
+                cty.Packing = dbCty.Packing;
+                cty.Price = dbCty.Price;
+                cty.SortOn = dbCty.SortOrder;
+                MAinCat.Add(cty);
+            }
+
+
+
+
+
+            return MAinCat.OrderBy(x => x.SortOn).ToList();
+        }
+
+        public List<City> SOVisittypes()
+        {
+            List<City> MAinCat = new List<City>();
+            City cty;
+            List<City> list;
+
+
+
+            //string SOName = "";
+            var dbMainCat = db.Tbl_VisittypesOfSO.Where(c => c.IsActive == true).ToList();
+
+            foreach (var dbCty in dbMainCat)
+            {
+                cty = new City();
+                cty.ID = dbCty.ID;
+                cty.Name = dbCty.Name;
+
+                MAinCat.Add(cty);
+            }
+
+
+
+
+
+            return MAinCat.OrderBy(x => x.Name).ToList();
+        }
         public List<AllSaleOfficers> SalesOfficers(int? RegionalHeadID, int saleofficerID)
         {
             List<AllSaleOfficers> MAinCat = new List<AllSaleOfficers>();

@@ -24,7 +24,14 @@ namespace FOS.DataLayer
         public string Contact2 { get; set; }
         public string CNIC { get; set; }
         public string RetailerType { get; set; }
-        public string RangeBDealer { get; set; }
-        public string RangeCDealer { get; set; }
+        public string Shoptype { get; set; }
+        public Nullable<int> Quota { get; set; }
+        public string NewOrOld { get; set; }
+        public string NewArea { get; set; }
+        public System.DateTime lastupdate { get; set; }
+        public int ShopID { get; set; }
+        public string address1 { get; set; }
+        public string location { get; set; }
+        public string ActiveInactive { get; set; }
     }
 }

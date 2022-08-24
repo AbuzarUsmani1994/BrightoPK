@@ -13,11 +13,13 @@ namespace FOS.DataLayer
     
     public partial class Sp_OrderSummeryReportInExcel2_5_Result
     {
+        public Nullable<int> ID { get; set; }
         public string ShopName { get; set; }
         public string ItemName { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<int> SortOrder { get; set; }
         public Nullable<System.DateTime> Datee { get; set; }
+        public Nullable<decimal> LineTotal { get; set; }
         public Nullable<System.DateTime> LastVisitDate { get; set; }
         public Nullable<int> DiscountPercentage { get; set; }
         public Nullable<int> DiscountedTotal { get; set; }

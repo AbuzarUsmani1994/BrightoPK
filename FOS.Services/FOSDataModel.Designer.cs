@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\GoldenPearl\10-25-2019 (8)\6-25-2019\FOS.Services\FOSDataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\ZamZamTechProjects\MMC\MMC\Project\FOS.Services\FOSDataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -26,7 +26,28 @@ namespace FOS.Web.UI.Controllers.API
                 JobObj.SOID = rm.SOID;
                 JobObj.RegionID = rm.RegionID;
                 JobObj.CityID = rm.CityID;
-                JobObj.Type = rm.Type;
+               // JobObj.Type = rm.Type;
+                if (rm.Type == "Market start")
+                {
+                    JobObj.Type = rm.Type;
+                    JobObj.MarketStartLat = rm.Latitude;
+                    JobObj.MarketStartLong = rm.Longitude;
+                    JobObj.MarketStartLatlong = rm.Latitude + "," + rm.Longitude;
+                }
+
+                else if (rm.Type == "Market close")
+                {
+                    JobObj.Type = rm.Type;
+                    JobObj.MarketCloseLat = rm.Latitude;
+                    JobObj.MarketCloseLong = rm.Longitude;
+                    JobObj.MarketCloseLatlong = rm.Latitude + "," + rm.Longitude;
+                }
+                else
+                {
+                    JobObj.Type = rm.Type;
+
+                }
+                JobObj.DealerID = rm.DistributorID;
                 JobObj.CreatedAt = DateTime.UtcNow.AddHours(5);
                 db.SOAttendances.Add(JobObj);
                 db.SaveChanges();
@@ -66,6 +87,9 @@ namespace FOS.Web.UI.Controllers.API
             public int SOID { get; set; }
             public int RegionID { get; set; }
             public int CityID { get; set; }
+            public decimal Latitude { get; set; }
+            public decimal Longitude { get; set; }
+            public int DistributorID { get; set; }
             public string Type { get; set; }
         
         }

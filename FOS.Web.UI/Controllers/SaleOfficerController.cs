@@ -32,6 +32,7 @@ namespace FOS.Web.UI.Controllers
             objSaleOffice.Areas = new List<Area>();
             objSaleOffice.Ranges = FOS.Setup.ManageRegion.GetRangeType();
             objSaleOffice.Designations = FOS.Setup.ManageRegion.GetDesignations();
+            objSaleOffice.SOTypes = FOS.Setup.ManageRegion.GetSOTypes();
             return View(objSaleOffice);
         }
 

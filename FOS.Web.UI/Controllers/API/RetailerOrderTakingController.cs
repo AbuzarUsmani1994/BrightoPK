@@ -22,6 +22,8 @@ namespace FOS.Web.UI.Controllers.API
             var JobObj = new Job();
             var RemObj = new TblReminder();
             var kpiReport = new KPIReport();
+
+            var Lastdata = db.JobsDetails.Where(x => x.RetailerID == rm.RetailerId).OrderByDescending(x => x.ID).FirstOrDefault();
             try
             {
                 var regionalHeadID = db.SaleOfficers.Where(x => x.ID == rm.SaleOfficerId).Select(x => x.RegionalHeadID).FirstOrDefault();
@@ -61,8 +63,19 @@ namespace FOS.Web.UI.Controllers.API
                     jobDet.OrderTotal = rm.OrderTotal;
                     jobDet.JobType = "Retailer Order";
                     jobDet.Status = true;
-                    // jobDet.ActivityType = rm.ActivityType;
-                    jobDet.VisitPurpose = "Ordering";
+                        if (Lastdata != null)
+                        {
+                            jobDet.Lastvisitdate = Lastdata.JobDate;
+                            jobDet.LastvisitType = Lastdata.VisitPurpose;
+                        }
+                        else
+                        {
+                            jobDet.Lastvisitdate = DateTime.UtcNow.AddHours(5);
+                            jobDet.LastvisitType = rm.Type;
+
+                        }
+                        // jobDet.ActivityType = rm.ActivityType;
+                        jobDet.VisitPurpose = "Ordering";
                         jobDet.Dispatchstatus = "Ordered";
                         if (rm.Picture1 == "" || rm.Picture1 == null)
                     {
@@ -160,6 +173,17 @@ namespace FOS.Web.UI.Controllers.API
                         jobDet.FollowupReason = rm.Followupreason;
                         jobDet.VisitPurpose = rm.Type;
                         jobDet.PRemarks = rm.Remarks;
+                        if (Lastdata != null)
+                        {
+                            jobDet.Lastvisitdate = Lastdata.JobDate;
+                            jobDet.LastvisitType = Lastdata.VisitPurpose;
+                        }
+                        else
+                        {
+                            jobDet.Lastvisitdate = DateTime.UtcNow.AddHours(5);
+                            jobDet.LastvisitType = rm.Type;
+
+                        }
                         if (rm.Picture1 == "" || rm.Picture1 == null)
                         {
                             jobDet.Picture1 = null;

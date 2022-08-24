@@ -38,11 +38,7 @@
             <div class="container" style="margin-top:2px;">
                 <div class="row">
                     <form class="form-inline">
-                        <label class="control-label" style="display:inline">Starting Date *</label>
-                        <input class="text-box single-line" id="StartingDate1" name="StartingDate1" style="height: 22px; width: 202px; margin-bottom: 0px;">
-                        <label class="control-label" style="display:inline">Ending Date *</label>
-                        <input class="text-box single-line" id="StartingDate2" name="StartingDate2" style="height: 22px; width: 202px; margin-bottom: 0px;">
-
+                     
 
                         <label class="control-label">Zone *</label>
 
@@ -397,8 +393,7 @@
                 "url": '@Url.Action("RetailerDataHandler", "Retailer")',
                 "contentType": 'application/json; charset=utf-8',
                 'data': function (data) {
-                    data.StartingDate1 = $('#StartingDate1').val();
-                    data.StartingDate2 = $('#StartingDate2').val();
+                  
                     data.RegionID = $('#RegionIDD').val();
                     data.CityID = $('#CityIDD').val();
                     return data = JSON.stringify(data);
@@ -481,58 +476,7 @@
 
                                     } catch (e) { }
 
-                                    @*try {
-
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "@Url.Action("GetAreaForSaleOfficerEdit", "SaleOfficer")",
-                                            dataType: 'json',
-                                            data: { ID: Response.SaleOfficerID, CityID: Response.CityID },
-                                            success: function (json) {
-
-                                                var $el = $("#Areas");
-                                                $el.empty(); // Remove Old Options
-
-                                                $.each(json, function (value, key) {
-
-                                                    $el.append($("<option></option>")
-                                                   .val(key.ID).text(key.Name));
-                                                });
-
-                                                //$(".Areas").val('' + $('.edit').attr('data-areaid') + '');
-                                                //$(".Areas").trigger('chosen:updated');
-
-                                                $(".Areas").val(Response.AreaID);
-                                                
-                                                $(".Areas").trigger('chosen:updated');
-
-                                                var array = $("#Location").val().split(",");
-
-                                                //location = new google.maps.LatLng(array[0], array[1]);
-                                                //mapCanvas = document.getElementById('map-canvas');
-                                                //map_options = {
-                                                //    center: location,
-                                                //    zoom: 15,
-                                                //    mapTypeId: google.maps.MapTypeId.ROADMAP
-                                                //}
-                                                //map = new google.maps.Map(mapCanvas, map_options);
-
-                                                //marker = new google.maps.Marker({
-                                                //    position: location,
-                                                //    animation: google.maps.Animation.DROP,
-                                                //});
-
-                                                //marker.setMap(map);
-
-                                                //google.maps.event.addDomListener(window, 'load');
-
-                                            }
-
-                                        });
-
-                                    } catch (e) {
-                                        alert(e);
-                                    }*@
+                               
 
                                     $('#Location').attr('disabled', true);
                                     $('#Location').css("background-color", "#eee");
@@ -811,22 +755,8 @@
     }
 
     $(document).ready(function () {
-        $('#StartingDate1').datepicker(
-            {
-                dateFormat: 'dd-M-yy',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1950:2100'
-            });
 
-        $('#StartingDate2').datepicker(
-            {
-                dateFormat: 'dd-M-yy',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1950:2100'
-            });
-
+        GenerateDetailGrid();
         $("#btnResetLatLong").click(function () {
             var retailerId = $("#ID").val();
             try {
@@ -868,11 +798,12 @@
                 success: function (json) { }
             });
         });
+        $("#ApplyFilter").click(function () {
+            $('#datatab').DataTable().ajax.reload();
+        });
 
-        $("#RegionalHeadID").change(function () {
+        $("#RegionIDD").change(function () {
 
-            LoadSalesOfficer($(this).val());
-            LoadDealers($(this).val());
             LoadCities($(this).val());
 
         });
@@ -944,20 +875,16 @@
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("GetCityListByRegionHeadID", "Dealer")",
-                data: { RegionalHeadID: RegionalHeadID },
+                data: { RegionID: RegionalHeadID },
                 success: function (json) {
 
-                    var $el = $("#CityID");
+                    var $el = $("#CityIDD");
                     $el.empty(); // remove old options
                     $.each(json, function (value, key) {
                         $el.append($("<option></option>").val(key.ID).text(key.Name));
                     });
 
-                    var $el = $("#AreaID");
-                    $el.empty(); // remove old options
-
-                    $("#CityID option:first").trigger("change");
-                    // GetAreaList($("#CityID option:first").val());
+                 
                 }
             });
         }

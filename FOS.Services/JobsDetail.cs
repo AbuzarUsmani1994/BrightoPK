@@ -82,6 +82,11 @@ namespace FOS.DataLayer
         public Nullable<int> OrderTotal { get; set; }
         public Nullable<int> DiscountedTotal { get; set; }
         public string Dispatchstatus { get; set; }
+        public Nullable<System.DateTime> Lastvisitdate { get; set; }
+        public string LastvisitType { get; set; }
+        public Nullable<int> ReasonForNoSaleID { get; set; }
+        public Nullable<int> VisitTypeID { get; set; }
+        public string OtherReasonFornoSale { get; set; }
     
         public virtual Area Area { get; set; }
         public virtual Job Job { get; set; }

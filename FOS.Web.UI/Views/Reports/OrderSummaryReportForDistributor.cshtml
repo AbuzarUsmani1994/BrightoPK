@@ -61,14 +61,7 @@
                             </div>
                         </div>
 
-                        <div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.ranges, "ID", "MainCategoryName"), new { @class = "" })
-                                @Html.ValidationMessageFor(model => model.RangeID)
-                                @Html.HiddenFor(model => model.RangeID)
-                            </div>
-                        </div>
+                       
                         <div class="control-group" style="margin-bottom: 14px;">
                             <label class="control-label">RegionalHead *</label>
                             <div class="controls">
@@ -158,7 +151,7 @@
 
 
 
-            window.open("@Url.Action("OrderSummaryForDistributor", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val()   + "&TID=" + $("#SaleOfficerID").val() + "&fosid=" + $("#RangeID").val() );
+            window.open("@Url.Action("OrderSummaryForDistributor", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val()   + "&TID=" + $("#SaleOfficerID").val());
             //}
         }
     });

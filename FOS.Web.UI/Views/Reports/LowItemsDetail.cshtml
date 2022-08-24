@@ -77,13 +77,6 @@
                             </div>
                         </div>
 
-                        <div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "" })
-                                @Html.ValidationMessageFor(model => model.RangeID)
-                            </div>
-                        </div>
 
                         <div class="control-group" style="margin-bottom: 14px;" id="Regions">
                             <label class="control-label">Regions *</label>
@@ -740,7 +733,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
                 //else {
-                window.open("@Url.Action("LowOrdersSOWise", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val() + "&RangeID=" + $("#RangeID").val() + "&Type=" + $("#Type").val() + "&RegionID=" + $("#RegionID").val() + "&CityID=" + $("#CityID").val());
+                window.open("@Url.Action("LowOrdersSOWise", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val()  + "&Type=" + $("#Type").val() + "&RegionID=" + $("#RegionID").val() + "&CityID=" + $("#CityID").val());
                 //}
             }
         });

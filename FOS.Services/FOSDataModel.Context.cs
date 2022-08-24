@@ -98,6 +98,18 @@ namespace FOS.DataLayer
         public virtual DbSet<DealerDispatchCalculation> DealerDispatchCalculations { get; set; }
         public virtual DbSet<DelieveryBoy> DelieveryBoys { get; set; }
         public virtual DbSet<DispatchInVan> DispatchInVans { get; set; }
+        public virtual DbSet<DispatchInVanMaster> DispatchInVanMasters { get; set; }
+        public virtual DbSet<TBL_RouteSelection> TBL_RouteSelection { get; set; }
+        public virtual DbSet<Tbl_CompititorBrand> Tbl_CompititorBrand { get; set; }
+        public virtual DbSet<TBL_CurrentStock> TBL_CurrentStock { get; set; }
+        public virtual DbSet<Tbl_OurBrandRate> Tbl_OurBrandRate { get; set; }
+        public virtual DbSet<Tbl_NoSaleReason> Tbl_NoSaleReason { get; set; }
+        public virtual DbSet<Tbl_VisittypesOfSO> Tbl_VisittypesOfSO { get; set; }
+        public virtual DbSet<TBL_CompititorBrandsForDropDown> TBL_CompititorBrandsForDropDown { get; set; }
+        public virtual DbSet<Tbl_ChecklistBeforeVisit> Tbl_ChecklistBeforeVisit { get; set; }
+        public virtual DbSet<Tbl_RSMCheckList> Tbl_RSMCheckList { get; set; }
+        public virtual DbSet<Tbl_RSMSummary> Tbl_RSMSummary { get; set; }
+        public virtual DbSet<SOType> SOTypes { get; set; }
     
         [DbFunction("FOSDataModel", "fnStringList2Table")]
         public virtual IQueryable<fnStringList2Table_Result> fnStringList2Table(string list)
@@ -806,15 +818,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_MyOrderListSummery_Result>("Sp_MyOrderListSummery", regionIDParameter);
         }
     
-        public virtual ObjectResult<Sp_MyOrderListDetail_Result> Sp_MyOrderListDetail(Nullable<int> jobID)
-        {
-            var jobIDParameter = jobID.HasValue ?
-                new ObjectParameter("JobID", jobID) :
-                new ObjectParameter("JobID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_MyOrderListDetail_Result>("Sp_MyOrderListDetail", jobIDParameter);
-        }
-    
         public virtual ObjectResult<Sp_GetItemsRelatedtoStock_Result> Sp_GetItemsRelatedtoStock(Nullable<int> jobID)
         {
             var jobIDParameter = jobID.HasValue ?
@@ -956,15 +959,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("saleofficerID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDealersForEditFinalRequest_Result>("Sp_GetDealersForEditFinalRequest", saleofficerIDParameter);
-        }
-    
-        public virtual ObjectResult<Sp_GetRetailerForEditFinalRequest_Result> Sp_GetRetailerForEditFinalRequest(Nullable<int> saleofficerID)
-        {
-            var saleofficerIDParameter = saleofficerID.HasValue ?
-                new ObjectParameter("saleofficerID", saleofficerID) :
-                new ObjectParameter("saleofficerID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetRetailerForEditFinalRequest_Result>("Sp_GetRetailerForEditFinalRequest", saleofficerIDParameter);
         }
     
         public virtual ObjectResult<Sp_StockTakingDetail_Result> Sp_StockTakingDetail(Nullable<int> jobID)
@@ -1522,19 +1516,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_PresentSOBarGraph1_1_Result>("Sp_PresentSOBarGraph1_1", dateFromParameter, dateToParameter);
         }
     
-        public virtual ObjectResult<Sp_SOVisitsToday1_1_Result> Sp_SOVisitsToday1_1(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
-        {
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateToParameter = dateTo.HasValue ?
-                new ObjectParameter("dateTo", dateTo) :
-                new ObjectParameter("dateTo", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_SOVisitsToday1_1_Result>("Sp_SOVisitsToday1_1", dateFromParameter, dateToParameter);
-        }
-    
         public virtual ObjectResult<Sp_Top10DistributorOrdersCityWiseGraph1_3_Result> Sp_Top10DistributorOrdersCityWiseGraph1_3(Nullable<System.DateTime> date, Nullable<int> sOID)
         {
             var dateParameter = date.HasValue ?
@@ -1856,23 +1837,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("SaleOfficerID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderSummeryReportInExcelRangeWiseForDistributor_Result>("Sp_OrderSummeryReportInExcelRangeWiseForDistributor", startingDateParameter, endingDateParameter, rangeIDParameter, saleOfficerIDParameter);
-        }
-    
-        public virtual ObjectResult<spGetSalesOfficerWithLoginDate_Result> spGetSalesOfficerWithLoginDate(Nullable<int> rID, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
-        {
-            var rIDParameter = rID.HasValue ?
-                new ObjectParameter("RID", rID) :
-                new ObjectParameter("RID", typeof(int));
-    
-            var startDateParameter = startDate.HasValue ?
-                new ObjectParameter("startDate", startDate) :
-                new ObjectParameter("startDate", typeof(System.DateTime));
-    
-            var endDateParameter = endDate.HasValue ?
-                new ObjectParameter("endDate", endDate) :
-                new ObjectParameter("endDate", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetSalesOfficerWithLoginDate_Result>("spGetSalesOfficerWithLoginDate", rIDParameter, startDateParameter, endDateParameter);
         }
     
         public virtual ObjectResult<Sp__ShopBrandWiseDisplay2_Result> Sp__ShopBrandWiseDisplay2(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> display, Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> dealerId, Nullable<int> cityId)
@@ -2629,31 +2593,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderSummeryReportInExcel2_31_Result>("Sp_OrderSummeryReportInExcel2_31", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
         }
     
-        public virtual ObjectResult<Sp_OrderSummeryReportInExcel2_5_Result> Sp_OrderSummeryReportInExcel2_5(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
-        {
-            var startingDateParameter = startingDate.HasValue ?
-                new ObjectParameter("StartingDate", startingDate) :
-                new ObjectParameter("StartingDate", typeof(System.DateTime));
-    
-            var endingDateParameter = endingDate.HasValue ?
-                new ObjectParameter("EndingDate", endingDate) :
-                new ObjectParameter("EndingDate", typeof(System.DateTime));
-    
-            var distributorIDParameter = distributorID.HasValue ?
-                new ObjectParameter("DistributorID", distributorID) :
-                new ObjectParameter("DistributorID", typeof(int));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("RangeID", rangeID) :
-                new ObjectParameter("RangeID", typeof(int));
-    
-            var saleOfficerIDParameter = saleOfficerID.HasValue ?
-                new ObjectParameter("SaleOfficerID", saleOfficerID) :
-                new ObjectParameter("SaleOfficerID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderSummeryReportInExcel2_5_Result>("Sp_OrderSummeryReportInExcel2_5", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
-        }
-    
         public virtual ObjectResult<sp_getOnlineVsOffline_Result> sp_getOnlineVsOffline(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
         {
             var datefromParameter = datefrom.HasValue ?
@@ -2866,45 +2805,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("dateend", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Top10RetailersOrderCityWiseGraphMonthly_Result>("Sp_Top10RetailersOrderCityWiseGraphMonthly", datetartParameter, dateendParameter);
-        }
-    
-        public virtual ObjectResult<Sp_OrdersCurrentMonthQuantityWise_Result> Sp_OrdersCurrentMonthQuantityWise(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
-        {
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateToParameter = dateTo.HasValue ?
-                new ObjectParameter("dateTo", dateTo) :
-                new ObjectParameter("dateTo", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrdersCurrentMonthQuantityWise_Result>("Sp_OrdersCurrentMonthQuantityWise", dateFromParameter, dateToParameter);
-        }
-    
-        public virtual ObjectResult<Sp_Top10OrderAmount_Result> Sp_Top10OrderAmount(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
-        {
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateToParameter = dateTo.HasValue ?
-                new ObjectParameter("dateTo", dateTo) :
-                new ObjectParameter("dateTo", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Top10OrderAmount_Result>("Sp_Top10OrderAmount", dateFromParameter, dateToParameter);
-        }
-    
-        public virtual ObjectResult<Sp_Top30ItemsSoldMonthWise_Result> Sp_Top30ItemsSoldMonthWise(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
-        {
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateToParameter = dateTo.HasValue ?
-                new ObjectParameter("dateTo", dateTo) :
-                new ObjectParameter("dateTo", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Top30ItemsSoldMonthWise_Result>("Sp_Top30ItemsSoldMonthWise", dateFromParameter, dateToParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> Sp_TotalLinesForSummaryInDSR(Nullable<int> regionID, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
@@ -3274,35 +3174,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_StockPositionReport_Result>("Sp_StockPositionReport", dateFromParameter, dateToParameter, regionIDParameter, cityIDParameter, rangeIDParameter);
         }
     
-        public virtual ObjectResult<Sp_Total_RetailerInformation1_5_Result> Sp_Total_RetailerInformation1_5(Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> cityId, Nullable<System.DateTime> startdate, Nullable<System.DateTime> enddate, Nullable<int> rangeID)
-        {
-            var headIdParameter = headId.HasValue ?
-                new ObjectParameter("HeadId", headId) :
-                new ObjectParameter("HeadId", typeof(int));
-    
-            var saleOfficerIdParameter = saleOfficerId.HasValue ?
-                new ObjectParameter("SaleOfficerId", saleOfficerId) :
-                new ObjectParameter("SaleOfficerId", typeof(int));
-    
-            var cityIdParameter = cityId.HasValue ?
-                new ObjectParameter("CityId", cityId) :
-                new ObjectParameter("CityId", typeof(int));
-    
-            var startdateParameter = startdate.HasValue ?
-                new ObjectParameter("startdate", startdate) :
-                new ObjectParameter("startdate", typeof(System.DateTime));
-    
-            var enddateParameter = enddate.HasValue ?
-                new ObjectParameter("enddate", enddate) :
-                new ObjectParameter("enddate", typeof(System.DateTime));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("rangeID", rangeID) :
-                new ObjectParameter("rangeID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Total_RetailerInformation1_5_Result>("Sp_Total_RetailerInformation1_5", headIdParameter, saleOfficerIdParameter, cityIdParameter, startdateParameter, enddateParameter, rangeIDParameter);
-        }
-    
         public virtual ObjectResult<Sp_AttandaceReport_Result> Sp_AttandaceReport(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> rangeID)
         {
             var startingDateParameter = startingDate.HasValue ?
@@ -3358,31 +3229,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_getOnlineVsOffline1_1_Result>("sp_getOnlineVsOffline1_1", datefromParameter, datetoParameter, headidParameter);
         }
     
-        public virtual ObjectResult<Sp_GetTotalFollowup1_3_Result> Sp_GetTotalFollowup1_3(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> headID, Nullable<int> rangeID, Nullable<int> sOID)
-        {
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateToParameter = dateTo.HasValue ?
-                new ObjectParameter("dateTo", dateTo) :
-                new ObjectParameter("dateTo", typeof(System.DateTime));
-    
-            var headIDParameter = headID.HasValue ?
-                new ObjectParameter("HeadID", headID) :
-                new ObjectParameter("HeadID", typeof(int));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("RangeID", rangeID) :
-                new ObjectParameter("RangeID", typeof(int));
-    
-            var sOIDParameter = sOID.HasValue ?
-                new ObjectParameter("SOID", sOID) :
-                new ObjectParameter("SOID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTotalFollowup1_3_Result>("Sp_GetTotalFollowup1_3", dateFromParameter, dateToParameter, headIDParameter, rangeIDParameter, sOIDParameter);
-        }
-    
         public virtual ObjectResult<sp_ShopsNotVisitedBySo1_3_Result> sp_ShopsNotVisitedBySo1_3(Nullable<int> soID, Nullable<int> cityID, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> rangeID)
         {
             var soIDParameter = soID.HasValue ?
@@ -3406,39 +3252,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("rangeID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ShopsNotVisitedBySo1_3_Result>("sp_ShopsNotVisitedBySo1_3", soIDParameter, cityIDParameter, dateFromParameter, dateToParameter, rangeIDParameter);
-        }
-    
-        public virtual ObjectResult<sp_BrandAndItemWiseReport_Result> sp_BrandAndItemWiseReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<int> rHID, Nullable<int> sOID, Nullable<int> brandID, Nullable<int> itemId, Nullable<int> rangeID)
-        {
-            var datefromParameter = datefrom.HasValue ?
-                new ObjectParameter("datefrom", datefrom) :
-                new ObjectParameter("datefrom", typeof(System.DateTime));
-    
-            var datetoParameter = dateto.HasValue ?
-                new ObjectParameter("dateto", dateto) :
-                new ObjectParameter("dateto", typeof(System.DateTime));
-    
-            var rHIDParameter = rHID.HasValue ?
-                new ObjectParameter("RHID", rHID) :
-                new ObjectParameter("RHID", typeof(int));
-    
-            var sOIDParameter = sOID.HasValue ?
-                new ObjectParameter("SOID", sOID) :
-                new ObjectParameter("SOID", typeof(int));
-    
-            var brandIDParameter = brandID.HasValue ?
-                new ObjectParameter("BrandID", brandID) :
-                new ObjectParameter("BrandID", typeof(int));
-    
-            var itemIdParameter = itemId.HasValue ?
-                new ObjectParameter("ItemId", itemId) :
-                new ObjectParameter("ItemId", typeof(int));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("rangeID", rangeID) :
-                new ObjectParameter("rangeID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_BrandAndItemWiseReport_Result>("sp_BrandAndItemWiseReport", datefromParameter, datetoParameter, rHIDParameter, sOIDParameter, brandIDParameter, itemIdParameter, rangeIDParameter);
         }
     
         public virtual ObjectResult<Sp_SOVisitsTodayForManagers_Result> Sp_SOVisitsTodayForManagers(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> headID)
@@ -3549,27 +3362,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("rangeID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_SOVisitsTodayRangeWise_Result>("Sp_SOVisitsTodayRangeWise", dateFromParameter, dateToParameter, rangeIDParameter);
-        }
-    
-        public virtual ObjectResult<Sp_DealerInformationSummery1_1_Result> Sp_DealerInformationSummery1_1(Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> cityId, Nullable<int> rangeID)
-        {
-            var headIdParameter = headId.HasValue ?
-                new ObjectParameter("HeadId", headId) :
-                new ObjectParameter("HeadId", typeof(int));
-    
-            var saleOfficerIdParameter = saleOfficerId.HasValue ?
-                new ObjectParameter("SaleOfficerId", saleOfficerId) :
-                new ObjectParameter("SaleOfficerId", typeof(int));
-    
-            var cityIdParameter = cityId.HasValue ?
-                new ObjectParameter("CityId", cityId) :
-                new ObjectParameter("CityId", typeof(int));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("rangeID", rangeID) :
-                new ObjectParameter("rangeID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_DealerInformationSummery1_1_Result>("Sp_DealerInformationSummery1_1", headIdParameter, saleOfficerIdParameter, cityIdParameter, rangeIDParameter);
         }
     
         public virtual ObjectResult<Sp_ManagersUpdateSummary_Result> Sp_ManagersUpdateSummary(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> headId, Nullable<int> rangeID)
@@ -3779,31 +3571,6 @@ namespace FOS.DataLayer
                 new ObjectParameter("SaleOfficerID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderSummaryGrandTotalRangeC_Result>("Sp_OrderSummaryGrandTotalRangeC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
-        }
-    
-        public virtual ObjectResult<Sp_RetailersOrderDetailFinal1_3_Result> Sp_RetailersOrderDetailFinal1_3(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> rangeID)
-        {
-            var startingDateParameter = startingDate.HasValue ?
-                new ObjectParameter("StartingDate", startingDate) :
-                new ObjectParameter("StartingDate", typeof(System.DateTime));
-    
-            var endingDateParameter = endingDate.HasValue ?
-                new ObjectParameter("EndingDate", endingDate) :
-                new ObjectParameter("EndingDate", typeof(System.DateTime));
-    
-            var headIdParameter = headId.HasValue ?
-                new ObjectParameter("HeadId", headId) :
-                new ObjectParameter("HeadId", typeof(int));
-    
-            var saleOfficerIdParameter = saleOfficerId.HasValue ?
-                new ObjectParameter("SaleOfficerId", saleOfficerId) :
-                new ObjectParameter("SaleOfficerId", typeof(int));
-    
-            var rangeIDParameter = rangeID.HasValue ?
-                new ObjectParameter("RangeID", rangeID) :
-                new ObjectParameter("RangeID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_RetailersOrderDetailFinal1_3_Result>("Sp_RetailersOrderDetailFinal1_3", startingDateParameter, endingDateParameter, headIdParameter, saleOfficerIdParameter, rangeIDParameter);
         }
     
         public virtual ObjectResult<sp_GetSOListInDSR_Result> sp_GetSOListInDSR(Nullable<int> soID, Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<int> rangeID)
@@ -4016,23 +3783,6 @@ namespace FOS.DataLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDispatchForvanGriddata_Result>("Sp_GetDispatchForvanGriddata", boyIDParameter, startParameter, endParameter);
         }
     
-        public virtual ObjectResult<Sp_GetDispatchDataForReport_Result> Sp_GetDispatchDataForReport(Nullable<int> boyID, Nullable<System.DateTime> start, Nullable<System.DateTime> end)
-        {
-            var boyIDParameter = boyID.HasValue ?
-                new ObjectParameter("BoyID", boyID) :
-                new ObjectParameter("BoyID", typeof(int));
-    
-            var startParameter = start.HasValue ?
-                new ObjectParameter("start", start) :
-                new ObjectParameter("start", typeof(System.DateTime));
-    
-            var endParameter = end.HasValue ?
-                new ObjectParameter("end", end) :
-                new ObjectParameter("end", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDispatchDataForReport_Result>("Sp_GetDispatchDataForReport", boyIDParameter, startParameter, endParameter);
-        }
-    
         public virtual ObjectResult<Sp_GetAllDataForExportofSO_Result> Sp_GetAllDataForExportofSO(Nullable<int> boyID, Nullable<System.DateTime> start, Nullable<System.DateTime> end)
         {
             var boyIDParameter = boyID.HasValue ?
@@ -4145,6 +3895,532 @@ namespace FOS.DataLayer
                 new ObjectParameter("RangeID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_ItemWisereportRegionWise_Result>("sp_ItemWisereportRegionWise", datefromParameter, datetoParameter, regionIDParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetDispatchDataForReport_Result> Sp_GetDispatchDataForReport(Nullable<int> boyID, Nullable<System.DateTime> start, Nullable<System.DateTime> end)
+        {
+            var boyIDParameter = boyID.HasValue ?
+                new ObjectParameter("BoyID", boyID) :
+                new ObjectParameter("BoyID", typeof(int));
+    
+            var startParameter = start.HasValue ?
+                new ObjectParameter("start", start) :
+                new ObjectParameter("start", typeof(System.DateTime));
+    
+            var endParameter = end.HasValue ?
+                new ObjectParameter("end", end) :
+                new ObjectParameter("end", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetDispatchDataForReport_Result>("Sp_GetDispatchDataForReport", boyIDParameter, startParameter, endParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Top30ItemsSoldMonthWise_Result> Sp_Top30ItemsSoldMonthWise(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Top30ItemsSoldMonthWise_Result>("Sp_Top30ItemsSoldMonthWise", dateFromParameter, dateToParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Top10OrderAmount_Result> Sp_Top10OrderAmount(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Top10OrderAmount_Result>("Sp_Top10OrderAmount", dateFromParameter, dateToParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OrdersCurrentMonthQuantityWise_Result> Sp_OrdersCurrentMonthQuantityWise(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrdersCurrentMonthQuantityWise_Result>("Sp_OrdersCurrentMonthQuantityWise", dateFromParameter, dateToParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetTotalFollowup1_3_Result> Sp_GetTotalFollowup1_3(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> headID, Nullable<int> rangeID, Nullable<int> sOID)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            var headIDParameter = headID.HasValue ?
+                new ObjectParameter("HeadID", headID) :
+                new ObjectParameter("HeadID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var sOIDParameter = sOID.HasValue ?
+                new ObjectParameter("SOID", sOID) :
+                new ObjectParameter("SOID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetTotalFollowup1_3_Result>("Sp_GetTotalFollowup1_3", dateFromParameter, dateToParameter, headIDParameter, rangeIDParameter, sOIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OrderSummeryReportInExcel2_5_Result> Sp_OrderSummeryReportInExcel2_5(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderSummeryReportInExcel2_5_Result>("Sp_OrderSummeryReportInExcel2_5", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_SOVisitsToday1_1_Result> Sp_SOVisitsToday1_1(Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo)
+        {
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_SOVisitsToday1_1_Result>("Sp_SOVisitsToday1_1", dateFromParameter, dateToParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OrderForPDFinMMC_Result> Sp_OrderForPDFinMMC(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderForPDFinMMC_Result>("Sp_OrderForPDFinMMC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_StockForPDFinMMC_Result> Sp_StockForPDFinMMC(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_StockForPDFinMMC_Result>("Sp_StockForPDFinMMC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OurBrandForPDFinMMC_Result> Sp_OurBrandForPDFinMMC(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OurBrandForPDFinMMC_Result>("Sp_OurBrandForPDFinMMC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OurCompititorForPDFinMMC_Result> Sp_OurCompititorForPDFinMMC(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OurCompititorForPDFinMMC_Result>("Sp_OurCompititorForPDFinMMC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetSOListAccordingToDistributor_Result> sp_GetSOListAccordingToDistributor(Nullable<int> soID, Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto)
+        {
+            var soIDParameter = soID.HasValue ?
+                new ObjectParameter("SoID", soID) :
+                new ObjectParameter("SoID", typeof(int));
+    
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetSOListAccordingToDistributor_Result>("sp_GetSOListAccordingToDistributor", soIDParameter, datefromParameter, datetoParameter);
+        }
+    
+        public virtual ObjectResult<Sp_LastthreeCurrentStock_Result> Sp_LastthreeCurrentStock(Nullable<int> jobID)
+        {
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_LastthreeCurrentStock_Result>("Sp_LastthreeCurrentStock", jobIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_GetRetailerForEditFinalRequest_Result> Sp_GetRetailerForEditFinalRequest(Nullable<int> saleofficerID)
+        {
+            var saleofficerIDParameter = saleofficerID.HasValue ?
+                new ObjectParameter("saleofficerID", saleofficerID) :
+                new ObjectParameter("saleofficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetRetailerForEditFinalRequest_Result>("Sp_GetRetailerForEditFinalRequest", saleofficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_MyLastThreeVisits_Result> Sp_MyLastThreeVisits(Nullable<int> jobID)
+        {
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_MyLastThreeVisits_Result>("Sp_MyLastThreeVisits", jobIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_MyOrderListDetail_Result> Sp_MyOrderListDetail(Nullable<int> jobID)
+        {
+            var jobIDParameter = jobID.HasValue ?
+                new ObjectParameter("JobID", jobID) :
+                new ObjectParameter("JobID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_MyOrderListDetail_Result>("Sp_MyOrderListDetail", jobIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_FollowUpVisitsDailyForMMC_Result> Sp_FollowUpVisitsDailyForMMC(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_FollowUpVisitsDailyForMMC_Result>("Sp_FollowUpVisitsDailyForMMC", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_MyVisitsMapViewForGPC1_4_Result> Sp_MyVisitsMapViewForGPC1_4(Nullable<int> saleofficerID, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTo, Nullable<int> regionID)
+        {
+            var saleofficerIDParameter = saleofficerID.HasValue ?
+                new ObjectParameter("saleofficerID", saleofficerID) :
+                new ObjectParameter("saleofficerID", typeof(int));
+    
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("dateFrom", dateFrom) :
+                new ObjectParameter("dateFrom", typeof(System.DateTime));
+    
+            var dateToParameter = dateTo.HasValue ?
+                new ObjectParameter("dateTo", dateTo) :
+                new ObjectParameter("dateTo", typeof(System.DateTime));
+    
+            var regionIDParameter = regionID.HasValue ?
+                new ObjectParameter("RegionID", regionID) :
+                new ObjectParameter("RegionID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_MyVisitsMapViewForGPC1_4_Result>("Sp_MyVisitsMapViewForGPC1_4", saleofficerIDParameter, dateFromParameter, dateToParameter, regionIDParameter);
+        }
+    
+        public virtual ObjectResult<spGetSalesOfficerWithLoginDate_Result> spGetSalesOfficerWithLoginDate(Nullable<int> rID, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        {
+            var rIDParameter = rID.HasValue ?
+                new ObjectParameter("RID", rID) :
+                new ObjectParameter("RID", typeof(int));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetSalesOfficerWithLoginDate_Result>("spGetSalesOfficerWithLoginDate", rIDParameter, startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetDashboardData_Result> sp_GetDashboardData(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<int> rHID, Nullable<System.DateTime> dateLastMonthStart, Nullable<System.DateTime> dateLastMonthend, Nullable<int> rangeID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var rHIDParameter = rHID.HasValue ?
+                new ObjectParameter("RHID", rHID) :
+                new ObjectParameter("RHID", typeof(int));
+    
+            var dateLastMonthStartParameter = dateLastMonthStart.HasValue ?
+                new ObjectParameter("dateLastMonthStart", dateLastMonthStart) :
+                new ObjectParameter("dateLastMonthStart", typeof(System.DateTime));
+    
+            var dateLastMonthendParameter = dateLastMonthend.HasValue ?
+                new ObjectParameter("dateLastMonthend", dateLastMonthend) :
+                new ObjectParameter("dateLastMonthend", typeof(System.DateTime));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("rangeID", rangeID) :
+                new ObjectParameter("rangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetDashboardData_Result>("sp_GetDashboardData", datefromParameter, datetoParameter, rHIDParameter, dateLastMonthStartParameter, dateLastMonthendParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_DealerInformationSummery1_1_Result> Sp_DealerInformationSummery1_1(Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> cityId, Nullable<int> rangeID)
+        {
+            var headIdParameter = headId.HasValue ?
+                new ObjectParameter("HeadId", headId) :
+                new ObjectParameter("HeadId", typeof(int));
+    
+            var saleOfficerIdParameter = saleOfficerId.HasValue ?
+                new ObjectParameter("SaleOfficerId", saleOfficerId) :
+                new ObjectParameter("SaleOfficerId", typeof(int));
+    
+            var cityIdParameter = cityId.HasValue ?
+                new ObjectParameter("CityId", cityId) :
+                new ObjectParameter("CityId", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("rangeID", rangeID) :
+                new ObjectParameter("rangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_DealerInformationSummery1_1_Result>("Sp_DealerInformationSummery1_1", headIdParameter, saleOfficerIdParameter, cityIdParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Total_RetailerInformation1_5_Result> Sp_Total_RetailerInformation1_5(Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> cityId, Nullable<System.DateTime> startdate, Nullable<System.DateTime> enddate, Nullable<int> rangeID)
+        {
+            var headIdParameter = headId.HasValue ?
+                new ObjectParameter("HeadId", headId) :
+                new ObjectParameter("HeadId", typeof(int));
+    
+            var saleOfficerIdParameter = saleOfficerId.HasValue ?
+                new ObjectParameter("SaleOfficerId", saleOfficerId) :
+                new ObjectParameter("SaleOfficerId", typeof(int));
+    
+            var cityIdParameter = cityId.HasValue ?
+                new ObjectParameter("CityId", cityId) :
+                new ObjectParameter("CityId", typeof(int));
+    
+            var startdateParameter = startdate.HasValue ?
+                new ObjectParameter("startdate", startdate) :
+                new ObjectParameter("startdate", typeof(System.DateTime));
+    
+            var enddateParameter = enddate.HasValue ?
+                new ObjectParameter("enddate", enddate) :
+                new ObjectParameter("enddate", typeof(System.DateTime));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("rangeID", rangeID) :
+                new ObjectParameter("rangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Total_RetailerInformation1_5_Result>("Sp_Total_RetailerInformation1_5", headIdParameter, saleOfficerIdParameter, cityIdParameter, startdateParameter, enddateParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Total_RetailerInformationSummery_Result> Sp_Total_RetailerInformationSummery(Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> cityId, Nullable<System.DateTime> startdate, Nullable<System.DateTime> enddate, Nullable<int> rangeID)
+        {
+            var headIdParameter = headId.HasValue ?
+                new ObjectParameter("HeadId", headId) :
+                new ObjectParameter("HeadId", typeof(int));
+    
+            var saleOfficerIdParameter = saleOfficerId.HasValue ?
+                new ObjectParameter("SaleOfficerId", saleOfficerId) :
+                new ObjectParameter("SaleOfficerId", typeof(int));
+    
+            var cityIdParameter = cityId.HasValue ?
+                new ObjectParameter("CityId", cityId) :
+                new ObjectParameter("CityId", typeof(int));
+    
+            var startdateParameter = startdate.HasValue ?
+                new ObjectParameter("startdate", startdate) :
+                new ObjectParameter("startdate", typeof(System.DateTime));
+    
+            var enddateParameter = enddate.HasValue ?
+                new ObjectParameter("enddate", enddate) :
+                new ObjectParameter("enddate", typeof(System.DateTime));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("rangeID", rangeID) :
+                new ObjectParameter("rangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Total_RetailerInformationSummery_Result>("Sp_Total_RetailerInformationSummery", headIdParameter, saleOfficerIdParameter, cityIdParameter, startdateParameter, enddateParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_RetailersOrderDetailFinal1_3_Result> Sp_RetailersOrderDetailFinal1_3(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> headId, Nullable<int> saleOfficerId, Nullable<int> rangeID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var headIdParameter = headId.HasValue ?
+                new ObjectParameter("HeadId", headId) :
+                new ObjectParameter("HeadId", typeof(int));
+    
+            var saleOfficerIdParameter = saleOfficerId.HasValue ?
+                new ObjectParameter("SaleOfficerId", saleOfficerId) :
+                new ObjectParameter("SaleOfficerId", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_RetailersOrderDetailFinal1_3_Result>("Sp_RetailersOrderDetailFinal1_3", startingDateParameter, endingDateParameter, headIdParameter, saleOfficerIdParameter, rangeIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_OrderForPDFinMMCTest_Result> Sp_OrderForPDFinMMCTest(Nullable<System.DateTime> startingDate, Nullable<System.DateTime> endingDate, Nullable<int> distributorID, Nullable<int> rangeID, Nullable<int> saleOfficerID)
+        {
+            var startingDateParameter = startingDate.HasValue ?
+                new ObjectParameter("StartingDate", startingDate) :
+                new ObjectParameter("StartingDate", typeof(System.DateTime));
+    
+            var endingDateParameter = endingDate.HasValue ?
+                new ObjectParameter("EndingDate", endingDate) :
+                new ObjectParameter("EndingDate", typeof(System.DateTime));
+    
+            var distributorIDParameter = distributorID.HasValue ?
+                new ObjectParameter("DistributorID", distributorID) :
+                new ObjectParameter("DistributorID", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("RangeID", rangeID) :
+                new ObjectParameter("RangeID", typeof(int));
+    
+            var saleOfficerIDParameter = saleOfficerID.HasValue ?
+                new ObjectParameter("SaleOfficerID", saleOfficerID) :
+                new ObjectParameter("SaleOfficerID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_OrderForPDFinMMCTest_Result>("Sp_OrderForPDFinMMCTest", startingDateParameter, endingDateParameter, distributorIDParameter, rangeIDParameter, saleOfficerIDParameter);
+        }
+    
+        public virtual ObjectResult<sp_BrandAndItemWiseReport_Result> sp_BrandAndItemWiseReport(Nullable<System.DateTime> datefrom, Nullable<System.DateTime> dateto, Nullable<int> rHID, Nullable<int> sOID, Nullable<int> brandID, Nullable<int> itemId, Nullable<int> rangeID)
+        {
+            var datefromParameter = datefrom.HasValue ?
+                new ObjectParameter("datefrom", datefrom) :
+                new ObjectParameter("datefrom", typeof(System.DateTime));
+    
+            var datetoParameter = dateto.HasValue ?
+                new ObjectParameter("dateto", dateto) :
+                new ObjectParameter("dateto", typeof(System.DateTime));
+    
+            var rHIDParameter = rHID.HasValue ?
+                new ObjectParameter("RHID", rHID) :
+                new ObjectParameter("RHID", typeof(int));
+    
+            var sOIDParameter = sOID.HasValue ?
+                new ObjectParameter("SOID", sOID) :
+                new ObjectParameter("SOID", typeof(int));
+    
+            var brandIDParameter = brandID.HasValue ?
+                new ObjectParameter("BrandID", brandID) :
+                new ObjectParameter("BrandID", typeof(int));
+    
+            var itemIdParameter = itemId.HasValue ?
+                new ObjectParameter("ItemId", itemId) :
+                new ObjectParameter("ItemId", typeof(int));
+    
+            var rangeIDParameter = rangeID.HasValue ?
+                new ObjectParameter("rangeID", rangeID) :
+                new ObjectParameter("rangeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_BrandAndItemWiseReport_Result>("sp_BrandAndItemWiseReport", datefromParameter, datetoParameter, rHIDParameter, sOIDParameter, brandIDParameter, itemIdParameter, rangeIDParameter);
         }
     }
 }

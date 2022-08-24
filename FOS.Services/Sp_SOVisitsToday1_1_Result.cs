@@ -13,7 +13,9 @@ namespace FOS.DataLayer
     
     public partial class Sp_SOVisitsToday1_1_Result
     {
+        public Nullable<int> id { get; set; }
         public string SaleOfficerName { get; set; }
-        public Nullable<int> Visits { get; set; }
+        public Nullable<int> Productive { get; set; }
+        public Nullable<int> NonProductive { get; set; }
     }
 }

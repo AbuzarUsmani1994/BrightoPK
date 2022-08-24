@@ -70,9 +70,9 @@
                 <div>
                     <div class="clearfix">
                         <div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Range *</label>
+                            <label class="control-label">Regions *</label>
                             <div class="controls">
-                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "" })
+                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.RegionsList, "ID", "MainCategoryName"), new { @class = "" })
                                 @Html.ValidationMessageFor(model => model.RangeID)
                             </div>
                         </div>
@@ -117,9 +117,7 @@
                                 <th style="width: 170px !important">
                                     Location
                                 </th>
-                                <th style="width: 170px !important">
-                                    Range
-                                </th>
+                               
                                 <th style="width: 170px !important">
                                     Zone
                                 </th>
@@ -218,14 +216,14 @@
                                 </div>
 
 
-                                <div class="control-group" style="margin-bottom: 0px;margin-top: 4px; ">
+                                @*<div class="control-group" style="margin-bottom: 0px;margin-top: 4px; ">
                                     <label class="control-label">Range  *</label>
                                     <div class="controls" style="margin-left: 0px">
                                         @Html.DropDownListFor(model => model.RangeIDD, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "", style = "220px" })
                                         @Html.ValidationMessageFor(model => model.RangeIDD)
                                         @Html.HiddenFor(model => model.RangeIDD)
                                     </div>
-                                </div>
+                                </div>*@
 
                                 <div class="control-group" style="margin-bottom: 0px; margin-top: 0px;">
 
@@ -261,7 +259,7 @@
                                 </div>
 
                                 <div class="control-group" style="margin-bottom: 0px">
-                                    <label class="control-label" style="">Distributor Code (SAP Code)</label>
+                                    <label class="control-label" style="">Distributor Code</label>
                                     <div class="controls" style="margin-left: 0px">
                                         @Html.EditorFor(model => model.RetailerCode)
                                     </div>
@@ -778,7 +776,7 @@
            },
             { "data": "Address" },
                 { "data": "Location" },
-                { "data": "RangeName" },
+              
            { "data": "RegionName" },
                 { "data": "CItyName" },
                 { "data": "IsActiveYes" },

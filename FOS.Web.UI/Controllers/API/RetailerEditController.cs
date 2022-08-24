@@ -24,58 +24,57 @@ namespace FOS.Web.UI.Controllers.API
             Retailer retailerObj = new Retailer();
             try
             {
-                if (FOS.Web.UI.Common.Token.TokenAttribute.IsTokenValid(rm.Token))
-                {
+               
                     //ADD New Retailer 
                     retailerObj = db.Retailers.Where(u => u.ID == rm.ID).FirstOrDefault();
 
-                    retailerObj.Name = rm.OwnerName;
-                    retailerObj.ShopName = rm.ShopName;
-                    retailerObj.AreaID = rm.AreaID;
-                    retailerObj.CityID = rm.CityID;
-                    // Zone ID  is saving in Regions Table bcx in menu region changes to zone
-                    retailerObj.ZoneID = rm.ZoneID;
-                    retailerObj.RegionID = rm.RegionID;
-                    retailerObj.NewArea = rm.AreaName;
-                    retailerObj.Phone1 = rm.CellNo1;
-                    retailerObj.Phone2 = rm.CellNo2;
-                    retailerObj.Email = rm.Email;
-                    retailerObj.RetailerClass = rm.RetailerClass;
-                    retailerObj.RetailerChannel = rm.RetailerChannel;
-                    retailerObj.Address = rm.Address;
-                    if (retailerObj.RangeID == 6)
-                    {
 
-                        retailerObj.DealerID = rm.DistributorIDRangeA;
-                        retailerObj.RangeADealer = rm.DistributorIDRangeA;
-                    }
-                    else if (retailerObj.RangeID == 7)
-                    {
-                       
-                        retailerObj.RangeBDealer = rm.DistributorIDRangeA;
-                    }
-                    else
-                    {
-                        
-                        retailerObj.RangeCDealer = rm.DistributorIDRangeA;
-                    }
-                   
-                    DateTime serverTime = DateTime.Now; // gives you current Time in server timeZone
-                    DateTime utcTime = serverTime.ToUniversalTime(); // convert it to Utc using timezone setting of server computer
+                    var data = db.Retailers.Where(x => x.RegionID == rm.RegionID && x.CityID == rm.CityID && x.Phone1 == rm.CellNo1).FirstOrDefault();
 
-                    TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("Pakistan Standard Time");
-                    DateTime localTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, tzi);
+                retailerObj.Name = rm.OwnerName;
+                retailerObj.SaleOfficerID = rm.SalesOfficerID;
 
 
-                    retailerObj.LastUpdate = localTime;
-                  
-                    retailerObj.CreatedBy = rm.SalesOfficerID;
 
-                    //db.Retailers.Add(retailerObj);
-                    //END
+                retailerObj.DealerID = rm.DistributorIDRangeA;
 
-                    // Add Token Detail ...
-                    TokenDetail tokenDetail = new TokenDetail();
+
+                retailerObj.ShopName = rm.ShopName;
+                retailerObj.AreaID = rm.AreaID;
+                retailerObj.CityID = rm.CityID;
+                // Zone ID  is saving in Regions Table bcx in menu region changes to zone
+                retailerObj.ZoneID = 1;
+                retailerObj.RegionID = rm.RegionID;
+            
+                retailerObj.NewArea = rm.AreaName;
+              
+                retailerObj.LocationMargin = null;
+                retailerObj.Phone1 = rm.CellNo1;
+                retailerObj.Phone2 = rm.CellNo2;
+                retailerObj.Email = rm.Email;
+                retailerObj.RetailerClass = rm.RetailerClass;
+                retailerObj.RetailerChannel = rm.RetailerChannel;
+                retailerObj.RangeID = 6;
+              
+
+
+                retailerObj.Remarks = rm.Remarks;
+                retailerObj.IsActive = true;
+                retailerObj.Status = true;
+                retailerObj.RetailerType = "Retailer";
+                retailerObj.IsDeleted = false;
+                retailerObj.Address = rm.Address;
+                retailerObj.Shoptype = rm.ShopType;
+                retailerObj.Quota = rm.Quota;
+                retailerObj.NewOrOld = rm.OldorNew;
+             
+                retailerObj.CreatedBy = rm.SalesOfficerID;
+
+                //db.Retailers.Add(retailerObj);
+                //END
+
+                // Add Token Detail ...
+                TokenDetail tokenDetail = new TokenDetail();
                     tokenDetail.TokenName = rm.Token;
                     tokenDetail.Action = "Add New Retailer";
                     tokenDetail.ProcessedDateTime = DateTime.Now;
@@ -92,19 +91,8 @@ namespace FOS.Web.UI.Controllers.API
                         Exception = null,
                         ValidationErrors = null
                     };
-                }
-                else
-                {
-                    return new Result<SuccessResponse>
-                    {
-                        Data = null,
-                        Message = "Authentication failed in Retailer Edit  API",
-                        ResultType = ResultType.Failure,
-                        Exception = null,
-                        ValidationErrors = null
-                    };
-
-                }
+               
+               
 
             }
             catch (Exception ex)
@@ -146,6 +134,9 @@ namespace FOS.Web.UI.Controllers.API
             public int ZoneID { get; set; }
             public int AreaID { get; set; }
             public string Address { get; set; }
+            public string ShopType { get; set; }
+            public int Quota { get; set; }
+            public string OldorNew { get; set; }
             public int DistributorIDRangeA { get; set; }
             public int DistributorIDRangeB { get; set; }
             public int DistributorIDRangeC { get; set; }

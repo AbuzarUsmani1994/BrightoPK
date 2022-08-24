@@ -28,6 +28,26 @@ namespace FOS.DataLayer
         public string DispatchQuantity { get; set; }
         public Nullable<System.DateTime> DispatchDate { get; set; }
         public string Status { get; set; }
+        public Nullable<int> Danda { get; set; }
+        public Nullable<int> Carton { get; set; }
+        public Nullable<decimal> FinalValue { get; set; }
+        public Nullable<int> CompititorProductID { get; set; }
+        public string CompititorProductName { get; set; }
+        public string CompititorPurchaseRate { get; set; }
+        public string CompititorSaleRate { get; set; }
+        public string CompititorSize { get; set; }
+        public string OrderQuantity { get; set; }
+        public Nullable<int> OwnProductID { get; set; }
+        public string OwnProductName { get; set; }
+        public string OwnPurchaseRate { get; set; }
+        public string OwnSaleRate { get; set; }
+        public string StockQuantity { get; set; }
+        public Nullable<bool> DistSOP { get; set; }
+        public Nullable<bool> SSSOP { get; set; }
+        public Nullable<bool> WSSOP { get; set; }
+        public Nullable<int> DealerID { get; set; }
+        public string Availability { get; set; }
+        public Nullable<int> AvailableProductID { get; set; }
     
         public virtual Job Job { get; set; }
         public virtual Item Item { get; set; }

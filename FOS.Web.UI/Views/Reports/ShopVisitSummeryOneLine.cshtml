@@ -65,13 +65,7 @@
                                 <input class="text-box single-line" id="StartingDate2" name="StartingDate2" style="height: 22px; width: 202px; margin-bottom: 0px;">
                             </div>
                         </div>
-                        <div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "" })
-                                @Html.ValidationMessageFor(model => model.RangeID)
-                            </div>
-                        </div>
+                       
 
                         <div class="control-group">
                             <label class="control-label">Select Head *</label>
@@ -693,7 +687,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
                 //else {
-                window.open("@Url.Action("ShopVisitSummeryOneLiner", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val() + "&RangeID=" + $("#RangeID").val());
+                window.open("@Url.Action("ShopVisitSummeryOneLiner", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val());
                 //}
             }
         });

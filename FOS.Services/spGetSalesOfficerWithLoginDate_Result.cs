@@ -17,5 +17,8 @@ namespace FOS.DataLayer
         public string RegionalHead { get; set; }
         public string Region { get; set; }
         public Nullable<System.DateTime> LoginDate { get; set; }
+        public string TypeofAttendance { get; set; }
+        public string MarketStartLatlong { get; set; }
+        public string MarketCloseLatlong { get; set; }
     }
 }

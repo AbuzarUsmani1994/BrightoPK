@@ -77,7 +77,7 @@ namespace FOS.Setup
 
 
 
-        public static List<RegionalHeadData> GetTerritorialRegionalHeadList(int UserID, int RangeID)
+        public static List<RegionalHeadData> GetTerritorialRegionalHeadList(int UserID)
         {
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
             RegionalHeadData comlist;
@@ -87,7 +87,7 @@ namespace FOS.Setup
                 {
                     if (UserID == 1)
                     {
-                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false && u.RangeID==RangeID)
+                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false)
                                 .ToList().Select(
                                     u => new RegionalHeadData
                                     {
@@ -106,52 +106,9 @@ namespace FOS.Setup
                             Name = "All"
                         });
                     }
-                    else if (UserID == 1055)
-                    {
-                        
-                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false && u.RangeID == RangeID)
-                                    .ToList().Select(
-                                        u => new RegionalHeadData
-                                        {
-                                            ID = u.ID,
-                                            Type = (int)u.Type,
-                                            TypeName = u.RegionalHeadsType.Type,
-                                            Name = u.Name,
-                                            Phone1 = u.Phone1 == null ? "" : u.Phone1,
-                                            Phone2 = u.Phone2 == null ? "" : u.Phone2,
-                                            LastUpdate = u.LastUpdate
-                                        }).ToList();
-                    }
-                    else if (UserID == 1024)
-                    {
+                  
 
-                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false && u.RangeID == RangeID)
-                                    .ToList().Select(
-                                        u => new RegionalHeadData
-                                        {
-                                            ID = u.ID,
-                                            Type = (int)u.Type,
-                                            TypeName = u.RegionalHeadsType.Type,
-                                            Name = u.Name,
-                                            Phone1 = u.Phone1 == null ? "" : u.Phone1,
-                                            Phone2 = u.Phone2 == null ? "" : u.Phone2,
-                                            LastUpdate = u.LastUpdate
-                                        }).ToList();
-                    }
-
-                    else if (UserID == 1023 || UserID==1028 || UserID == 1026 || UserID==1087||UserID==1035||UserID==1072 || UserID == 1041 || UserID == 1048 || UserID == 1040)
-                    {
-                        var ZSMids = dbContext.RSMPortalUsers.Where(x => x.UserID == UserID && x.RangeID==RangeID).Select(x => x.ZSMID).Distinct().ToList();
-
-                        foreach (var item in ZSMids)
-                        {
-
-                            comlist = new RegionalHeadData();
-                            comlist.ID = (int)item;
-                            comlist.Name = dbContext.RegionalHeads.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
-                            regionalHeadData.Add(comlist);
-                        }
-                    }
+        
 
                     else
                     {

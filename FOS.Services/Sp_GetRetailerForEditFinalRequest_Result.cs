@@ -28,5 +28,10 @@ namespace FOS.DataLayer
         public Nullable<int> RetailerClass { get; set; }
         public string RetailerType { get; set; }
         public string Area { get; set; }
+        public Nullable<int> RetailerChannel { get; set; }
+        public Nullable<int> DealerID { get; set; }
+        public string shoptype { get; set; }
+        public Nullable<int> Quota { get; set; }
+        public string OldOrNew { get; set; }
     }
 }

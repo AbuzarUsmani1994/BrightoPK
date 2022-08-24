@@ -102,13 +102,7 @@
                             </div>
                         </div>
 
-                        <div class="control-group">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.MainCategoryID, new SelectList(Model.Regions, "ID", "MainCategoryName"), new { @class = "" })
-
-                            </div>
-                        </div>
+                      
                         <div class="control-group" style="border-top: 1px solid #e5e5e5;">
                             <div class="form-actions" style="padding-left: 130px; padding-right: 0px;">
                                 <button type="submit" id="btnNew" class="btn btn-primary">
@@ -753,7 +747,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
         //else {
-        window.open("@Url.Action("RetailerSaleAverage", "Reports")" + "?TID=" + $("#RegionalHeadID").val()  + "&RangeID=" + $("#MainCategoryID").val()+"&cityid=" + $("#CityID").val()+ "&sdate=" + $sdate+"&edate=" + $edate);
+        window.open("@Url.Action("RetailerSaleAverage", "Reports")" + "?TID=" + $("#RegionalHeadID").val()  +"&cityid=" + $("#CityID").val()+ "&sdate=" + $sdate+"&edate=" + $edate);
         //}
     });
 

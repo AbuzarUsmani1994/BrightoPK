@@ -66,13 +66,7 @@
                             </div>
                         </div>
 
-                        <div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "" })
-                                @Html.ValidationMessageFor(model => model.RangeID)
-                            </div>
-                        </div>
+                       
 
                         <div class="control-group">
                             <label class="control-label">Select Head *</label>
@@ -392,10 +386,7 @@
                                     .val(key.SaleOfficerID).text(key.SaleOfficerName));
                         });
 
-                        if ($('#SaleOfficerID').val() != null) {
-                            $("#external-events").empty();
-                            LoadSOCities($('#SaleOfficerID').val());
-                        }
+                     
 
 
 
@@ -736,7 +727,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
                 //else {
-                window.open("@Url.Action("GetAllFollowUpRetailer", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&RangeID=" + $("#RangeID").val() + "&HeadID=" + $("#RegionalHeadID").val() + "&fosid=" + $("#SaleOfficerID").val());
+                window.open("@Url.Action("GetAllFollowUpRetailer", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() +  "&HeadID=" + $("#RegionalHeadID").val() + "&fosid=" + $("#SaleOfficerID").val());
                 //}
             }
         });

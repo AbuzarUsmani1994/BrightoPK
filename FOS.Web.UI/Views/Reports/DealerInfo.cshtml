@@ -63,7 +63,7 @@
         </div>*@
 
                         <div class="control-group">
-                            <label class="control-label">Select Head *</label>
+                            <label class="control-label">Select Region *</label>
                             <div class="controls">
                                 @Html.DropDownListFor(model => model.RegionalHeadID, new SelectList(Model.RegionalHead, "ID", "Name"), new { @class = "" })
                                 @Html.ValidationMessageFor(model => model.RegionalHeadID)
@@ -75,13 +75,7 @@
 
 
                         
-                        <div class="control-group">
-                            <label class="control-label">Range *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.MainCategoryID, new SelectList(Model.Regions, "ID", "MainCategoryName"), new { @class = "" })
-
-                            </div>
-                        </div>
+                   
 
                         <div class="control-group" style="border-top: 1px solid #e5e5e5;">
                             <div class="form-actions" style="padding-left: 130px; padding-right: 0px;">
@@ -695,7 +689,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
         //else {
-        window.open("@Url.Action("DealerInformation", "Reports")" + "?TID=" + $TID + "&RangeID=" + $("#MainCategoryID").val());
+        window.open("@Url.Action("DealerInformation", "Reports")" + "?TID=" + $TID);
         //}
     });
 

@@ -19,6 +19,5 @@ namespace FOS.DataLayer
         public string Brand { get; set; }
         public string ItemName { get; set; }
         public Nullable<decimal> TotalQuantity { get; set; }
-        public Nullable<decimal> Carton { get; set; }
     }
 }

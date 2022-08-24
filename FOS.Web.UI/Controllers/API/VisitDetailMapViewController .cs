@@ -16,22 +16,24 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int SOID)
+        public IHttpActionResult Get(int SOID,string Date)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
             {
-                DateTime dtFromTodayUtc = DateTime.UtcNow.AddHours(5);
+                DateTime dtFromTodayUtc = Convert.ToDateTime(Date);
 
                 DateTime dtFromToday = dtFromTodayUtc.Date;
                 DateTime dtToToday = dtFromToday.AddDays(1);
 
-                if (SOID > 0)
+                var RegionID = db.SOAttendances.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday).Select(x => x.RegionID).FirstOrDefault();
+
+                if (SOID > 0 && RegionID > 0)
                 {
                     object[] param = { SOID };
                     
                     
-                        var result = dbContext.Sp_MyVisitsMapViewForGPC1_3(SOID,dtFromToday,dtToToday).ToList();
+                        var result = dbContext.Sp_MyVisitsMapViewForGPC1_4(SOID,dtFromToday,dtToToday,RegionID).ToList();
                     
                     if (result != null && result.Count > 0)
                     {

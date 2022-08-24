@@ -337,7 +337,7 @@ namespace FOS.Setup
             FOSDataModel dbContext = new FOSDataModel();
             List<int> lastMonth = (from lm in dbContext.JobsDetails
 
-                                   where lm.JobDate >= dtFromToday && lm.JobDate <= dtToToday && lm.JobType == "Retailer Order" && lm.Status == true && lm.VisitPurpose == "Ordering"
+                                   where lm.JobDate >= dtFromToday && lm.JobDate <= dtToToday  && lm.Status == true && lm.VisitPurpose == "Ordering"
                                    select lm.JobID).ToList();
             return lastMonth;
         }

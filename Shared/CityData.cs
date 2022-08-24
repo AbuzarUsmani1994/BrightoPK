@@ -19,11 +19,19 @@ namespace FOS.Shared
 
         public string ShopName { get; set; }
 
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+        public int? Quota { get; set; }
+        public string NewOrOld { get; set; }
 
+        public string AreaName { get; set; }
+        public string ShopType { get; set; }
+        public string OwnerName { get; set; }
+        public string address { get; set; }
         [DisplayName("Region *")]
         [Required(ErrorMessage = "* Required")]
         public int RegionID { get; set; }
-
+        public string Phone { get; set; }
         [DisplayName("Region Name *")]
         public string RegionName { get; set; }
 
@@ -78,12 +86,14 @@ namespace FOS.Shared
     {
         public int OrderID { get; set; }
         public int ItemId { get; set; }
-        public int ItemID { get; set; }
+        
         public int Packing { get; set; }
         public decimal Rate { get; set; }
         public decimal? Value { get; set; }
         public decimal? Amount { get; set; }
         public Nullable<System.DateTime> Createddate { get; set; }
+        public Nullable<System.DateTime> DateFromInv { get; set; }
+        public Nullable<System.DateTime> DateToInv { get; set; }
         public int OrderedQuan { get; set; }
         public int MainCategoryID { get; set; }
         public int SubCategoryAID { get; set; }

@@ -14,6 +14,8 @@ namespace FOS.Shared
         public int TID { get; set; }
         public int ID { get; set; }
 
+        public int SOTypeID { get; set; }
+
         [DisplayName("Sale Officer *")]
         [Required(ErrorMessage = "* Required")]
         public string Name { get; set; }
@@ -63,6 +65,7 @@ namespace FOS.Shared
         public IEnumerable<RegionalHeadTypeData> RegionalHeadTypeData { get; set; }
         public IEnumerable<RegionalHeadTypeData> Ranges { get; set; }
         public IEnumerable<RegionalHeadTypeData> Designations { get; set; }
+        public IEnumerable<RegionalHeadTypeData> SOTypes { get; set; }
         public IEnumerable<RegionalHeadTypeData> SORegion { get; set; }
         public IEnumerable<CityData> Cities { get; set; }
 

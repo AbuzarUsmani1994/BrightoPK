@@ -252,7 +252,7 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    RetailerObj = dbContext.Dealers.OrderBy(u => u.Name).Where(u => u.IsActive == true && u.IsDeleted == false && u.RegionID==RegionID && u.RangeID==ID)
+                    RetailerObj = dbContext.Dealers.OrderBy(u => u.Name).Where(u => u.IsActive == true && u.IsDeleted == false && u.RegionID==RegionID)
                             .Select(
                                 u => new RetailerData
                                 {
@@ -842,7 +842,7 @@ namespace FOS.Setup
 
                 {
                     
-                        RetailerData = dbContext.Dealers.OrderByDescending(r => r.ID).Where( u=>u.IsDeleted == false && u.RangeID==UserID )
+                        RetailerData = dbContext.Dealers.OrderByDescending(r => r.ID).Where( u=>u.IsDeleted == false && u.RegionID==UserID )
                                 .ToList().Select(
                                     u => new RetailerData
                                     {
@@ -912,7 +912,7 @@ namespace FOS.Setup
                             retailerObj.NewArea = obj.AreaName;
                             retailerObj.CityID = obj.CityID;
                             retailerObj.AreaID = 1;
-                            retailerObj.RangeID = obj.RangeID;
+                            retailerObj.RangeID = 6;
                             retailerObj.DealerCode = obj.RetailerCode;
                             retailerObj.ShopName = obj.ShopName;
                             retailerObj.Location = obj.Location;
@@ -942,7 +942,7 @@ namespace FOS.Setup
                             retailerObj.Email = obj.Email;
                             retailerObj.NewArea = obj.AreaName;
                             retailerObj.SaleOfficerID = 1;
-                            retailerObj.RangeID = obj.RangeIDD;
+                            retailerObj.RangeID = 6;
                             retailerObj.CityID = obj.CityID;
                             retailerObj.AreaID = 1;
                             retailerObj.RegionID = obj.RegionID;
@@ -1028,115 +1028,137 @@ namespace FOS.Setup
 
 
 
-        public static string AddDistributorDispatchNote(RetailerData obj,string sdate , string edate)
-        {
-            DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(sdate) ? DateTime.Now.ToString() : sdate);
-            DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(edate) ? DateTime.Now.ToString() : edate);
-            DateTime final = end.AddDays(1);
-            string Res = "0";
+        //public static string AddDistributorDispatchNote(RetailerData obj,string sdate,int? DealerID)
+        //{
+            
+        //    DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(sdate) ? DateTime.Now.ToString() : sdate);
+        //    DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(sdate) ? DateTime.Now.ToString() : sdate);
+        //    DateTime final = end.AddDays(1);
+        //    string Res = "0";
 
-            try
-            {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    using (FOSDataModel dbContext = new FOSDataModel())
-                    {
-                        DispatchInVan van = new DispatchInVan();
+        //    try
+        //    {
+        //        using (TransactionScope scope = new TransactionScope())
+        //        {
+        //            using (FOSDataModel dbContext = new FOSDataModel())
+        //            {
+        //                DispatchInVan van = new DispatchInVan();
 
-                        if (obj.ID == 0)
-                        {
-                           
+        //                if (obj.ID == 0)
+        //                {
+        //                    DispatchInVanMaster master = new DispatchInVanMaster();
+        //                    var SOName = "";
+        //                    var DBOY = "";
 
-                                String[] strRegionId = obj.CityIDs.Split(',');
+        //                    String[] strRegionId = obj.CityIDs.Split(',');
 
-                                foreach (var regionid in strRegionId)
-                                {
-                                var retailers =  dbContext.DealerDSRDispatches.Where(r=>r.SOID.ToString() == regionid && r.FromDate >= start && r.ToDate <= final).Select(u => new Items
-                                {
-                                    ItemID = (int)u.ItemID,
-                                    ItemName = u.ItemName,
-                                    JobID = u.JobID,
-                                    DispatchQuantity = u.DispatchQuantity,
-                                    Createddate = u.Createddate
+        //                    foreach (var val in strRegionId)
+        //                    {
+        //                        SOName += "/" + dbContext.SaleOfficers.Where(x => x.ID.ToString() == val).Select(x => x.Name).FirstOrDefault();
+        //                    }
+        //                    DBOY = dbContext.DelieveryBoys.Where(x => x.ID == obj.RegionID).Select(x => x.Name).FirstOrDefault();
 
-                                }).ToList();
+        //                    master.DelieveryboyName = DBOY;
+        //                    master.SoNames = SOName;
+        //                    master.DealerID = DealerID;
+        //                    dbContext.DispatchInVanMasters.Add(master);
+        //                    dbContext.SaveChanges();
 
-                                foreach (var item in retailers)
-                                {
-                                    var data = dbContext.DispatchInVans.Where(x => x.JobID == item.JobID && x.ItemID == item.ItemID).ToList();
-                                    if (data.Count == 0)
-                                    {
-                                        van.SOID = Convert.ToInt32(regionid);
-                                        van.ItemID = item.ItemID;
-                                        van.ItemName = item.ItemName;
-                                        van.JobID = item.JobID;
-                                        //van.RetailerID = dbContext.JobsDetails.Where(x => x.JobID == item.JobID).Select(x => x.RetailerID).FirstOrDefault();
-                                        van.DispatchQuantityinVan = item.DispatchQuantity;
-                                        van.CreatedOn = true;
-                                        van.InvoicedDate = item.Createddate;
-                                        van.DelieveryboyID = obj.RegionID;
-                                        van.DispatchDate = DateTime.UtcNow.AddHours(5);
-                                        dbContext.DispatchInVans.Add(van);
+
+
+        //                    foreach (var regionid in strRegionId)
+        //                        {
+        //                        var retailers =  dbContext.DealerDSRDispatches.Where(r=>r.SOID.ToString() == regionid && r.FromDate >= start && r.ToDate <= final).Select(u => new Items
+        //                        {
+        //                            ItemID = (int)u.ItemID,
+        //                            ItemName = u.ItemName,
+        //                            JobID = u.JobID,
+        //                            DispatchQuantity = u.DispatchQuantity,
+        //                            Createddate = u.Createddate,
+        //                            DateFromInv=u.FromDate,
+        //                            DateToInv=u.ToDate
+
+        //                        }).ToList();
+
+        //                        foreach (var item in retailers)
+        //                        {
+        //                            var data = dbContext.DispatchInVans.Where(x => x.JobID == item.JobID && x.ItemID == item.ItemID).ToList();
+        //                            if (data.Count == 0)
+        //                            {
+        //                                van.SOID = Convert.ToInt32(regionid);
+        //                                van.ItemID = item.ItemID;
+        //                                van.ItemName = item.ItemName;
+        //                                van.JobID = item.JobID;
+        //                                //van.RetailerID = dbContext.JobsDetails.Where(x => x.JobID == item.JobID).Select(x => x.RetailerID).FirstOrDefault();
+        //                                van.DispatchQuantityinVan = item.DispatchQuantity;
+        //                                van.CreatedOn = true;
+        //                                van.InvoicedDate = item.Createddate;
+        //                                van.DelieveryboyID = obj.RegionID;
+        //                                van.DispatchDate = DateTime.UtcNow.AddHours(5);
+        //                                van.FromDateOnInvoiced = item.DateFromInv;
+        //                                van.ToDateOnInvoiced = item.DateToInv;
+        //                                van.DispatchInVanMasterID = master.ID;
+        //                                dbContext.DispatchInVans.Add(van);
                                      
 
-                                        var changeStatus = dbContext.JobsDetails.Where(x => x.JobID == item.JobID).FirstOrDefault();
-                                        if (changeStatus.Dispatchstatus == "Dispatched")
-                                        {
+        //                                var changeStatus = dbContext.JobsDetails.Where(x => x.JobID == item.JobID).FirstOrDefault();
+        //                                if (changeStatus.Dispatchstatus == "Dispatched")
+        //                                {
 
-                                        }
-                                        else
-                                        {
-                                            changeStatus.Dispatchstatus = "Dispatched";
+        //                                }
+        //                                else
+        //                                {
+        //                                    changeStatus.Dispatchstatus = "Dispatched";
                                             
-                                        }
-                                        dbContext.SaveChanges();
-                                    }
+        //                                }
+        //                                dbContext.SaveChanges();
+        //                            }
 
-                                }
+        //                        }
                              
 
 
-                            }
+        //                    }
 
                          
 
 
-                        }
+        //                }
 
 
-                        dbContext.SaveChanges();
-                        Res = "1";
-                        scope.Complete();
-                    }
-                }
-            }
-            catch (Exception exp)
-            {
-                Log.Instance.Error(exp, "Add Customer Failed");
-                if (exp.InnerException.InnerException.Message.Contains("CNIC"))
-                {
-                    // Res = 2 Is For Unique Constraint Error...
-                    Res = "3";
-                    return Res;
-                }
+        //                dbContext.SaveChanges();
+        //                Res = "1";
+        //                scope.Complete();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception exp)
+        //    {
+        //        Log.Instance.Error(exp, "Add Customer Failed");
+        //        if (exp.InnerException.InnerException.Message.Contains("CNIC"))
+        //        {
+        //            // Res = 2 Is For Unique Constraint Error...
+        //            Res = "3";
+        //            return Res;
+        //        }
 
-                if (exp.InnerException.InnerException.Message.Contains("AccountNo"))
-                {
-                    // Res = 2 Is For Unique Constraint Error...
-                    Res = "4";
-                    return Res;
-                }
+        //        if (exp.InnerException.InnerException.Message.Contains("AccountNo"))
+        //        {
+        //            // Res = 2 Is For Unique Constraint Error...
+        //            Res = "4";
+        //            return Res;
+        //        }
 
-                if (exp.InnerException.InnerException.Message.Contains("CardNo"))
-                {
-                    // Res = 2 Is For Unique Constraint Error...
-                    Res = "5";
-                    return Res;
-                }
-                Res = "0";
-            }
-            return Res;
-        }
+        //        if (exp.InnerException.InnerException.Message.Contains("CardNo"))
+        //        {
+        //            // Res = 2 Is For Unique Constraint Error...
+        //            Res = "5";
+        //            return Res;
+        //        }
+        //        Res = "0";
+        //    }
+        //    return Res;
+        //}
 
 
 

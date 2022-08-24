@@ -347,10 +347,10 @@ namespace FOS.Web.UI.Controllers
         {
             var userID = Convert.ToInt32(Session["UserID"]);
           
-            var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToDealer(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
            var regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
             List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(regId, true);
             var objSaleOff = SaleOfficerObj.FirstOrDefault();
@@ -358,12 +358,12 @@ namespace FOS.Web.UI.Controllers
             //List<DealerData> DealerObj = ManageDealer.GetDealerListBySaleOfficerID(objSaleOff.ID);
 
             var objRetailer = new RetailerData();
-            objRetailer.Range = ranges;
+            objRetailer.RegionsList = ranges;
             
             objRetailer.RegionalHead = regionalHeadData;
             objRetailer.SaleOfficerss = SaleOfficerObj;
             //objRetailer.Dealers = DealerObj;
-            objRetailer.Regions = FOS.Setup.ManageCity.GetRegionsListRelatedToUser(userID);
+            objRetailer.Regions = FOS.Setup.ManageCity.GetRegionList();
             objRetailer.Cities = FOS.Setup.ManageCity.GetCityList();
           //  objRetailer.Cities = FOS.Setup.ManageCity.GetCityList();
             objRetailer.Areas = FOS.Setup.ManageArea.GetAreaList();
@@ -579,7 +579,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
@@ -781,233 +781,235 @@ namespace FOS.Web.UI.Controllers
             return View(objRetailer);
         }
 
-        public ActionResult NewUpdateDistributorDispatches([Bind(Exclude = "TID,SaleOfficers,Dealers")] RetailerData newRetailer, string StartingDate1, string StartingDate2)
-        {
-            Boolean boolFlag = true;
-            ValidationResult results = new ValidationResult();
-            try
-            {
-                List<Items> Itemdata = new List<Items>();
-                Items cty;
-                DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate1) ? DateTime.Now.ToString() : StartingDate1);
-                DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate2) ? DateTime.Now.ToString() : StartingDate2);
-                DateTime final = end.AddDays(1);
-                string Res = "0";
+        //public ActionResult NewUpdateDistributorDispatches([Bind(Exclude = "TID,SaleOfficers,Dealers")] RetailerData newRetailer, string StartingDate1)
+        //{
+        //    Boolean boolFlag = true;
+        //    ValidationResult results = new ValidationResult();
+        //    try
+        //    {
+        //        List<Items> Itemdata = new List<Items>();
+        //        Items cty;
+        //        DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate1) ? DateTime.Now.ToString() : StartingDate1);
+        //        DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate1) ? DateTime.Now.ToString() : StartingDate1);
+        //        DateTime final = end.AddDays(1);
+        //        string Res = "0";
 
-                if (newRetailer != null)
-                {
-                    if (newRetailer.ID == 0)
-                    {
-                        RetailerValidator validator = new RetailerValidator();
-                        results = validator.Validate(newRetailer);
-                        boolFlag = results.IsValid;
-                    }
+        //        if (newRetailer != null)
+        //        {
+        //            if (newRetailer.ID == 0)
+        //            {
+        //                RetailerValidator validator = new RetailerValidator();
+        //                results = validator.Validate(newRetailer);
+        //                boolFlag = results.IsValid;
+        //            }
 
 
-                    if (boolFlag)
-                    {
-                        if (StartingDate1 == null || StartingDate2 == null)
-                        {
-                            Res = "2";
-                        }
+        //            if (boolFlag)
+        //            {
+        //                if (StartingDate1 == null)
+        //                {
+        //                    Res = "2";
+        //                }
 
-                        else
-                        {
+        //                else
+        //                {
+        //                    var userID = Convert.ToInt32(Session["UserID"]);
+        //                    var DealerID = db.Users.Where(x => x.ID == userID).Select(x => x.DealerRefNo).FirstOrDefault();
 
-                            Res = ManageDealer.AddDistributorDispatchNote(newRetailer, StartingDate1, StartingDate2);
+        //                    Res = ManageDealer.AddDistributorDispatchNote(newRetailer, StartingDate1,DealerID);
 
-                            if (Res == "1")
-                            {
-                                var DBOY = "";
-                                var SOName = "";
-                                String[] strRegionId = newRetailer.CityIDs.Split(',');
-                                string FilePathReturn = "";
-                                try
-                                {
-                                    foreach (var item in strRegionId)
-                                    {
-                                        SOName +="/"+ db.SaleOfficers.Where(x => x.ID.ToString() == item).Select(x=>x.Name).FirstOrDefault();
-                                        var ID = Convert.ToInt32(item);
-                                        var ReportData = db.Sp_GetDispatchDataForReport(ID, start, final).ToList();
-                                        foreach (var items in ReportData)
-                                        {
-                                            cty = new Items();
-                                            cty.ItemID = (int)items.ItemID;
-                                                cty.ItemName = items.itemName;
-                                                cty.Packing = (int)items.packing;
-                                                cty.DispatchQuantity = (int)items.Quantity;
-                                                cty.ItemPrice = items.price;
+        //                    if (Res == "1")
+        //                    {
+        //                        var DBOY = "";
+        //                        var SOName = "";
+        //                        String[] strRegionId = newRetailer.CityIDs.Split(',');
+        //                        string FilePathReturn = "";
+        //                        try
+        //                        {
+        //                            foreach (var item in strRegionId)
+        //                            {
+        //                                SOName +="/"+ db.SaleOfficers.Where(x => x.ID.ToString() == item).Select(x=>x.Name).FirstOrDefault();
+        //                                var ID = Convert.ToInt32(item);
+        //                                var ReportData = db.Sp_GetDispatchDataForReport(ID, start, final).ToList();
+        //                                foreach (var items in ReportData)
+        //                                {
+        //                                    cty = new Items();
+        //                                    cty.ItemID = (int)items.ItemID;
+        //                                        cty.ItemName = items.itemName;
+        //                                        cty.Packing = (int)items.packing;
+        //                                        cty.DispatchQuantity = (int)items.Quantity;
+        //                                        cty.ItemPrice = items.price;
                                                 
                                         
-                                            Itemdata.Add(cty);
-                                        }
+        //                                    Itemdata.Add(cty);
+        //                                }
 
 
-                                    }
-                                    var data = Itemdata.GroupBy(d => d.ItemID)
-                                                    .Select(
-                                                        g => new
-                                                        {
-                                                            Key = g.Key,
-                                                            Value = g.Sum(s => s.DispatchQuantity),
-                                                            Name = g.First().ItemName,
-                                                            ItemID = g.First().ItemID,
-                                                            Packing= g.First().Packing,
-                                                            Quantity = g.Sum(s => s.DispatchQuantity),
-                                                            Price = g.First().ItemPrice,
-                                                        });
-                                    DBOY = db.DelieveryBoys.Where(x => x.ID == newRetailer.RegionID).Select(x=>x.Name).FirstOrDefault();
-                                    // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
-                                    ReportViewer reportViewer = new ReportViewer();
-                                    //var DealerName = db.JobsDetails.Where(x => x.JobID == Orderid).Select(x => x.RetailerID).FirstOrDefault();
+        //                            }
+        //                            var data = Itemdata.GroupBy(d => d.ItemID)
+        //                                            .Select(
+        //                                                g => new
+        //                                                {
+        //                                                    Key = g.Key,
+        //                                                    Value = g.Sum(s => s.DispatchQuantity),
+        //                                                    Name = g.First().ItemName,
+        //                                                    ItemID = g.First().ItemID,
+        //                                                    Packing= g.First().Packing,
+        //                                                    Quantity = g.Sum(s => s.DispatchQuantity),
+        //                                                    Price = g.First().ItemPrice,
+        //                                                });
+        //                            DBOY = db.DelieveryBoys.Where(x => x.ID == newRetailer.RegionID).Select(x=>x.Name).FirstOrDefault();
+        //                            // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
+        //                            ReportViewer reportViewer = new ReportViewer();
+        //                            //var DealerName = db.JobsDetails.Where(x => x.JobID == Orderid).Select(x => x.RetailerID).FirstOrDefault();
 
-                                    //var ShopName = dbContext.Retailers.Where(x => x.ID == DealerName).FirstOrDefault();
+        //                            //var ShopName = dbContext.Retailers.Where(x => x.ID == DealerName).FirstOrDefault();
 
-                                    ReportParameter[] prm = new ReportParameter[4];
-
-
-                                    prm[0] = new ReportParameter("DBoy", DBOY);
-                                    prm[1] = new ReportParameter("SOName", SOName);
-                                    prm[2] = new ReportParameter("DateFrom", StartingDate1);
-                                    prm[3] = new ReportParameter("DateTo", StartingDate2);
-                                    reportViewer.ProcessingMode = ProcessingMode.Local;
-                                    reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DispatchForVan.rdlc");
-                                    reportViewer.LocalReport.EnableExternalImages = true;
-                                    ReportDataSource dt1 = new ReportDataSource("DataSet1", data);
-
-                                    reportViewer.LocalReport.SetParameters(prm);
-                                    reportViewer.LocalReport.DataSources.Clear();
-                                    reportViewer.LocalReport.DataSources.Add(dt1);
-                                    reportViewer.LocalReport.Refresh();
-                                    // PrintReport.PrintToPrinter(ReportViewer1);
-
-                                    Warning[] warnings;
-                                    string[] streamids;
-                                    string mimeType, encoding, filenameExtension;
-
-                                    byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                                    //File  
-                                    string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
-                                    string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
-
-                                    //create and set PdfReader  
-                                    PdfReader reader = new PdfReader(bytes);
-                                    FileStream output = new FileStream(FilePath, FileMode.Create);
-
-                                    string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
-
-                                    //create and set PdfStamper  
-                                    PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
-
-                                    if (Agent.Contains("Firefox"))
-                                        pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
-                                    else
-                                        pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
-
-                                    pdfStamper.FormFlattening = false;
-                                    pdfStamper.Close();
-                                    reader.Close();
-
-                                    //return file path  
-                                    FilePathReturn = @"TempFiles/" + FileName;
-
-                                }
-
-                                catch (Exception exp)
-                                {
-                                    Log.Instance.Error(exp, "Report Not Working");
-
-                                }
+        //                            ReportParameter[] prm = new ReportParameter[4];
 
 
-                                return Content(FilePathReturn);
-                            }
-                            else if (Res == "3")
-                            {
-                                return Content("3");
-                            }
-                            else if (Res == "4")
-                            {
-                                return Content("4");
-                            }
-                            else if (Res == "5")
-                            {
-                                return Content("5");
-                            }
-                            else
-                            {
-                                return Content("0");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        IList<ValidationFailure> failures = results.Errors;
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
-                        foreach (ValidationFailure failer in results.Errors)
-                        {
-                            sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
-                            Response.StatusCode = 422;
-                            return Json(new { errors = sb.ToString() });
-                        }
-                    }
+        //                            prm[0] = new ReportParameter("DBoy", DBOY);
+        //                            prm[1] = new ReportParameter("SOName", SOName);
+        //                            prm[2] = new ReportParameter("DateFrom", StartingDate1);
+        //                            prm[3] = new ReportParameter("DateTo", StartingDate1);
+        //                            reportViewer.ProcessingMode = ProcessingMode.Local;
+        //                            reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DispatchForVan.rdlc");
+        //                            reportViewer.LocalReport.EnableExternalImages = true;
+        //                            ReportDataSource dt1 = new ReportDataSource("DataSet1", data);
 
-                }
-                return Content("0");
-            }
-            catch (Exception exp)
-            {
-                return Content("Exception : " + exp.Message);
-            }
-        }
+        //                            reportViewer.LocalReport.SetParameters(prm);
+        //                            reportViewer.LocalReport.DataSources.Clear();
+        //                            reportViewer.LocalReport.DataSources.Add(dt1);
+        //                            reportViewer.LocalReport.Refresh();
+        //                            // PrintReport.PrintToPrinter(ReportViewer1);
 
+        //                            Warning[] warnings;
+        //                            string[] streamids;
+        //                            string mimeType, encoding, filenameExtension;
 
-        public JsonResult DispatchInVanDataHandler(DTParameters param)
-        {
-            try
-            {
-                var dtsource = new List<JobsDetailData>();
+        //                            byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
 
+        //                            //File  
+        //                            string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
+        //                            string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
 
-                dtsource = ManageJobs.GetDispatchForvanForGrid(param.StartingDate1, param.StartingDate2, param.BoyID);
+        //                            //create and set PdfReader  
+        //                            PdfReader reader = new PdfReader(bytes);
+        //                            FileStream output = new FileStream(FilePath, FileMode.Create);
 
+        //                            string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
 
-                List<String> columnSearch = new List<String>();
+        //                            //create and set PdfStamper  
+        //                            PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
 
-                foreach (var col in param.Columns)
-                {
-                    columnSearch.Add(col.Search.Value);
-                }
+        //                            if (Agent.Contains("Firefox"))
+        //                                pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
+        //                            else
+        //                                pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
 
-                List<JobsDetailData> data = ManageJobs.GetResult12(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch/*param.SaleOfficer,param.StartingDate1,param.StartingDate2*/);
-                foreach (var itm in data)
-                {
-                    if (itm.Dispatchdate.HasValue)
-                    {
+        //                            pdfStamper.FormFlattening = false;
+        //                            pdfStamper.Close();
+        //                            reader.Close();
 
-                        itm.VisitDateFormatted = Convert.ToDateTime(itm.Dispatchdate).ToString("dd-MM-yyyy");
-                        itm.InvoicedateFormatted = Convert.ToDateTime(itm.VisitDate).ToString("dd-MM-yyyy");
-                    }
+        //                            //return file path  
+        //                            FilePathReturn = @"TempFiles/" + FileName;
+
+        //                        }
+
+        //                        catch (Exception exp)
+        //                        {
+        //                            Log.Instance.Error(exp, "Report Not Working");
+
+        //                        }
 
 
-                }
-                int count = ManageJobs.Count12(param.Search.Value, dtsource, columnSearch /*param.SaleOfficer, param.StartingDate1, param.StartingDate2*/);
-                DTResult<JobsDetailData> result = new DTResult<JobsDetailData>
-                {
-                    draw = param.Draw,
-                    data = data,
-                    recordsFiltered = count,
-                    recordsTotal = count
-                };
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { error = ex.Message });
-            }
-        }
+        //                        return Content(FilePathReturn);
+        //                    }
+        //                    else if (Res == "3")
+        //                    {
+        //                        return Content("3");
+        //                    }
+        //                    else if (Res == "4")
+        //                    {
+        //                        return Content("4");
+        //                    }
+        //                    else if (Res == "5")
+        //                    {
+        //                        return Content("5");
+        //                    }
+        //                    else
+        //                    {
+        //                        return Content("0");
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                IList<ValidationFailure> failures = results.Errors;
+        //                StringBuilder sb = new StringBuilder();
+        //                sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+        //                foreach (ValidationFailure failer in results.Errors)
+        //                {
+        //                    sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+        //                    Response.StatusCode = 422;
+        //                    return Json(new { errors = sb.ToString() });
+        //                }
+        //            }
+
+        //        }
+        //        return Content("0");
+        //    }
+        //    catch (Exception exp)
+        //    {
+        //        return Content("Exception : " + exp.Message);
+        //    }
+        //}
+
+
+        //public JsonResult DispatchInVanDataHandler(DTParameters param)
+        //{
+        //    try
+        //    {
+        //        var dtsource = new List<JobsDetailData>();
+
+
+        //        dtsource = ManageJobs.GetDispatchForvanForGrid(param.StartingDate1, param.StartingDate2, param.BoyID);
+
+
+        //        List<String> columnSearch = new List<String>();
+
+        //        foreach (var col in param.Columns)
+        //        {
+        //            columnSearch.Add(col.Search.Value);
+        //        }
+
+        //        List<JobsDetailData> data = ManageJobs.GetResult12(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch/*param.SaleOfficer,param.StartingDate1,param.StartingDate2*/);
+        //        foreach (var itm in data)
+        //        {
+        //            if (itm.Dispatchdate.HasValue)
+        //            {
+
+        //                itm.VisitDateFormatted = Convert.ToDateTime(itm.Dispatchdate).ToString("dd-MM-yyyy");
+        //                itm.InvoicedateFormatted = Convert.ToDateTime(itm.VisitDate).ToString("dd-MM-yyyy");
+        //            }
+
+
+        //        }
+        //        int count = ManageJobs.Count12(param.Search.Value, dtsource, columnSearch /*param.SaleOfficer, param.StartingDate1, param.StartingDate2*/);
+        //        DTResult<JobsDetailData> result = new DTResult<JobsDetailData>
+        //        {
+        //            draw = param.Draw,
+        //            data = data,
+        //            recordsFiltered = count,
+        //            recordsTotal = count
+        //        };
+        //        return Json(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { error = ex.Message });
+        //    }
+        //}
 
 
         #endregion
@@ -1023,7 +1025,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
@@ -1132,7 +1134,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
@@ -1251,7 +1253,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             int regId = 0;
             if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
@@ -1393,150 +1395,152 @@ namespace FOS.Web.UI.Controllers
 
 
 
-        public JsonResult ReprintInvoice(int OrderID)
-        {
-            decimal Scheme = 0;
-            var schemeData = new TblDetailScheme();
-            var userID = Convert.ToInt32(Session["UserID"]);
-            var DealerID = db.Users.Where(x => x.ID == userID).Select(x => x.DealerRefNo).FirstOrDefault();
-            var Orderid = 0;
-            var ParentData = db.DealerDispatchCalculations.Where(x => x.OrderID == OrderID).FirstOrDefault();
-            var ChildData = db.DealerDSRDispatches.Where(x => x.JobID == OrderID).ToList();
-            var rangeid = db.Dealers.Where(x => x.ID == DealerID && x.IsActive == true).FirstOrDefault();
-            var masterID = db.TblMasterSchemes.Where(x => x.rangeID == rangeid.RangeID && x.isActive == true).FirstOrDefault();
-            List<Items> Itemdata = new List<Items>();
-            Items cty;
-            string FilePathReturn = "";
+        //public JsonResult ReprintInvoice(int OrderID)
+        //{
+        //    decimal Scheme = 0;
+        //    var schemeData = new TblDetailScheme();
+        //    var userID = Convert.ToInt32(Session["UserID"]);
+        //    var DealerID = db.Users.Where(x => x.ID == userID).Select(x => x.DealerRefNo).FirstOrDefault();
+        //    var Orderid = 0;
+        //    var ParentData = db.DealerDispatchCalculations.Where(x => x.OrderID == OrderID).FirstOrDefault();
+        //    var ChildData = db.DealerDSRDispatches.Where(x => x.JobID == OrderID).ToList();
+        //    var rangeid = db.Dealers.Where(x => x.ID == DealerID && x.IsActive == true).FirstOrDefault();
+        //    var masterID = db.TblMasterSchemes.Where(x => x.rangeID == rangeid.RangeID && x.isActive == true).FirstOrDefault();
+        //    List<Items> Itemdata = new List<Items>();
+        //    Items cty;
+        //    string FilePathReturn = "";
 
-            foreach (var items in ChildData)
-            {
-                Orderid = (int)items.JobID;
-                cty = new Items();
-                cty.ItemID = (int) items.ItemID;
-                var data = db.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
-                if (masterID != null)
-                {
-                    schemeData = db.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
-                }
-                cty.ItemName = items.ItemName;
-                cty.OrderID =(int) items.JobID;
-                cty.Packing = data.Packing;
-                if (schemeData.SchemePrice != null)
-                {
-                    cty.Slab = "RS" + schemeData.SchemePrice + "/" + data.Packing;
+        //    foreach (var items in ChildData)
+        //    {
+        //        Orderid = (int)items.JobID;
+        //        cty = new Items();
+        //        cty.ItemID = (int) items.ItemID;
+        //        var data = db.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
+        //        if (masterID != null)
+        //        {
+        //            schemeData = db.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
+        //        }
+        //        cty.ItemName = items.ItemName;
+        //        cty.OrderID =(int) items.JobID;
+        //        cty.Packing = data.Packing;
+        //        if (schemeData.SchemePrice != null)
+        //        {
+        //            cty.Slab = "RS" + schemeData.SchemePrice + "/" + data.Packing;
 
-                }
-                else
-                {
-                    cty.Slab = "0";
-                    cty.SchemeValue = 0;
-                }
-                cty.Rate = data.Price;
+        //        }
+        //        else
+        //        {
+        //            cty.Slab = "0";
+        //            cty.SchemeValue = 0;
+        //        }
+        //        cty.Rate = data.Price;
 
 
-                cty.OrderedQuan = (int) items.OrderQuantity;
+        //        cty.OrderedQuan = (int) items.OrderQuantity;
                
-                    cty.DispatchQuantity = items.DispatchQuantity;
-                    cty.Value = data.Price * items.OrderQuantity;
-                cty.Amount = data.Price * items.DispatchQuantity;
-                if (schemeData.SchemePrice != 0)
-                    {
-                        double val = Convert.ToDouble( items.OrderQuantity / data.Packing);
-                        int rounded = (int)Math.Round(val);
-                        cty.SchemeValue = rounded * schemeData.SchemePrice;
-                        Scheme += Convert.ToDecimal(cty.SchemeValue);
-                    }
-                    else
-                    {
-                        cty.Slab = "0";
-                        cty.SchemeValue = 0;
+        //            cty.DispatchQuantity = items.DispatchQuantity;
+        //            cty.Value = data.Price * items.OrderQuantity;
+        //        cty.Amount = data.Price * items.DispatchQuantity;
+        //        if (schemeData.SchemePrice != 0)
+        //            {
+        //                double val = Convert.ToDouble( items.OrderQuantity / data.Packing);
+        //                int rounded = (int)Math.Round(val);
+        //                cty.SchemeValue = rounded * schemeData.SchemePrice;
+        //                Scheme += Convert.ToDecimal(cty.SchemeValue);
+        //            }
+        //            else
+        //            {
+        //                cty.Slab = "0";
+        //                cty.SchemeValue = 0;
 
-                    }
+        //            }
                
               
 
-                cty.Createddate = DateTime.UtcNow.AddHours(5);
-                Itemdata.Add(cty);
-            }
+        //        cty.Createddate = DateTime.UtcNow.AddHours(5);
+        //        Itemdata.Add(cty);
+        //    }
 
-            try
-            {
-                // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
-                ReportViewer reportViewer = new ReportViewer();
-                var DealerName = db.JobsDetails.Where(x => x.JobID == Orderid).FirstOrDefault();
+        //    try
+        //    {
+        //        // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
+        //        ReportViewer reportViewer = new ReportViewer();
+        //        var DealerName = db.JobsDetails.Where(x => x.JobID == Orderid).FirstOrDefault();
 
-                var ShopName = db.Retailers.Where(x => x.ID == DealerName.RetailerID).FirstOrDefault();
-                var SOName = db.SaleOfficers.Where(x => x.ID == DealerName.SalesOficerID).Select(x => x.Name).FirstOrDefault();
+        //        var ShopName = db.Retailers.Where(x => x.ID == DealerName.RetailerID).FirstOrDefault();
+        //        var SOName = db.SaleOfficers.Where(x => x.ID == DealerName.SalesOficerID).Select(x => x.Name).FirstOrDefault();
 
-                ReportParameter[] prm = new ReportParameter[12];
+        //        ReportParameter[] prm = new ReportParameter[12];
 
 
-                prm[0] = new ReportParameter("DealerName", rangeid.ShopName + "/" + rangeid.DealerCode);
-                prm[1] = new ReportParameter("SOName", SOName);
-                prm[2] = new ReportParameter("ShopName", ShopName.ShopName);
-                prm[3] = new ReportParameter("GrossAmount", ParentData.GrossAmount.ToString());
-                prm[4] = new ReportParameter("Display", ParentData.Display.ToString());
-                prm[5] = new ReportParameter("Balance1", ParentData.Balanceamount1.ToString());
-                prm[6] = new ReportParameter("Scheme", ParentData.Scheme.ToString());
-                prm[7] = new ReportParameter("Balance2", ParentData.Balanceamount2.ToString());
-                prm[8] = new ReportParameter("Discount", ParentData.WSDiscount.ToString());
-                prm[9] = new ReportParameter("NetAmount", ParentData.NetAmount.ToString());
-                prm[10] = new ReportParameter("Address", ShopName.Address);
-                prm[11] = new ReportParameter("BillNo", ParentData.BillNo);
-                reportViewer.ProcessingMode = ProcessingMode.Local;
-                reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DealerDSR.rdlc");
-                reportViewer.LocalReport.EnableExternalImages = true;
-                ReportDataSource dt1 = new ReportDataSource("DataSet1", Itemdata);
+        //        prm[0] = new ReportParameter("DealerName", rangeid.ShopName + "/" + rangeid.DealerCode);
+        //        prm[1] = new ReportParameter("SOName", SOName);
+        //        prm[2] = new ReportParameter("ShopName", ShopName.ShopName);
+        //        prm[3] = new ReportParameter("GrossAmount", ParentData.GrossAmount.ToString());
+        //        prm[4] = new ReportParameter("Display", ParentData.Display.ToString());
+        //        prm[5] = new ReportParameter("Balance1", ParentData.Balanceamount1.ToString());
+        //        prm[6] = new ReportParameter("Scheme", ParentData.Scheme.ToString());
+        //        prm[7] = new ReportParameter("Balance2", ParentData.Balanceamount2.ToString());
+        //        prm[8] = new ReportParameter("Discount", ParentData.WSDiscount.ToString());
+        //        prm[9] = new ReportParameter("NetAmount", ParentData.NetAmount.ToString());
+        //        prm[10] = new ReportParameter("Address", ShopName.Address);
+        //        prm[11] = new ReportParameter("BillNo", ParentData.BillNo);
+        //        reportViewer.ProcessingMode = ProcessingMode.Local;
+        //        reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DealerDSR.rdlc");
+        //        reportViewer.LocalReport.EnableExternalImages = true;
+        //        ReportDataSource dt1 = new ReportDataSource("DataSet1", Itemdata);
 
-                reportViewer.LocalReport.SetParameters(prm);
-                reportViewer.LocalReport.DataSources.Clear();
-                reportViewer.LocalReport.DataSources.Add(dt1);
-                reportViewer.LocalReport.Refresh();
-                // PrintReport.PrintToPrinter(ReportViewer1);
+        //        reportViewer.LocalReport.SetParameters(prm);
+        //        reportViewer.LocalReport.DataSources.Clear();
+        //        reportViewer.LocalReport.DataSources.Add(dt1);
+        //        reportViewer.LocalReport.Refresh();
+        //        // PrintReport.PrintToPrinter(ReportViewer1);
 
-                Warning[] warnings;
-                string[] streamids;
-                string mimeType, encoding, filenameExtension;
+        //        Warning[] warnings;
+        //        string[] streamids;
+        //        string mimeType, encoding, filenameExtension;
 
-                byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+        //        byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
 
-                //File  
-                string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
-                string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
+        //        //File  
+        //        string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
+        //        string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
 
-                //create and set PdfReader  
-                PdfReader reader = new PdfReader(bytes);
-                FileStream output = new FileStream(FilePath, FileMode.Create);
+        //        //create and set PdfReader  
+        //        PdfReader reader = new PdfReader(bytes);
+        //        FileStream output = new FileStream(FilePath, FileMode.Create);
 
-                string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
+        //        string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
 
-                //create and set PdfStamper  
-                PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
+        //        //create and set PdfStamper  
+        //        PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
 
-                if (Agent.Contains("Firefox"))
-                    pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
-                else
-                    pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
+        //        if (Agent.Contains("Firefox"))
+        //            pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
+        //        else
+        //            pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
 
-                pdfStamper.FormFlattening = false;
-                pdfStamper.Close();
-                reader.Close();
+        //        pdfStamper.FormFlattening = false;
+        //        pdfStamper.Close();
+        //        reader.Close();
 
-                //return file path  
-                FilePathReturn = @"TempFiles/" + FileName;
+        //        //return file path  
+        //        FilePathReturn = @"TempFiles/" + FileName;
 
-            }
+        //    }
 
-            catch (Exception exp)
-            {
-                Log.Instance.Error(exp, "Report Not Working");
+        //    catch (Exception exp)
+        //    {
+        //        Log.Instance.Error(exp, "Report Not Working");
 
-            }
+        //    }
 
-            return Json(FilePathReturn);
-        }
+        //    return Json(FilePathReturn);
+        //}
 
         #endregion DealerDSR
+
+     
 
     }
 }

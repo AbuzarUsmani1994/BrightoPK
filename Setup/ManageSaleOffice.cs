@@ -594,11 +594,12 @@ namespace FOS.Setup
                         saleofficerObj.Password = obj.Password;
                         saleofficerObj.RegionalHeadID = obj.HiddenRegionalHeadID;
                         saleofficerObj.CityID = 1;
-                        saleofficerObj.RangeID = obj.RangeID;
+                        saleofficerObj.RangeID = 6;
                         saleofficerObj.Phone1 = obj.Phone1 == "" ? null : obj.Phone1;
                         saleofficerObj.Phone2 = obj.Phone2 == "" ? null : obj.Phone2;
                         saleofficerObj.IsActive = true;
                         saleofficerObj.IsDeleted = false;
+                        saleofficerObj.SORoleID = obj.SOTypeID;
                         saleofficerObj.DesignationID = obj.DesignationID;
                         saleofficerObj.RegionID = obj.RegionID;
                         saleofficerObj.CreatedDate = DateTime.UtcNow.AddHours(5);
@@ -617,9 +618,10 @@ namespace FOS.Setup
                         saleofficerObj.Name = obj.Name;
                         saleofficerObj.UserName = obj.UserName;
                         saleofficerObj.Password = obj.Password;
-                        saleofficerObj.RangeID = obj.RangeID;
+                        saleofficerObj.RangeID = 6;
                         saleofficerObj.RegionalHeadID = obj.HiddenRegionalHeadID;
                         saleofficerObj.CityID = 1;
+                        saleofficerObj.SORoleID = obj.SOTypeID;
                         saleofficerObj.IsActive = obj.IsActive;
                         saleofficerObj.DesignationID = obj.DesignationID;
                         saleofficerObj.RegionID = obj.RegionID;

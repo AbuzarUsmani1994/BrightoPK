@@ -44,7 +44,9 @@ namespace FOS.Shared
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public string ElapseTime { get; set; }
+        public string CityName { get; set; }
         public int? totalVisits { get; set; }
+        public decimal? totalSale { get; set; }
         public int ProductiveShops { get; set; }
         public int NonProductive { get; set; }
         public decimal ProductivePer { get; set; }

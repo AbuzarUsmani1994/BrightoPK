@@ -94,6 +94,9 @@ namespace FOS.DataLayer
         public Nullable<int> RangeBDealer { get; set; }
         public Nullable<int> RangeCDealer { get; set; }
         public Nullable<int> RangeID { get; set; }
+        public string Shoptype { get; set; }
+        public string NewOrOld { get; set; }
+        public Nullable<int> Quota { get; set; }
     
         public virtual Area Area { get; set; }
         public virtual City City { get; set; }

@@ -13,8 +13,12 @@ namespace FOS.DataLayer
     
     public partial class Sp_MyOrderListDetail_Result
     {
-        public int JobID { get; set; }
         public string ItemName { get; set; }
-        public Nullable<decimal> Quantity { get; set; }
+        public Nullable<System.DateTime> VisitDate { get; set; }
+        public Nullable<int> Carton { get; set; }
+        public Nullable<int> Danda { get; set; }
+        public string OrderQuantity { get; set; }
+        public string StockQuantity { get; set; }
+        public Nullable<System.DateTime> lastvisitdate { get; set; }
     }
 }

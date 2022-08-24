@@ -25,6 +25,9 @@ namespace FOS.DataLayer
         public Nullable<System.DateTime> InvoicedDate { get; set; }
         public Nullable<System.DateTime> DispatchDate { get; set; }
         public Nullable<int> DelieveryboyID { get; set; }
+        public Nullable<System.DateTime> FromDateOnInvoiced { get; set; }
+        public Nullable<System.DateTime> ToDateOnInvoiced { get; set; }
+        public Nullable<int> DispatchInVanMasterID { get; set; }
     
         public virtual Item Item { get; set; }
         public virtual Retailer Retailer { get; set; }

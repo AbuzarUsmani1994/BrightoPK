@@ -22,11 +22,10 @@ namespace FOS.Web.UI.Controllers
         {
             // Load Region Data For City Records ...
             var objCity = new MainCategories();
-           // List<Shared.MainCategory> region = new List<Shared.MainCategory>();
-            //int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
-           objCity.Regions = FOS.Setup.ManageRegion.GetMainCategory();
+      
+          // objCity.Regions = FOS.Setup.ManageRegion.GetMainCategory();
 
-            return View(objCity);
+            return View();
         }
         public ActionResult AddUpdateMainCategory([Bind(Exclude = "TID")] MainCategories newCity)
         {
@@ -289,9 +288,8 @@ namespace FOS.Web.UI.Controllers
            // return View(objSubCat);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddUpdateItems([Bind(Exclude = "TID")] Items newData)
+
+        public ActionResult AddUpdateItemsss([Bind(Exclude = "TID")] Items newData)
         {
             Boolean boolFlag = true;
             ValidationResult results = new ValidationResult();

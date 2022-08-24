@@ -5194,6 +5194,10 @@ namespace FOS.Web.UI.DataSets {
             
             private global::System.Data.DataColumn columnElapseTime;
             
+            private global::System.Data.DataColumn columnCityName;
+            
+            private global::System.Data.DataColumn columntotalSale;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DailyDataTable() {
@@ -5293,6 +5297,22 @@ namespace FOS.Web.UI.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn CityNameColumn {
+                get {
+                    return this.columnCityName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn totalSaleColumn {
+                get {
+                    return this.columntotalSale;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -5328,7 +5348,7 @@ namespace FOS.Web.UI.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public DailyRow AddDailyRow(string SoName, string totalVisits, string ProductiveShops, string totallines, string Linesperbill, string StartDate, string EndDate, string ElapseTime) {
+            public DailyRow AddDailyRow(string SoName, string totalVisits, string ProductiveShops, string totallines, string Linesperbill, string StartDate, string EndDate, string ElapseTime, string CityName, string totalSale) {
                 DailyRow rowDailyRow = ((DailyRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         SoName,
@@ -5338,7 +5358,9 @@ namespace FOS.Web.UI.DataSets {
                         Linesperbill,
                         StartDate,
                         EndDate,
-                        ElapseTime};
+                        ElapseTime,
+                        CityName,
+                        totalSale};
                 rowDailyRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDailyRow);
                 return rowDailyRow;
@@ -5369,6 +5391,8 @@ namespace FOS.Web.UI.DataSets {
                 this.columnStartDate = base.Columns["StartDate"];
                 this.columnEndDate = base.Columns["EndDate"];
                 this.columnElapseTime = base.Columns["ElapseTime"];
+                this.columnCityName = base.Columns["CityName"];
+                this.columntotalSale = base.Columns["totalSale"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5390,6 +5414,10 @@ namespace FOS.Web.UI.DataSets {
                 base.Columns.Add(this.columnEndDate);
                 this.columnElapseTime = new global::System.Data.DataColumn("ElapseTime", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnElapseTime);
+                this.columnCityName = new global::System.Data.DataColumn("CityName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCityName);
+                this.columntotalSale = new global::System.Data.DataColumn("totalSale", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columntotalSale);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9752,6 +9780,38 @@ namespace FOS.Web.UI.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string CityName {
+                get {
+                    try {
+                        return ((string)(this[this.tableDaily.CityNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CityName\' in table \'Daily\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDaily.CityNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string totalSale {
+                get {
+                    try {
+                        return ((string)(this[this.tableDaily.totalSaleColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'totalSale\' in table \'Daily\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDaily.totalSaleColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsSoNameNull() {
                 return this.IsNull(this.tableDaily.SoNameColumn);
             }
@@ -9844,6 +9904,30 @@ namespace FOS.Web.UI.DataSets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetElapseTimeNull() {
                 this[this.tableDaily.ElapseTimeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsCityNameNull() {
+                return this.IsNull(this.tableDaily.CityNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetCityNameNull() {
+                this[this.tableDaily.CityNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IstotalSaleNull() {
+                return this.IsNull(this.tableDaily.totalSaleColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SettotalSaleNull() {
+                this[this.tableDaily.totalSaleColumn] = global::System.Convert.DBNull;
             }
         }
         

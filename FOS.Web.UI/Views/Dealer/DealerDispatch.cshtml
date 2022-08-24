@@ -44,7 +44,7 @@
             <div id="divPDF">
                 <div id="printerDiv"><iframe id="frmPDF"></iframe></div>
             </div>
-            <div class="widget-body" style="">
+            <div class="widget-body" style="height:400px">
 
                 @using (Ajax.BeginForm("NewUpdateDistributorDispatches", "Dealer", new AjaxOptions { OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @class = "form-horizontal form-label-left", @style = "margin-top: -16px;" }))
                 {
@@ -64,18 +64,13 @@
                             <div class="span3" style="margin-top: 0px;">
 
                                 <div class="control-group" style="margin-bottom: 14px;">
-                                    <label class="control-label">Date From *</label>
+                                    <label class="control-label">Report Date *</label>
                                     <div class="controls">
                                         <input class="text-box single-line" id="StartingDate1" name="StartingDate1" style="height: 22px; width: 202px; margin-bottom: 0px; margin-left:0px;">
                                     </div>
                                 </div>
 
-                                <div class="control-group" style="margin-bottom: 14px;">
-                                    <label class="control-label">Date To *</label>
-                                    <div class="controls">
-                                        <input class="text-box single-line" id="StartingDate2" name="StartingDate2" style="height: 22px; width: 202px; margin-bottom: 0px; margin-left:0px;">
-                                    </div>
-                                </div>
+                             
 
                                 <div class="control-group" style="margin-bottom: 14px">
                                     <label class="control-label">Select Boy *</label>
@@ -123,10 +118,6 @@
 
                 }
 
-            
-                        <button type="submit" id="btnNew1" class="btn btn-primary" style="margin-right: 8px; width: 100px;">
-                            <span id="create">DataForGrid</span>
-                        </button>
 
                         @* <button type="button" id="btnRefresh" class="btn btn-info"><i class="icon-ban-circle icon-white" style="padding-right: 8px"></i>Reset</button>*@
               
@@ -134,7 +125,7 @@
 
             </div>
 
-            <table class="table table-striped table-hover table-bordered" style="width: 100%;" id="datatab">
+            @*<table class="table table-striped table-hover table-bordered" style="width: 100%;" id="datatab">
                 <thead>
                     <tr>
                         <th>
@@ -169,7 +160,7 @@
                     </tr>
                 </thead>
                 <tbody></tbody>
-            </table>
+            </table>*@
         </div>
 
 

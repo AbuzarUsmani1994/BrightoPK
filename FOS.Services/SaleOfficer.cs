@@ -33,6 +33,7 @@ namespace FOS.DataLayer
             this.KPIReports = new HashSet<KPIReport>();
             this.SOAttendances = new HashSet<SOAttendance>();
             this.DispatchInVans = new HashSet<DispatchInVan>();
+            this.Tbl_RSMSummary = new HashSet<Tbl_RSMSummary>();
         }
     
         public int TID { get; set; }
@@ -55,6 +56,7 @@ namespace FOS.DataLayer
         public Nullable<System.DateTime> LeaveOn { get; set; }
         public Nullable<System.DateTime> JoiningDate { get; set; }
         public string SOType { get; set; }
+        public Nullable<int> SORoleID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccessLog> AccessLogs { get; set; }
@@ -90,5 +92,7 @@ namespace FOS.DataLayer
         public virtual ICollection<SOAttendance> SOAttendances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DispatchInVan> DispatchInVans { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_RSMSummary> Tbl_RSMSummary { get; set; }
     }
 }

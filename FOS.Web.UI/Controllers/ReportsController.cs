@@ -305,7 +305,7 @@ namespace FOS.Web.UI.Controllers
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -491,7 +491,7 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void RetailerSaleAverage(int TID, int RangeID, int cityid, DateTime sdate, DateTime edate)
+        public void RetailerSaleAverage(int TID, int cityid, DateTime sdate, DateTime edate)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -508,7 +508,7 @@ namespace FOS.Web.UI.Controllers
 
 
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_RetailerAvgSale_Result> result = objRetailers.AvgSale(TID, RangeID, cityid, sdate, edate);
+                List<Sp_RetailerAvgSale_Result> result = objRetailers.AvgSale(TID, 6, cityid, sdate, edate);
 
                 // Example data
                 StringWriter sw = new StringWriter();
@@ -523,52 +523,7 @@ namespace FOS.Web.UI.Controllers
 
 
 
-                if (RangeID == 6)
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
-
-
-                        // retailer.Name,
-                        retailer.shopname,
-                        retailer.Region,
-                        retailer.CityName,
-                        retailer.SOName,
-                        retailer.Orders,
-                        retailer.rangeADealer,
-                        retailer.value,
-                        retailer.TotalAvgValue
-
-
-                        ));
-                    }
-                }
-
-                else if (RangeID == 7)
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
-
-
-                        // retailer.Name,
-                        retailer.shopname,
-                        retailer.Region,
-                        retailer.CityName,
-                         retailer.SOName,
-                        retailer.Orders,
-                        retailer.rangeBDealer,
-                        retailer.value,
-                        retailer.TotalAvgValue
-
-
-
-                        ));
-                    }
-                }
-                else
-                {
+               
                     foreach (var retailer in result)
                     {
                         sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
@@ -580,7 +535,7 @@ namespace FOS.Web.UI.Controllers
                         retailer.CityName,
                         retailer.SOName,
                         retailer.Orders,
-                        retailer.rangeCdealer,
+                        retailer.rangeADealer,
                         retailer.value,
                         retailer.TotalAvgValue
 
@@ -589,7 +544,7 @@ namespace FOS.Web.UI.Controllers
                         ));
                     }
 
-                }
+               
 
 
                 Response.Write(sw.ToString());
@@ -603,6 +558,151 @@ namespace FOS.Web.UI.Controllers
 
                 hst.ReportName = "Retailer Average Sale";
                 hst.ReportType = "AVG Sale";
+                hst.CreatedOn = DateTime.UtcNow.AddHours(5);
+                db.ManagersLoginHsts.Add(hst);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Report Not Working");
+
+            }
+
+        }
+
+        public ActionResult RetailerSummery()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionaList(userID);
+            if (userID == 1)
+            {
+                regionalHeadData.Insert(0, new RegionalHeadData
+                {
+                    ID = 0,
+                    Name = "All"
+                });
+            }
+            int regId = 0;
+            if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
+            {
+                regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            }
+            else
+            {
+                regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            }
+            //List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(0);
+            List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(regId, true);
+
+            SaleOfficerObj.Insert(0, new SaleOfficer
+            {
+                ID = 0,
+                Name = "All"
+            });
+
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+
+            if (SaleOfficerObj == null)
+            {
+                return View();
+            }
+
+            else
+            {
+                RetailerObj = FOS.Setup.ManageRetailer.GetAllRetailerSaleOfficerList(SaleOfficerObj.Select(s => s.ID).FirstOrDefault());
+                ViewData["RetailerObj"] = RetailerObj;
+            }
+
+
+            List<MainCategories> CityObj = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            //List<VisitPlanData> visitData = new List<VisitPlanData>();
+            //visitData = FOS.Setup.ManageJobs.GetAllVisitList();
+
+            var objJob = new JobsData();
+
+            objJob.RegionalHeadTypeData = FOS.Setup.ManageRegion.GetRegionalHeadsType();
+            objJob.SaleOfficer = SaleOfficerObj;
+            objJob.Retailers = RetailerObj;
+            objJob.RegionalHead = regionalHeadData;
+            objJob.Regions = CityObj;
+            objJob.PainterCityNames = FOS.Setup.ManagePainter.GetPainterCityNamesList();
+            objJob.VisitPlanEach = new Shared.Common.SelectedWeekday("0000000");
+            objJob.Cities = ManageCity.GetCityListByRegionIDD(regionalHeadData.FirstOrDefault().ID);
+
+
+            return View(objJob);
+        }
+
+        public void RetailerSummaryRpt(int TID, int cityid, DateTime sdate, DateTime edate)
+        {
+            DateTime start = sdate;
+            DateTime end = edate;
+            DateTime final = end.AddDays(1);
+            var userID = Convert.ToInt32(Session["UserID"]);
+            var remoteIpAddress = "";
+            string hostName = Dns.GetHostName();
+            IPAddress[] ipaddress = Dns.GetHostAddresses(hostName);
+            foreach (IPAddress ip in ipaddress)
+            {
+                remoteIpAddress = ip.ToString();
+            }
+
+
+            try
+            {
+
+
+                ManageRetailer objRetailers = new ManageRetailer();
+                List<Sp_Total_RetailerInformationSummery_Result> result = db.Sp_Total_RetailerInformationSummery(TID,0, cityid,start,final,6).ToList();
+
+                // Example data
+                StringWriter sw = new StringWriter();
+
+                sw.WriteLine("\"SrNO \",\"Region\",\"City\",\"Retailers Count\",\"Distributor Count\"");
+
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment;filename=RetailersSummaryRpt" + DateTime.Now + ".csv");
+                Response.ContentType = "application/octet-stream";
+
+                int srNo = 1;
+
+                foreach (var retailer in result)
+                {
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"",
+
+                        srNo,
+                     retailer.Region,
+                      retailer.City,
+                    retailer.RetailersCount,
+                      retailer.DealersCount,
+                    
+                  
+
+                    srNo++
+
+
+                    ));
+                }
+
+
+
+
+
+                Response.Write(sw.ToString());
+                Response.End();
+
+
+
+                ManagersLoginHst hst = new ManagersLoginHst();
+                hst.UserID = userID;
+                hst.IPAddress = remoteIpAddress;
+
+                hst.ReportName = "RetailerInformation";
+                hst.ReportType = "RetailerInfo";
                 hst.CreatedOn = DateTime.UtcNow.AddHours(5);
                 db.ManagersLoginHsts.Add(hst);
                 db.SaveChanges();
@@ -682,8 +782,11 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void RetailerInformation(int TID, int RangeID, int cityid, DateTime sdate, DateTime edate)
+        public void RetailerInformation(int TID,  int cityid, DateTime sdate, DateTime edate)
         {
+            DateTime start = sdate;
+            DateTime end = edate;
+            DateTime final = end.AddDays(1);
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
             string hostName = Dns.GetHostName();
@@ -699,12 +802,12 @@ namespace FOS.Web.UI.Controllers
                
 
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_Total_RetailerInformation1_5_Result> result = objRetailers.RetailerInfos(TID, 0, RangeID,cityid, sdate, edate);
+                List<Sp_Total_RetailerInformation1_5_Result> result = objRetailers.RetailerInfos(TID, 0, 0,cityid, start, final);
 
                 // Example data
                 StringWriter sw = new StringWriter();
 
-                sw.WriteLine("\"Shop Name\",\"Sales Officer Name\",\"Customer Name\",\"Distributor Name\",\"Region Name\",\"City Name\",\"Address\",\"Phone1\",\"Phone2\",\"CNIC\",\"Retailer Type\"");
+                sw.WriteLine("\"SrNO \",\"Created Date\",\"ShopID\",\"Shop Name\",\"Owner Name\",\"Sales Officer Name\",\"Distributor Name\",\"Region Name\",\"City Name\",\"Area Name\",\"Address\",\"Phone1\",\"Phone2\",\"Shop Type\",\"Quota\",\"NewOROldShop\",\"LatitudeLongitude\",\"ActiveInactive\"");
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename=Retailers" + DateTime.Now + ".csv");
@@ -714,85 +817,43 @@ namespace FOS.Web.UI.Controllers
                 var RegionalHead = db.RegionalHeadRegions.Where(x => x.RegionID == TID).Select(x =>x.RegionHeadID).FirstOrDefault();
                 var name = db.RegionalHeads.Where(x => x.ID == RegionalHead).Select(x => x.Name).FirstOrDefault();
 
+                int srNo = 1;
 
-
-                if (RangeID == 6)
-                {
                     foreach (var retailer in result)
                     {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
+                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\",\"{14}\",\"{15}\",\"{16}\",\"{17}\"",
 
-
-                        // retailer.Name,
+                            srNo,
+                         retailer.lastupdate,
+                          retailer.ShopID,
                         retailer.ShopName,
+                          retailer.RetailerName,
                         retailer.SaleOfficerName,
-                        retailer.RetailerName,
                         retailer.DealerName,
+                       // retailer.re,
                         retailer.RegionName,
                         retailer.City,
+                        retailer.NewArea,
                         retailer.Address,
                         retailer.Contact1,
                         retailer.Contact2,
-                        retailer.CNIC,
-                        retailer.RetailerType
 
+                      retailer.Shoptype,
+                         retailer.Quota,
+                        
+                        retailer.NewOrOld,
+                        retailer.location,
+
+                        retailer.ActiveInactive,
+
+                        srNo++
 
 
                         ));
                     }
-                }
+              
 
-                else if (RangeID == 7)
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
-
-
-                        // retailer.Name,
-                        retailer.ShopName,
-                        retailer.SaleOfficerName,
-                        retailer.RetailerName,
-                        retailer.RangeBDealer,
-                        retailer.RegionName,
-                        retailer.City,
-                        retailer.Address,
-                        retailer.Contact1,
-                        retailer.Contact2,
-                        retailer.CNIC,
-                        retailer.RetailerType
-
-
-
-                        ));
-                    }
-                }
-                else
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
-
-
-                        // retailer.Name,
-                        retailer.ShopName,
-                        retailer.SaleOfficerName,
-                        retailer.RetailerName,
-                        retailer.RangeCDealer,
-                        retailer.RegionName,
-                        retailer.City,
-                        retailer.Address,
-                        retailer.Contact1,
-                        retailer.Contact2,
-                        retailer.CNIC,
-                        retailer.RetailerType
-
-
-
-                        ));
-                    }
-
-                }
+          
 
 
                 Response.Write(sw.ToString());
@@ -1298,7 +1359,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -1508,7 +1569,7 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void DealerInformation(int TID, int RangeID)
+        public void DealerInformation(int TID)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -1523,36 +1584,36 @@ namespace FOS.Web.UI.Controllers
             {
 
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_DealerInformationSummery1_1_Result> result = objRetailers.DealerInfo(TID, 0, 0,RangeID);
+                List<Sp_DealerInformationSummery1_1_Result> result = objRetailers.DealerInfo(TID, 0, 0,6);
 
                 // Example data
                 StringWriter sw = new StringWriter();
 
-                sw.WriteLine("\"Region Name\",\"Shop Name\",\"Active/InActive\",\"Customer Name\",\"City Name\",\"Address\",\"Phone1\",\"Phone2\",\"CNIC\"");
+                sw.WriteLine("\"SR NO\",\"Distributor ID\",\"Region\",\"City\",\"Distributor Name\",\"Owner Name\",\"Address\",\"Phone1\",\"Phone2\",\"ActiveInactive\"");
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename=Distributors" + DateTime.Now + ".csv");
                 Response.ContentType = "application/octet-stream";
 
                 //   var retailers = ManageRetailer.GetRetailersForExportinExcel();
-
+                int srNo = 1;
                 foreach (var retailer in result)
                 {
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\"",
-
-                    retailer.Name,
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\"",
+                        srNo,
+                    retailer.DistID,
                     // retailer.Name,
-                    retailer.ShopSchoolName,
-                    retailer.Active,
-                    retailer.PrincipleName,
+                    retailer.Region,
                     retailer.City,
+                    retailer.ShopSchoolName,
+                    retailer.PrincipleName,
                     retailer.Address,
                     retailer.Contact1,
                     retailer.Contact2,
-                    retailer.CNIC
-                    // retailer.CustomerType
-
-
+                    retailer.Active,
+                    
+                   
+                    srNo++
 
                     ));
                 }
@@ -1592,7 +1653,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -1651,7 +1712,7 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void ShopVisitSummeryOneLiner(string StartingDate, string EndingDate, int TID, int fosid, int RangeID)
+        public void ShopVisitSummeryOneLiner(string StartingDate, string EndingDate, int TID, int fosid)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -1668,7 +1729,7 @@ namespace FOS.Web.UI.Controllers
                 DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(EndingDate) ? DateTime.Now.ToString() : EndingDate);
                 DateTime final = end.AddDays(1);
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_DealersOrderDetail_Result> result = objRetailers.ShopVisitSummeryOneLine(start, final, TID, fosid,RangeID);
+                List<Sp_DealersOrderDetail_Result> result = objRetailers.ShopVisitSummeryOneLine(start, final, TID, fosid,6);
                 // Example data
                 StringWriter sw = new StringWriter();
 
@@ -1728,7 +1789,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -1867,7 +1928,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -1990,7 +2051,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -2050,7 +2111,7 @@ namespace FOS.Web.UI.Controllers
         }
 
 
-        public void SaleOfficerDetailRpt( int TID, int RangeID)
+        public void SaleOfficerDetailRpt( int TID)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -2065,11 +2126,11 @@ namespace FOS.Web.UI.Controllers
 
            
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_SaleofficerData_Result> result = db.Sp_SaleofficerData(TID, RangeID).ToList();
+                List<Sp_SaleofficerData_Result> result = db.Sp_SaleofficerData(TID, 6).ToList();
                 // Example data
                 StringWriter sw = new StringWriter();
 
-                sw.WriteLine("\"Name\",\"RegionalHead Name\",\"Phone1\",\"Phone2\",\"Range\",\"Joining Date\",\"Active\",\"LeaveON\"");
+                sw.WriteLine("\"Name\",\"RegionalHead Name\",\"Phone1\",\"Phone2\",\"Joining Date\",\"Active\",\"LeaveON\"");
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename=SoDetail" + DateTime.Now + ".csv");
@@ -2079,13 +2140,13 @@ namespace FOS.Web.UI.Controllers
 
                 foreach (var retailer in result)
                 {
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\"",
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
 
                     retailer.name,
                     retailer.RegionalHeadName,
                     retailer.Phone1,
                     retailer.Phone2,
-                    retailer.MainCategDesc,
+               
                     retailer.DateofJoin,
                     retailer.Active,
                     retailer.LeaveON
@@ -2118,7 +2179,7 @@ namespace FOS.Web.UI.Controllers
             var ranges= FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
            var  rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -2177,7 +2238,7 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void RetailerOrders(string StartingDate, string EndingDate, int TID, int fosid,int RangeID)
+        public void RetailerOrders(string StartingDate, string EndingDate, int TID, int fosid)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -2194,22 +2255,20 @@ namespace FOS.Web.UI.Controllers
                 DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(EndingDate) ? DateTime.Now.ToString() : EndingDate);
                 DateTime final = end.AddDays(1);
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<Sp_RetailersOrderDetailFinal1_3_Result> result = objRetailers.RetailerVisitSummeryOneLine(start, final, TID, fosid, RangeID);
+                List<Sp_RetailersOrderDetailFinal1_3_Result> result = objRetailers.RetailerVisitSummeryOneLine(start, final, TID, fosid, 6);
                 // Example data
                 StringWriter sw = new StringWriter();
 
-                sw.WriteLine("\"OrderID\",\"Zone\",\"RegionalHead Name\",\"Sales Officer Name\",\"Retailer Name\",\"Retailer Channel\",\"Distributor Name\",\"Item Name\",\"Quantity (IN PCS)\",\"Item Price\",\"Value\",\"Discounted Percentage\",\"City Name\",\"Visited Date\"");
+                sw.WriteLine("\"OrderID\",\"Zone\",\"RegionalHead Name\",\"Sales Officer Name\",\"Retailer Name\",\"Retailer Channel\",\"Distributor Name\",\"Item Name\",\"Order Quantity\",\"Stock Quantity\",\"OwnPurchaseRate\",\"OwnSaleRate\",\"CompititorProduct\",\"CompititorPurchaseRate\",\"CompititorSaleRate\",\"City Name\",\"Visited Date\",\"Reason For No Sale\"");
 
                 Response.ClearContent();
                 Response.AddHeader("content-disposition", "attachment;filename=RetailerOrder" + DateTime.Now + ".csv");
                 Response.ContentType = "application/octet-stream";
 
 
-                if (RangeID == 6)
-                {
-                    foreach (var retailer in result)
+              foreach (var retailer in result)
                     {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\"",
+                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\",\"{14}\",\"{15}\",\"{16}\",\"{17}\"",
 
                         retailer.OrderID,
                         retailer.Zone,
@@ -2218,15 +2277,20 @@ namespace FOS.Web.UI.Controllers
                         retailer.SaleOfficerName,
                         retailer.RetailerName,
                         retailer.Channel,
-
                         retailer.DealerName,
-                        retailer.ItemName,
-                        retailer.QuantityPcs,
-                        retailer.Price,
-                        retailer.Value,
-                        retailer.discountPercentage,
+
+                        retailer.OwnProductName,
+                        retailer.Quantity,
+                        retailer.StockQuantity,
+                
+                        retailer.OwnPurchaserate,
+                        retailer.OwnSaleRate,
+                           retailer.CompititorProductName,
+                   retailer.CompititorPurchaseRate,
+                   retailer.CompititorSaleRate,
                         retailer.CityName,
-                        retailer.VisitDate
+                        retailer.VisitDate,
+                        retailer.ReasonForNoSale
 
                         // retailer.CustomerType
 
@@ -2234,67 +2298,7 @@ namespace FOS.Web.UI.Controllers
 
                         ));
                     }
-                }else if (RangeID == 7)
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\"",
-
-                        retailer.OrderID,
-                        retailer.Zone,
-                        // retailer.Name,
-                        retailer.RegionalHeadName,
-                        retailer.SaleOfficerName,
-                        retailer.RetailerName,
-                        retailer.Channel,
-                        retailer.RangeBDealername,
-
-                        retailer.ItemName,
-                        retailer.QuantityPcs,
-                        retailer.Price,
-                        retailer.Value,
-                        retailer.discountPercentage,
-                        retailer.CityName,
-                        retailer.VisitDate
-
-                        // retailer.CustomerType
-
-
-
-                        ));
-                    }
-
-                }
-                else
-                {
-                    foreach (var retailer in result)
-                    {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\",\"{11}\",\"{12}\",\"{13}\"",
-
-                        retailer.OrderID,
-                        retailer.Zone,
-                        // retailer.Name,
-                        retailer.RegionalHeadName,
-                        retailer.SaleOfficerName,
-                        retailer.RetailerName,
-                        retailer.Channel,
-                        retailer.rangeCDealername,
-
-                        retailer.ItemName,
-                        retailer.QuantityPcs,
-                        retailer.Price,
-                        retailer.Value,
-                        retailer.discountPercentage,
-                        retailer.CityName,
-                        retailer.VisitDate
-
-                        // retailer.CustomerType
-
-
-
-                        ));
-                    }
-                }
+               
                 Response.Write(sw.ToString());
                 Response.End();
                 ManagersLoginHst hst = new ManagersLoginHst();
@@ -2332,7 +2336,7 @@ namespace FOS.Web.UI.Controllers
                 });
             }
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -2393,7 +2397,7 @@ namespace FOS.Web.UI.Controllers
         }
 
 
-        public void LowOrdersSOWise(string StartingDate, string EndingDate, int TID, int fosid, int RangeID, string Type, int RegionID, int CityID)
+        public void LowOrdersSOWise(string StartingDate, string EndingDate, int TID, int fosid, string Type, int RegionID, int CityID)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -2413,11 +2417,11 @@ namespace FOS.Web.UI.Controllers
                     DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(EndingDate) ? DateTime.Now.ToString() : EndingDate);
                     DateTime final = end.AddDays(1);
                     ManageRetailer objRetailers = new ManageRetailer();
-                    List<Sp_LessItemsSoldRegionWise_Result> result = db.Sp_LessItemsSoldRegionWise(start, final, RangeID, TID, fosid).ToList();
+                    List<Sp_LessItemsSoldRegionWise_Result> result = db.Sp_LessItemsSoldRegionWise(start, final, 6, TID, fosid).ToList();
                     // Example data
                     StringWriter sw = new StringWriter();
 
-                    sw.WriteLine("\"RegionalHead Name\",\"Sales Officer Name\",\"Brand Name\",\"Item Name\",\"Quantity in PCS\",\"Price\",\"Grand Total\"");
+                    sw.WriteLine("\"RegionalHead Name\",\"Sales Officer Name\",\"Item Name\",\"Quantity in PCS\",\"Price\",\"Grand Total\"");
 
                     Response.ClearContent();
                     Response.AddHeader("content-disposition", "attachment;filename=LowSalesItemSOWise" + DateTime.Now + ".csv");
@@ -2427,13 +2431,13 @@ namespace FOS.Web.UI.Controllers
                   
                         foreach (var retailer in result)
                         {
-                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
+                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\"",
 
 
                             // retailer.Name,
                             retailer.RegionalHeadName,
                             retailer.SaleofficerName,
-                            retailer.SubcategDesc,
+                            
                              retailer.ItemName,
                             retailer.Orders,
                             retailer.Price,
@@ -2470,11 +2474,11 @@ namespace FOS.Web.UI.Controllers
                     DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(EndingDate) ? DateTime.Now.ToString() : EndingDate);
                     DateTime final = end.AddDays(1);
                     ManageRetailer objRetailers = new ManageRetailer();
-                    List<Sp_LessItemsSoldRegionandCityWise_Result> result = db.Sp_LessItemsSoldRegionandCityWise(start, final, RangeID, RegionID, CityID).ToList();
+                    List<Sp_LessItemsSoldRegionandCityWise_Result> result = db.Sp_LessItemsSoldRegionandCityWise(start, final, 6, RegionID, CityID).ToList();
                     // Example data
                     StringWriter sw = new StringWriter();
 
-                    sw.WriteLine("\"Region Name\",\"City Name\",\"Brand Name\",\"Item Name\",\"Quantity in PCS\",\"Price\",\"Grand Total\"");
+                    sw.WriteLine("\"Region Name\",\"City Name\",\"Item Name\",\"Quantity in PCS\",\"Price\",\"Grand Total\"");
 
                     Response.ClearContent();
                     Response.AddHeader("content-disposition", "attachment;filename=LowSalesItemRegionWise" + DateTime.Now + ".csv");
@@ -2484,13 +2488,13 @@ namespace FOS.Web.UI.Controllers
                  
                         foreach (var retailer in result)
                         {
-                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
+                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\"",
 
 
                             // retailer.Name,
                             retailer.RegionName,
                             retailer.CityName,
-                            retailer.SubcategDesc,
+                     
                             retailer.ItemName,
                             retailer.Orders,
                             retailer.Price,
@@ -2527,7 +2531,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -2593,7 +2597,7 @@ namespace FOS.Web.UI.Controllers
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -2736,7 +2740,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -2877,7 +2881,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -2948,7 +2952,7 @@ namespace FOS.Web.UI.Controllers
             regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
-            obj = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            obj = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
                 objRegion = obj.ToList();
           
             var objRetailer = new RetailerData();
@@ -2973,27 +2977,123 @@ namespace FOS.Web.UI.Controllers
                 DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate) ? DateTime.Now.ToString() : StartingDate);
                 DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(EndingDate) ? DateTime.Now.ToString() : EndingDate);
                 DateTime final = end.AddDays(1);
+
+                List<KPIData> list = new List<KPIData>();
+                decimal? Val = 0;
+                KPIData comlist;
+
+                if (TID == 0 )
+                {
+                    var SaleOfficerIDs = db.SaleOfficers.Where(x => x.IsActive == true && x.IsDeleted == false).Select(x => x.ID).ToList();
+                    foreach (var item in SaleOfficerIDs)
+                    {
+                        var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.Status == true).ToList();
+
+                        if (totalVisitsToday != null)
+                        {
+                            comlist = new KPIData();
+                            comlist.SoName = db.SaleOfficers.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
+                            comlist.totalVisits = totalVisitsToday.Count();
+                            comlist.CityName = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.Retailer.City.Name).FirstOrDefault();
+                            comlist.StartDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
+                            comlist.EndDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
+                            comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.VisitPurpose == "Ordering" && x.Status == true
+                            ).Select(x => x.ID).Count();
+                            comlist.NonProductive = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.VisitPurpose == "FollowupVisit" && x.Status == true
+                             ).Select(x => x.ID).Count();
+
+                            TimeSpan? diff = comlist.EndDate - comlist.StartDate;
+
+                            comlist.ElapseTime = string.Format("{0:%h} hours, {0:%m} minutes, {0:%s} seconds", diff);
+                            var total = db.sp_BrandAndItemWiseReport(start, final, 0, item, 0, 0, 6).ToList();
+
+                            foreach (var items in total)
+                            {
+                                Val += items.TotalQuantity;
+                            }
+                            comlist.totalSale = Val;
+                            list.Add(comlist);
+                        }
+                    }
+
+                }
+
+                else if (  TID != 0)
+                {
+                    var SaleOfficerIDs = db.SaleOfficers.Where(x => x.RegionalHeadID == TID && x.IsActive == true && x.IsDeleted == false).Select(x => x.ID).ToList();
+                    foreach (var item in SaleOfficerIDs)
+                    {
+                        var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.Status == true).ToList();
+
+                        if (totalVisitsToday != null)
+                        {
+                            comlist = new KPIData();
+                            comlist.SoName = db.SaleOfficers.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
+                            comlist.totalVisits = totalVisitsToday.Count();
+                            comlist.CityName = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.Retailer.City.Name).FirstOrDefault();
+                            comlist.StartDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
+                            comlist.EndDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
+                            comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final  && x.VisitPurpose == "Ordering" && x.Status == true
+                            ).Select(x => x.ID).Count();
+                            comlist.NonProductive = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.VisitPurpose == "FollowupVisit" && x.Status == true
+                           ).Select(x => x.ID).Count();
+                            //comlist.totallines = db.Sp_TotalLinesForSummaryInDSR(item, start, final).FirstOrDefault();
+                            //var finallines = Convert.ToDecimal(comlist.totallines);
+                            //var finalProductiveShops = Convert.ToDecimal(comlist.ProductiveShops);
+
+                            //if (comlist.ProductiveShops != 0)
+                            //{
+
+                            //    var Linesperbill = finallines / finalProductiveShops;
+
+                            //    comlist.Linesperbill = Linesperbill.ToString("0.0");
+                            //}
+
+                            TimeSpan? diff = comlist.EndDate - comlist.StartDate;
+
+                            comlist.ElapseTime = string.Format("{0:%h} hours, {0:%m} minutes, {0:%s} seconds", diff);
+                            var total = db.sp_BrandAndItemWiseReport(start, final, 0, item, 0, 0, 6).ToList();
+
+                            foreach (var items in total)
+                            {
+                                Val += items.TotalQuantity;
+                            }
+                            comlist.totalSale = Val;
+                            list.Add(comlist);
+                        }
+                    }
+                }
+
+                var filtered = list.Where(t => t.totalVisits > 0);
                 ManageRetailer objRetailers = new ManageRetailer();
-                List<spGetSalesOfficerWithLoginDate_Result> result = objRetailers.TodayPresentSalesOfficer(TID, start, final);
+                //List<spGetSalesOfficerWithLoginDate_Result> result = objRetailers.TodayPresentSalesOfficer(TID, start, final);
+                // Example data
                 // Example data
                 StringWriter sw = new StringWriter();
 
-                sw.WriteLine("\"SrNo.\",\"Sales Officer Name\",\"Regional Head\",\"Region\",\"Login Date\"");
+                sw.WriteLine("\"SrNo.\",\"AreaName\",\"SOName\",\"Total Visits\",\"Productive Visits\",\"Total Lines\",\"LinesPerBill\",\"Market Start Time\",\"Market End Time\",\"Elapse Time\",\"TotalSaleIncarton\"");
 
                 Response.ClearContent();
-                Response.AddHeader("content-disposition", "attachment;filename=TodayPresentSO" + DateTime.Now + ".csv");
+                Response.AddHeader("content-disposition", "attachment;filename=Performance Report" + DateTime.Now + ".csv");
                 Response.ContentType = "application/octet-stream";
 
-                //   var retailers = ManageRetailer.GetRetailersForExportinExcel();
+                //var retailers = ManageRetailer.GetRetailersForExportinExcel();
                 int srNo = 1;
-                foreach (var retailer in result)
+                foreach (var retailer in filtered)
                 {
-                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"",
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
                     srNo,
-                    retailer.SalesOfficer,
-                    retailer.RegionalHead,
-                    retailer.Region,
-                    retailer.LoginDate,
+                    retailer.CityName,
+                    retailer.SoName,
+                    retailer.totalVisits,
+                    retailer.ProductiveShops,
+                    retailer.NonProductive,
+                     
+                      retailer.StartDate,
+                       retailer.EndDate,
+                        retailer.ElapseTime,
+                        retailer.totalSale
+                   ,
                     srNo++
 
 
@@ -3230,7 +3330,7 @@ namespace FOS.Web.UI.Controllers
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -3367,7 +3467,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -3425,7 +3525,7 @@ namespace FOS.Web.UI.Controllers
             return View(objJob);
         }
 
-        public void DailyPerformanceKPIDetails(string StartingDate, string EndingDate, string Type , string Typess,int RHID, int SOID, string ReportType, int RHIDD,int RangeID)
+        public void DailyPerformanceKPIDetails(string StartingDate, string EndingDate, string Type , string Typess,int RHID, int SOID, string ReportType, int RHIDD)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -3555,14 +3655,14 @@ namespace FOS.Web.UI.Controllers
             //SOWise
             if (Type == "SoWise")
             {
-                List<sp_getSoWiseOrdersAndFollowUps1_6_Result> result = data.sp_getSoWiseOrdersAndFollowUps1_6(start, final,RHID,RangeID).ToList();
+                List<sp_getSoWiseOrdersAndFollowUps1_6_Result> result = data.sp_getSoWiseOrdersAndFollowUps1_6(start, final,RHID,6).ToList();
                 if (ReportType == "Excel")
                 {
 
                     // Example data
                     StringWriter sw = new StringWriter();
 
-                    sw.WriteLine("\"SrNo.\",\"RegionalHeadName\",\"SOName\",\"RetailerOrders\",\"DistributorOrders\",\"Followups\"");
+                    sw.WriteLine("\"SrNo.\",\"RegionalHeadName\",\"SOName\",\"RetailerOrders\",\"Followups\"");
 
                     Response.ClearContent();
                     Response.AddHeader("content-disposition", "attachment;filename=SOWise" + DateTime.Now + ".csv");
@@ -3572,12 +3672,12 @@ namespace FOS.Web.UI.Controllers
                     int srNo = 1;
                     foreach (var retailer in result)
                     {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\"",
+                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"",
                         srNo,
                         retailer.RegionName,
                         retailer.SaleOfficerName,
                         retailer.RetailerOrders,
-                        retailer.DistributorOrders,
+                      
                         retailer.Followups,
                         srNo++
 
@@ -3670,7 +3770,7 @@ namespace FOS.Web.UI.Controllers
                     // Example data
                     StringWriter sw = new StringWriter();
 
-                    sw.WriteLine("\"SrNo.\",\"Range Name\",\"Brand Name\",\"Item Name\",\"Quantity\"");
+                    sw.WriteLine("\"SrNo.\",\"Range Name\",\"Item Name\",\"Quantity\"");
 
                     Response.ClearContent();
                     Response.AddHeader("content-disposition", "attachment;filename=ItemWise" + DateTime.Now + ".csv");
@@ -3680,10 +3780,10 @@ namespace FOS.Web.UI.Controllers
                     int srNo = 1;
                     foreach (var retailer in result)
                     {
-                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"",
+                        sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\"",
                         srNo,
                         retailer.Maincategdesc,
-                        retailer.subCategDesc,
+                 
                         retailer.ItemName,
                         retailer.Qty,
                         srNo++
@@ -4104,7 +4204,47 @@ namespace FOS.Web.UI.Controllers
 
                     KPIData comlist;
 
-                    if (SOID == 0)
+                    if(RHID==0 && SOID == 0)
+                    {
+                        var SaleOfficerIDs = db.SaleOfficers.Where(x =>  x.IsActive == true && x.IsDeleted == false).Select(x => x.ID).ToList();
+                        foreach (var item in SaleOfficerIDs)
+                        {
+                            var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.Status == true).ToList();
+
+                            if (totalVisitsToday != null)
+                            {
+                                comlist = new KPIData();
+                                comlist.SoName = db.SaleOfficers.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
+                                comlist.totalVisits = totalVisitsToday.Count();
+                                comlist.CityName= totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.Retailer.City.Name).FirstOrDefault();
+                                comlist.StartDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
+                                comlist.EndDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
+                                comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.VisitPurpose == "Ordering" && x.Status == true
+                                ).Select(x => x.ID).Count();
+                                comlist.totallines = db.Sp_TotalLinesForSummaryInDSR(item, start, final).FirstOrDefault();
+                                var finallines = Convert.ToDecimal(comlist.totallines);
+                                var finalProductiveShops = Convert.ToDecimal(comlist.ProductiveShops);
+
+                                if (comlist.ProductiveShops != 0)
+                                {
+
+                                    var Linesperbill = finallines / finalProductiveShops;
+
+                                    comlist.Linesperbill = Linesperbill.ToString("0.0");
+                                }
+
+                                TimeSpan? diff = comlist.EndDate - comlist.StartDate;
+
+                                comlist.ElapseTime = string.Format("{0:%h} hours, {0:%m} minutes, {0:%s} seconds", diff);
+                                var total = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.Status == true).Sum(i => i.OrderTotal);
+                                comlist.totalSale = total;
+                                list.Add(comlist);
+                            }
+                        }
+
+                    }
+
+                   else if (SOID == 0 && RHID != 0)
                     {
                         var SaleOfficerIDs = db.SaleOfficers.Where(x => x.RegionalHeadID == RHIDD && x.IsActive==true&& x.IsDeleted==false).Select(x => x.ID).ToList();
                         foreach (var item in SaleOfficerIDs)
@@ -4116,7 +4256,7 @@ namespace FOS.Web.UI.Controllers
                                 comlist = new KPIData();
                                 comlist.SoName = db.SaleOfficers.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
                                 comlist.totalVisits = totalVisitsToday.Count();
-
+                                comlist.CityName = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.Retailer.City.Name).FirstOrDefault();
                                 comlist.StartDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
                                 comlist.EndDate = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
                                 comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.JobType == "Retailer Order" && x.VisitPurpose == "Ordering" && x.Status == true
@@ -4136,7 +4276,8 @@ namespace FOS.Web.UI.Controllers
                                TimeSpan? diff = comlist.EndDate - comlist.StartDate;
 
                                 comlist.ElapseTime = string.Format("{0:%h} hours, {0:%m} minutes, {0:%s} seconds", diff);
-
+                                var total = totalVisitsToday.Where(x => x.SalesOficerID == item && x.JobDate >= start && x.JobDate <= final && x.Status == true).Sum(i => i.OrderTotal);
+                                comlist.totalSale = total;
                                 list.Add(comlist);
                             }
                         }
@@ -4148,9 +4289,10 @@ namespace FOS.Web.UI.Controllers
                         comlist = new KPIData();
                         comlist.SoName = db.SaleOfficers.Where(x => x.ID == SOID).Select(x => x.Name).FirstOrDefault();
                         comlist.totalVisits = totalVisitsToday.Count();
+                        comlist.CityName = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final).Select(x => x.Retailer.City.Name).FirstOrDefault();
                         comlist.StartDate = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
                         comlist.EndDate = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
-                        comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final && x.JobType == "Retailer Order" && x.VisitPurpose == "Ordering" && x.Status == true
+                        comlist.ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final  && x.VisitPurpose == "Ordering" && x.Status == true
                         ).Select(x => x.ID).Count();
                         comlist.totallines = db.Sp_TotalLinesForSummaryInDSR(SOID, start, final).FirstOrDefault();
                         var finallines = Convert.ToDecimal(comlist.totallines);
@@ -4167,7 +4309,8 @@ namespace FOS.Web.UI.Controllers
                         TimeSpan? diff = comlist.EndDate - comlist.StartDate;
 
                         comlist.ElapseTime = string.Format("{0:%h} hours, {0:%m} minutes, {0:%s} seconds", diff);
-
+                        var total = totalVisitsToday.Where(x => x.SalesOficerID == SOID && x.JobDate >= start && x.JobDate <= final && x.Status==true).Sum(i => i.OrderTotal);
+                        comlist.totalSale = total;
                         list.Add(comlist);
 
                     }
@@ -4181,7 +4324,7 @@ namespace FOS.Web.UI.Controllers
                         // Example data
                         StringWriter sw = new StringWriter();
 
-                        sw.WriteLine("\"SrNo.\",\"SOName\",\"Total Visits\",\"Productive Visits\",\"Total Lines\",\"LinesPerBill\",\"Market Start Time\",\"Market End Time\",\"Elapse Time\"");
+                        sw.WriteLine("\"SrNo.\",\"AreaName\",\"SOName\",\"Total Visits\",\"Productive Visits\",\"Total Lines\",\"LinesPerBill\",\"Market Start Time\",\"Market End Time\",\"Elapse Time\",\"TotalSale\"");
 
                         Response.ClearContent();
                         Response.AddHeader("content-disposition", "attachment;filename=Performance Report" + DateTime.Now + ".csv");
@@ -4191,8 +4334,9 @@ namespace FOS.Web.UI.Controllers
                         int srNo = 1;
                         foreach (var retailer in filtered)
                         {
-                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\"",
+                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
                             srNo,
+                            retailer.CityName,
                             retailer.SoName,
                             retailer.totalVisits,
                             retailer.ProductiveShops,
@@ -4200,7 +4344,8 @@ namespace FOS.Web.UI.Controllers
                              retailer.Linesperbill,
                               retailer.StartDate,
                                retailer.EndDate,
-                                retailer.ElapseTime
+                                retailer.ElapseTime,
+                                retailer.totalSale
                            ,
                             srNo++
 
@@ -4225,6 +4370,10 @@ namespace FOS.Web.UI.Controllers
 
 
                             var regionalheadName = db.RegionalHeads.Where(x => x.ID == RHIDD).Select(x => x.Name).FirstOrDefault();
+                            if (regionalheadName == null)
+                            {
+                                regionalheadName = "ALL";
+                            }
 
                             ReportParameter[] prm = new ReportParameter[4];
 
@@ -4293,7 +4442,7 @@ namespace FOS.Web.UI.Controllers
 
 
 
-                    var lists = db.sp_GetKPISummarySOWise(start, final, RHIDD, SOID,RangeID).ToList();
+                    var lists = db.sp_GetKPISummarySOWise(start, final, RHIDD, SOID,6).ToList();
 
                     if (lists != null)
                     {
@@ -4472,7 +4621,7 @@ namespace FOS.Web.UI.Controllers
             objSaleOffice.ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
       
             var rangeid = objSaleOffice.ranges.Select(r => r.ID).FirstOrDefault();
-            objSaleOffice.RegionalHead = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            objSaleOffice.RegionalHead = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             var regionid = objSaleOffice.RegionalHead.FirstOrDefault();
             objSaleOffice.SaleOfficer = FOS.Setup.ManageRegion.GetAllSOListRelatedtoregionalHeadID(regionid.ID, true);
             var regionids = objSaleOffice.ranges.FirstOrDefault();
@@ -4489,7 +4638,7 @@ namespace FOS.Web.UI.Controllers
 
             var rangeid = objSaleOffice.ranges.Select(r => r.ID).FirstOrDefault();
 
-            objSaleOffice.RegionalHead = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid);
+            objSaleOffice.RegionalHead = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             var regionid = objSaleOffice.RegionalHead.FirstOrDefault();
             objSaleOffice.SaleOfficer = FOS.Setup.ManageRegion.GetAllSOListRelatedtoregionalHeadID(regionid.ID, true);
             var regionids = objSaleOffice.ranges.FirstOrDefault();
@@ -4660,7 +4809,7 @@ namespace FOS.Web.UI.Controllers
             }
         }
 
-        public void OrderSummary(string StartingDate, string EndingDate, int? DisID, int TID, int fosid, string type)
+        public void OrderSummary(string StartingDate, string EndingDate, int? DisID, int TID, string type)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -4683,39 +4832,19 @@ namespace FOS.Web.UI.Controllers
             {
                 var number = "";
 
-                if (fosid == 6)
-                {
+               
                     try
                     {
                         decimal linesperbill = 0;
                         int? total = 0;
-                        List<Sp_OrderSummaryGrandTotal_Result> gt = db.Sp_OrderSummaryGrandTotal(start, final, DisID, fosid, TID).ToList();
-                        foreach (var gat in gt)
-                        {
-                            if (gat.DiscountedTotal == null || gat.DiscountedTotal == 0)
-                            {
-                                if (gat.OrderTotal == null)
-                                {
-                                    total += 0;
-                                }
-                                else
-                                {
-                                    total += gat.OrderTotal;
-                                }
-
-                            }
-                            else
-                            {
-                                total += gat.DiscountedTotal;
-                            }
+                    List<Sp_OrderForPDFinMMCTest_Result> result = db.Sp_OrderForPDFinMMCTest(start, final, DisID, 6, TID).ToList();
+                    // List<Sp_OrderSummeryReportInExcel2_5_Result> result = db.Sp_OrderSummeryReportInExcel2_5(start, final, DisID, 6, TID).ToList();
+                    List<sp_BrandAndItemWiseReport_Result> result2 = db.sp_BrandAndItemWiseReport(start, final, 0, TID, 0, 0, 6).ToList();
+                    // List<Sp_FollowUpVisitsDaily_Result> result1 = db.Sp_FollowUpVisitsDaily(start, final, DisID, 6, TID).ToList();
+                    List<Sp_FollowUpVisitsDailyForMMC_Result> result3 = db.Sp_FollowUpVisitsDailyForMMC(start, final, DisID, 6, TID).ToList();
 
 
-                        }
-                        // List<Sp_OrderSummeryReportNotSoldItem1_1_Result> NotItems = null;  //db.Sp_OrderSummeryReportNotSoldItem1_1(start, final, DisID, fosid, TID).ToList();
-
-                        List<Sp_OrderSummeryReportInExcel2_5_Result> result = db.Sp_OrderSummeryReportInExcel2_5(start, final, DisID, fosid, TID).ToList();
-                        List<Sp_FollowUpVisitsDaily_Result> result1 = db.Sp_FollowUpVisitsDaily(start, final, DisID, fosid, TID).ToList();
-                        string CityName = "";
+                    string CityName = "";
                         string dealername = "";
                         var dealer = db.Dealers.Where(u => u.ID == DisID).FirstOrDefault();
 
@@ -4728,58 +4857,52 @@ namespace FOS.Web.UI.Controllers
                         SoName = SO.Name;
 
                         string RangeName = "";
-                        var range = db.MainCategories.Where(u => u.MainCategID == fosid).FirstOrDefault();
+                        var range = db.MainCategories.Where(u => u.MainCategID == 6).FirstOrDefault();
 
                         RangeName = range.MainCategDesc;
 
-                        DateTime? firstRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
-                        DateTime? lastRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
-                        var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.Status == true).Select(x => x.ID).Count();
+                    var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.Status == true).ToList();
 
-                        var ProductiveShops = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.JobType == "Retailer Order" && x.VisitPurpose == "Ordering" && x.Status == true
-                        ).Select(x => x.ID).Count();
+                    var listi = totalVisitsToday.Count();
 
-
-                        var Lines = db.Sp_TotalLinesForSummaryInDSR(TID, start, final).FirstOrDefault();
+                    DateTime? firstRecord = totalVisitsToday.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
+                    DateTime? lastRecord = totalVisitsToday.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
 
 
-                        var finallines = Convert.ToDecimal(Lines);
-                        var finalProductiveShops = Convert.ToDecimal(ProductiveShops);
+                    var ProductiveShops = totalVisitsToday.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final  && x.VisitPurpose == "Ordering" && x.Status == true
+                    ).Select(x => x.ID).Count();
 
-                        if (ProductiveShops != 0)
-                        {
+                    var FollowUpsShops = totalVisitsToday.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final  && x.VisitPurpose == "FollowupVisit" && x.Status == true
+                   ).Select(x => x.ID).Count();
 
-                            linesperbill = finallines / finalProductiveShops;
-                            number = linesperbill.ToString("0.0");
-                        }
+                    TimeSpan? difference = (lastRecord - firstRecord);
+                    var format = difference;
+                    string test = difference.HasValue ? difference.Value.ToString(@"hh\:mm") : string.Empty;
 
-                        TimeSpan? difference = (lastRecord - firstRecord);
-                        var format = difference;
-                        string test = difference.HasValue ? difference.Value.ToString(@"hh\:mm") : string.Empty;
 
-                        ReportParameter[] prm = new ReportParameter[13];
-                        prm[0] = new ReportParameter("DistributorName", dealername);
-                        prm[1] = new ReportParameter("Date", (System.DateTime.Now.ToString()));
-                        prm[2] = new ReportParameter("SOName", SoName);
-                        prm[3] = new ReportParameter("RangeName", RangeName);
-                        prm[4] = new ReportParameter("DateTo", EndingDate);
-                        prm[5] = new ReportParameter("DateFrom", StartingDate);
-                        prm[6] = new ReportParameter("CityName", CityName);
-                        prm[7] = new ReportParameter("GrandTotal", total.ToString());
-                        prm[8] = new ReportParameter("TotalVisitsToday", totalVisitsToday.ToString());
-                        prm[9] = new ReportParameter("ProductiveShops", ProductiveShops.ToString());
-                        prm[10] = new ReportParameter("Lines", Lines.ToString());
-                        prm[11] = new ReportParameter("LinesPerBill", number);
-                        prm[12] = new ReportParameter("TodayWorkingTime", test);
-                        ReportViewer1.ReportPath = Server.MapPath("~\\Views\\Reports\\TestReport - Copy.rdlc");
+                    ReportParameter[] prm = new ReportParameter[10];
+                    prm[0] = new ReportParameter("DistributorName", dealername);
+                    prm[1] = new ReportParameter("Date", (System.DateTime.Now.ToString()));
+                    prm[2] = new ReportParameter("SOName", SoName);
+
+                    prm[3] = new ReportParameter("DateTo", StartingDate);
+                    prm[4] = new ReportParameter("DateFrom", StartingDate);
+                    prm[5] = new ReportParameter("CityName", CityName);
+                    prm[6] = new ReportParameter("TotalVisitsToday", listi.ToString());
+                    prm[7] = new ReportParameter("ProductiveShops", ProductiveShops.ToString());
+                    prm[8] = new ReportParameter("TodayWorkingTime", test);
+                    prm[9] = new ReportParameter("FollowUps", FollowUpsShops.ToString());
+                    ReportViewer1.ReportPath = Server.MapPath("~\\Views\\Reports\\MMCOrders.rdlc");
                         ReportViewer1.EnableExternalImages = true;
                         ReportDataSource dt1 = new ReportDataSource("DataSet1", result);
-                         ReportDataSource dt2 = new ReportDataSource("DataSet2", result1);
-                        ReportViewer1.SetParameters(prm);
+                    ReportDataSource dt2 = new ReportDataSource("DataSet2", result2);
+                    ReportDataSource dt3 = new ReportDataSource("DataSet3", result3);
+                    ReportViewer1.SetParameters(prm);
                         ReportViewer1.DataSources.Clear();
                         ReportViewer1.DataSources.Add(dt1);
-                         ReportViewer1.DataSources.Add(dt2);
-                        ReportViewer1.Refresh();
+                    ReportViewer1.DataSources.Add(dt2);
+                    ReportViewer1.DataSources.Add(dt3);
+                    ReportViewer1.Refresh();
 
 
 
@@ -4820,292 +4943,15 @@ namespace FOS.Web.UI.Controllers
                     db.ManagersLoginHsts.Add(hst);
                     db.SaveChanges();
 
-                }
+               
 
-                else if(fosid == 7)
-                {
-                    try
-                    {
-                        decimal linesperbill = 0;
-                        int? total = 0;
-                        List<Sp_OrderSummaryGrandTotalRangeB_Result> gt = db.Sp_OrderSummaryGrandTotalRangeB(start, final, DisID, fosid, TID).ToList();
-                        foreach (var gat in gt)
-                        {
-                            if (gat.DiscountedTotal == null || gat.DiscountedTotal == 0)
-                            {
-                                if (gat.OrderTotal == null)
-                                {
-                                    total += 0;
-                                }
-                                else
-                                {
-                                    total += gat.OrderTotal;
-                                }
-
-                            }
-                            else
-                            {
-                                total += gat.DiscountedTotal;
-                            }
-
-
-                        }
-                        // List<Sp_OrderSummeryReportNotSoldItem1_1_Result> NotItems = null;  //db.Sp_OrderSummeryReportNotSoldItem1_1(start, final, DisID, fosid, TID).ToList();
-
-                        List<Sp_OrderSummeryReportInExcelRangeB_Result> result = db.Sp_OrderSummeryReportInExcelRangeB(start, final, DisID, fosid, TID).ToList();
-                        List<Sp_FollowUpVisitsDailyRangeB_Result> result1 = db.Sp_FollowUpVisitsDailyRangeB(start, final, DisID, fosid, TID).ToList();
-                        string dealername = "";
-                        string CityName = "";
-                       var dealer = db.Dealers.Where(u => u.ID == DisID).FirstOrDefault();
-                       
-                            dealername = dealer.ShopName;
-                            CityName = dealer.City.Name;
-                     
-                        string SoName = "";
-                        var SO = db.SaleOfficers.Where(u => u.ID == TID).FirstOrDefault();
-                       
-                            SoName = SO.Name;
-                       
-                        string RangeName = "";
-                        var range = db.MainCategories.Where(u => u.MainCategID == fosid).FirstOrDefault();
-                        
-                            RangeName = range.MainCategDesc;
-                       
-
-                        DateTime? firstRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
-                        DateTime? lastRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
-                        var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.Status == true).Select(x => x.ID).Count();
-
-                        var ProductiveShops = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.JobType == "Retailer Order" && x.VisitPurpose == "Ordering" && x.Status == true
-                        ).Select(x => x.ID).Count();
-
-
-                        var Lines = db.Sp_TotalLinesForSummaryInDSR(TID, start, final).FirstOrDefault();
-
-
-                        var finallines = Convert.ToDecimal(Lines);
-                        var finalProductiveShops = Convert.ToDecimal(ProductiveShops);
-
-                        if (ProductiveShops != 0)
-                        {
-
-                            linesperbill = finallines / finalProductiveShops;
-                            number = linesperbill.ToString("0.0");
-                        }
-
-                        TimeSpan? difference = (lastRecord - firstRecord);
-                        var format = difference;
-                        string test = difference.HasValue ? difference.Value.ToString(@"hh\:mm") : string.Empty;
-
-                        ReportParameter[] prm = new ReportParameter[13];
-                        prm[0] = new ReportParameter("DistributorName", dealername);
-                        prm[1] = new ReportParameter("Date", (System.DateTime.Now.ToString()));
-                        prm[2] = new ReportParameter("SOName", SoName);
-                        prm[3] = new ReportParameter("RangeName", RangeName);
-                        prm[4] = new ReportParameter("DateTo", EndingDate);
-                        prm[5] = new ReportParameter("DateFrom", StartingDate);
-                        prm[6] = new ReportParameter("CityName", CityName);
-                        prm[7] = new ReportParameter("GrandTotal", total.ToString());
-                        prm[8] = new ReportParameter("TotalVisitsToday", totalVisitsToday.ToString());
-                        prm[9] = new ReportParameter("ProductiveShops", ProductiveShops.ToString());
-                        prm[10] = new ReportParameter("Lines", Lines.ToString());
-                        prm[11] = new ReportParameter("LinesPerBill", number);
-                        prm[12] = new ReportParameter("TodayWorkingTime", test);
-                        ReportViewer1.ReportPath = Server.MapPath("~\\Views\\Reports\\TestReport - Copy.rdlc");
-                        ReportViewer1.EnableExternalImages = true;
-                        ReportDataSource dt1 = new ReportDataSource("DataSet1", result);
-                         ReportDataSource dt2 = new ReportDataSource("DataSet2", result1);
-                        ReportViewer1.SetParameters(prm);
-                        ReportViewer1.DataSources.Clear();
-                        ReportViewer1.DataSources.Add(dt1);
-                         ReportViewer1.DataSources.Add(dt2);
-                        ReportViewer1.Refresh();
-
-
-
-                        Warning[] warnings;
-                        string[] streamIds;
-                        string contentType;
-                        string encoding;
-                        string extension;
-
-                        //Export the RDLC Report to Byte Array.
-                        byte[] bytes = ReportViewer1.Render("PDF", null, out contentType, out encoding, out extension, out streamIds, out warnings);
-
-                        //Download the RDLC Report in Word, Excel, PDF and Image formats.
-                        Response.Clear();
-                        Response.Buffer = true;
-                        Response.Charset = "";
-                        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                        Response.ContentType = contentType;
-                        Response.AddHeader("content-disposition", "attachment;filename=D" + DateTime.Now + ".Pdf");
-                        Response.BinaryWrite(bytes);
-                        Response.Flush();
-
-                        Response.End();
-
-                    }
-
-                    catch (Exception exp)
-                    {
-                        Log.Instance.Error(exp, "Report Not Working");
-
-                    }
-                    ManagersLoginHst hst = new ManagersLoginHst();
-                    hst.UserID = userID;
-                    hst.IPAddress = remoteIpAddress;
-                    hst.ReportName = "Daily Sale Report";
-                    hst.ReportType = "Daily Range B";
-                    hst.CreatedOn = DateTime.UtcNow.AddHours(5);
-                    db.ManagersLoginHsts.Add(hst);
-                    db.SaveChanges();
-
-                }
-
-                else 
-                {
-                    try
-                    {
-                        decimal linesperbill = 0;
-                        int? total = 0;
-                        List<Sp_OrderSummaryGrandTotalRangeC_Result> gt = db.Sp_OrderSummaryGrandTotalRangeC(start, final, DisID, fosid, TID).ToList();
-                        foreach (var gat in gt)
-                        {
-                            if (gat.DiscountedTotal == null || gat.DiscountedTotal == 0)
-                            {
-                                if (gat.OrderTotal == null)
-                                {
-                                    total += 0;
-                                }
-                                else
-                                {
-                                    total += gat.OrderTotal;
-                                }
-
-                            }
-                            else
-                            {
-                                total += gat.DiscountedTotal;
-                            }
-
-
-                        }
-                        // List<Sp_OrderSummeryReportNotSoldItem1_1_Result> NotItems = null;  //db.Sp_OrderSummeryReportNotSoldItem1_1(start, final, DisID, fosid, TID).ToList();
-
-                        List<Sp_OrderSummeryReportInExcelRangeC_Result> result = db.Sp_OrderSummeryReportInExcelRangeC(start, final, DisID, fosid, TID).ToList();
-                        List<Sp_FollowUpVisitsDailyRangeC_Result> result1 = db.Sp_FollowUpVisitsDailyRangeC(start, final, DisID, fosid, TID).ToList();
-                        string dealername = "";
-                        string CityName = "";
-                        var dealer = db.Dealers.Where(u => u.ID == DisID).FirstOrDefault();
-
-                        dealername = dealer.ShopName;
-                        CityName = dealer.City.Name;
-
-                        string SoName = "";
-                        var SO = db.SaleOfficers.Where(u => u.ID == TID).FirstOrDefault();
-
-                        SoName = SO.Name;
-
-                        string RangeName = "";
-                        var range = db.MainCategories.Where(u => u.MainCategID == fosid).FirstOrDefault();
-
-                        RangeName = range.MainCategDesc;
-
-                        DateTime? firstRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).Select(x => x.JobDate).FirstOrDefault();
-                        DateTime? lastRecord = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final).OrderByDescending(x => x.ID).Select(x => x.JobDate).FirstOrDefault();
-                        var totalVisitsToday = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.Status == true).Select(x => x.ID).Count();
-
-                        var ProductiveShops = db.JobsDetails.Where(x => x.SalesOficerID == TID && x.JobDate >= start && x.JobDate <= final && x.JobType == "Retailer Order" && x.VisitPurpose == "Ordering" && x.Status == true
-                        ).Select(x => x.ID).Count();
-
-
-                        var Lines = db.Sp_TotalLinesForSummaryInDSR(TID, start, final).FirstOrDefault();
-
-
-                        var finallines = Convert.ToDecimal(Lines);
-                        var finalProductiveShops = Convert.ToDecimal(ProductiveShops);
-
-                        if (ProductiveShops != 0)
-                        {
-
-                            linesperbill = finallines / finalProductiveShops;
-                            number = linesperbill.ToString("0.0");
-                        }
-
-                        TimeSpan? difference = (lastRecord - firstRecord);
-                        var format = difference;
-                        string test = difference.HasValue ? difference.Value.ToString(@"hh\:mm") : string.Empty;
-
-                        ReportParameter[] prm = new ReportParameter[13];
-                        prm[0] = new ReportParameter("DistributorName", dealername);
-                        prm[1] = new ReportParameter("Date", (System.DateTime.Now.ToString()));
-                        prm[2] = new ReportParameter("SOName", SoName);
-                        prm[3] = new ReportParameter("RangeName", RangeName);
-                        prm[4] = new ReportParameter("DateTo", EndingDate);
-                        prm[5] = new ReportParameter("DateFrom", StartingDate);
-                        prm[6] = new ReportParameter("CityName", CityName);
-                        prm[7] = new ReportParameter("GrandTotal", total.ToString());
-                        prm[8] = new ReportParameter("TotalVisitsToday", totalVisitsToday.ToString());
-                        prm[9] = new ReportParameter("ProductiveShops", ProductiveShops.ToString());
-                        prm[10] = new ReportParameter("Lines", Lines.ToString());
-                        prm[11] = new ReportParameter("LinesPerBill", number);
-                        prm[12] = new ReportParameter("TodayWorkingTime", test);
-                        ReportViewer1.ReportPath = Server.MapPath("~\\Views\\Reports\\TestReport - Copy.rdlc");
-                        ReportViewer1.EnableExternalImages = true;
-                        ReportDataSource dt1 = new ReportDataSource("DataSet1", result);
-                        ReportDataSource dt2 = new ReportDataSource("DataSet2", result1);
-                        ReportViewer1.SetParameters(prm);
-                        ReportViewer1.DataSources.Clear();
-                        ReportViewer1.DataSources.Add(dt1);
-                         ReportViewer1.DataSources.Add(dt2);
-                        ReportViewer1.Refresh();
-
-
-
-                        Warning[] warnings;
-                        string[] streamIds;
-                        string contentType;
-                        string encoding;
-                        string extension;
-
-                        //Export the RDLC Report to Byte Array.
-                        byte[] bytes = ReportViewer1.Render("PDF", null, out contentType, out encoding, out extension, out streamIds, out warnings);
-
-                        //Download the RDLC Report in Word, Excel, PDF and Image formats.
-                        Response.Clear();
-                        Response.Buffer = true;
-                        Response.Charset = "";
-                        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                        Response.ContentType = contentType;
-                        Response.AddHeader("content-disposition", "attachment;filename=D" + DateTime.Now + ".Pdf");
-                        Response.BinaryWrite(bytes);
-                        Response.Flush();
-
-                        Response.End();
-
-                    }
-
-                    catch (Exception exp)
-                    {
-                        Log.Instance.Error(exp, "Report Not Working");
-
-                    }
-                    ManagersLoginHst hst = new ManagersLoginHst();
-                    hst.UserID = userID;
-                    hst.IPAddress = remoteIpAddress;
-                    hst.ReportName = "Daily Sale Report";
-                    hst.ReportType = "Daily Range C";
-                    hst.CreatedOn = DateTime.UtcNow.AddHours(5);
-                    db.ManagersLoginHsts.Add(hst);
-                    db.SaveChanges();
-                }
-
+                
             }
 
             if (type == "Weekly")
             {
                 decimal? total = 0;
-                List<Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport(start, final, fosid, TID).ToList();
+                List<Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport(start, final, 6, TID).ToList();
 
                 foreach (var item in result)
                 {
@@ -5118,7 +4964,7 @@ namespace FOS.Web.UI.Controllers
                     SoName = SOS.Name;
                 }
                 string RangeName = "";
-                List<MainCategory> Region = db.MainCategories.Where(u => u.MainCategID == fosid).ToList();
+                List<MainCategory> Region = db.MainCategories.Where(u => u.MainCategID == 6).ToList();
                 foreach (var SOS in Region)
                 {
                     RangeName = SOS.MainCategDesc;
@@ -5174,7 +5020,7 @@ namespace FOS.Web.UI.Controllers
             if (type == "Monthly")
             {
                 decimal? total = 0;
-                List<Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport(start, final, fosid, TID).ToList();
+                List<Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseWeeklyReport(start, final, 6, TID).ToList();
                 foreach (var item in result)
                 {
                     total += item.Subtotal;
@@ -5186,7 +5032,7 @@ namespace FOS.Web.UI.Controllers
                     SoName = SOS.Name;
                 }
                 string RangeName = "";
-                List<MainCategory> Region = db.MainCategories.Where(u => u.MainCategID == fosid).ToList();
+                List<MainCategory> Region = db.MainCategories.Where(u => u.MainCategID == 6).ToList();
                 foreach (var SOS in Region)
                 {
                     RangeName = SOS.MainCategDesc;
@@ -5241,7 +5087,7 @@ namespace FOS.Web.UI.Controllers
         }
 
 
-        public void OrderSummaryForDistributor(string StartingDate, string EndingDate, int? DisID, int TID, int fosid)
+        public void OrderSummaryForDistributor(string StartingDate, string EndingDate, int? DisID, int TID)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             var remoteIpAddress = "";
@@ -5263,7 +5109,7 @@ namespace FOS.Web.UI.Controllers
             try
             {
 
-                List<Sp_OrderSummeryReportInExcelRangeWiseForDistributor1_1_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseForDistributor1_1(start, final,  fosid, TID).ToList();
+                List<Sp_OrderSummeryReportInExcelRangeWiseForDistributor1_1_Result> result = db.Sp_OrderSummeryReportInExcelRangeWiseForDistributor1_1(start, final,  6, TID).ToList();
                 
                
                 string SoName = "";
@@ -5273,26 +5119,20 @@ namespace FOS.Web.UI.Controllers
                     SoName = SOS.Name;
                 }
                 string RangeName = "";
-                List<MainCategory> range = db.MainCategories.Where(u => u.MainCategID == fosid).ToList();
+                List<MainCategory> range = db.MainCategories.Where(u => u.MainCategID == 6).ToList();
                 foreach (var SOS in range)
                 {
                     RangeName = SOS.MainCategDesc;
                 }
 
-                string ZoneName = "";
-                List<Tbl_SOREGIONS> zone = db.Tbl_SOREGIONS.Where(u => u.SaleofficerID == TID).ToList();
-                foreach (var SOS in zone)
-                {
-                    ZoneName = db.Regions.Where(x=>x.ID==SOS.RegionID).Select(x=>x.Name).FirstOrDefault();
-                }
-                ReportParameter[] prm = new ReportParameter[6];
+              
+                ReportParameter[] prm = new ReportParameter[4];
           
                 prm[0] = new ReportParameter("Date", (System.DateTime.Now.ToString()));
                 prm[1] = new ReportParameter("SOName", SoName);
-                prm[2] = new ReportParameter("RangeName", RangeName);
-                prm[3] = new ReportParameter("DateTo", EndingDate);
-                prm[4] = new ReportParameter("DateFrom", StartingDate);
-                prm[5] = new ReportParameter("Zone", ZoneName);
+                prm[2] = new ReportParameter("DateTo", EndingDate);
+                prm[3] = new ReportParameter("DateFrom", StartingDate);
+                
                 ReportViewer1.ReportPath = Server.MapPath("~\\Views\\Reports\\Report1.rdlc");
                 ReportViewer1.EnableExternalImages = true;
                 ReportDataSource dt1 = new ReportDataSource("DataSet1", result);
@@ -5354,7 +5194,7 @@ namespace FOS.Web.UI.Controllers
             List<RegionData> RegionObj = ManageRegion.GetRegionDataList(userID);
             var objRegion = RegionObj.FirstOrDefault();
             List<CityData> cityObj = FOS.Setup.ManageRegion.GetCitiesList(objRegion.ID);
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -5444,7 +5284,7 @@ namespace FOS.Web.UI.Controllers
             List<MainCategories> Ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = Ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             var objhead = regionalHeadData.FirstOrDefault();
             List<SaleOfficer> Sos = FOS.Setup.ManageRegion.GetAllSOListRelatedtoregionalHeadID(objhead.ID, true);
             
@@ -5535,7 +5375,7 @@ namespace FOS.Web.UI.Controllers
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
             List<MainCategories> Ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
             var rangeid = Ranges.FirstOrDefault();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -5569,7 +5409,7 @@ namespace FOS.Web.UI.Controllers
             objJob.Range = Ranges;
             return View(objJob);
         }
-        public void GetAllFollowUpRetailer(string StartingDate, string EndingDate,int RangeID ,int HeadID, int fosid)
+        public void GetAllFollowUpRetailer(string StartingDate, string EndingDate ,int HeadID, int fosid)
         {
           
 
@@ -5589,7 +5429,7 @@ namespace FOS.Web.UI.Controllers
                 DateTime final = end.AddDays(1);
                 ManageRetailer objRetailers = new ManageRetailer();
                 FOSDataModel db = new FOSDataModel();
-                List<Sp_GetTotalFollowup1_3_Result> result = db.Sp_GetTotalFollowup1_3(start, final,HeadID,RangeID ,fosid).ToList();
+                List<Sp_GetTotalFollowup1_3_Result> result = db.Sp_GetTotalFollowup1_3(start, final,HeadID,6 ,fosid).ToList();
                 // Example data
                 StringWriter sw = new StringWriter();
 
@@ -5708,7 +5548,7 @@ namespace FOS.Web.UI.Controllers
             var objRegion = CityObj.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, objRegion.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             if (userID == 1)
             {
                 regionalHeadData.Insert(0, new RegionalHeadData
@@ -5825,7 +5665,7 @@ namespace FOS.Web.UI.Controllers
                         retailer.Brand,
                         retailer.ItemName,
                         retailer.TotalQuantity,
-                        retailer.Carton
+                        retailer.TotalQuantity
 
 
 

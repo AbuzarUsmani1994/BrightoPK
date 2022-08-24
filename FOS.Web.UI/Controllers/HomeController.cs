@@ -400,7 +400,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             var headid= regionalHeadData.FirstOrDefault();
 
             List<RegionalHeadData> ZoneData = new List<RegionalHeadData>();

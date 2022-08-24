@@ -20,14 +20,18 @@ namespace FOS.DataLayer
         public string SaleOfficerName { get; set; }
         public string RetailerName { get; set; }
         public string ItemName { get; set; }
-        public Nullable<decimal> QuantityPcs { get; set; }
-        public Nullable<decimal> Price { get; set; }
+        public string Quantity { get; set; }
+        public string OwnProductName { get; set; }
         public string CityName { get; set; }
         public Nullable<System.DateTime> VisitDate { get; set; }
-        public Nullable<decimal> Value { get; set; }
-        public Nullable<int> discountPercentage { get; set; }
+        public string OwnPurchaserate { get; set; }
+        public string OwnSaleRate { get; set; }
+        public string StockQuantity { get; set; }
         public string DealerName { get; set; }
-        public string RangeBDealername { get; set; }
-        public string rangeCDealername { get; set; }
+        public string CompititorProductName { get; set; }
+        public string CompititorPurchaseRate { get; set; }
+        public string CompititorSaleRate { get; set; }
+        public string ReasonForNoSale { get; set; }
+        public string OtherReasonFornoSale { get; set; }
     }
 }

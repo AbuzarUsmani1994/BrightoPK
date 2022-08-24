@@ -439,7 +439,7 @@ namespace FOS.Setup
                 {
                   
 
-                    List<Items> Items = dbContext.Items.Where(a => a.MainCategID == MainCat).Select(a => new Items
+                    List<Items> Items = dbContext.Items.Where(a => a.IsActive == true).Select(a => new Items
                     {
                         ItemId = a.ItemID,
                         ItemName = a.ItemName,
@@ -574,9 +574,19 @@ namespace FOS.Setup
                     List<CityData> ChooseAreas = dbContext.Retailers.Where(a => a.RegionID == RegionID && a.CityID==CityID && a.Status==true && a.RangeID == RangeID).Select(a => new CityData
                     {
                         ID = a.ID,
-                        ShopName = a.ShopName,
-                        IsActive = a.IsActive
-
+                        ShopName = a.ID + "/" +" "+a.ShopName,
+                        IsActive = a.IsActive,
+                        ShopType=a.Shoptype,
+                        address=a.Address,
+                        OwnerName=a.Name,
+                        Quota=a.Quota,
+                        Phone=a.Phone1,
+                        NewOrOld=a.NewOrOld,
+                        Latitude=a.Latitude,
+                        Longitude=a.Longitude,
+                        AreaName=a.NewArea
+                        
+                        
                     }).ToList();
 
 
@@ -629,7 +639,7 @@ namespace FOS.Setup
                 {
                     //var CITY = dbContext.Cities.Where(s => s.ID == CityID).FirstOrDefault();
 
-                    List<CityData> ChooseAreas = dbContext.Dealers.Where(a => a.RegionID == RegionID && a.CityID == CityID&& a.RangeID==RangeID).Select(a => new CityData
+                    List<CityData> ChooseAreas = dbContext.Dealers.Where(a => a.RegionID == RegionID /*&& a.CityID == CityID*/&& a.RangeID==RangeID).Select(a => new CityData
                     {
                         ID = a.ID,
                         ShopName = a.ShopName,
@@ -1167,7 +1177,7 @@ namespace FOS.Setup
                                     ItemName = u.ItemName,
                                     ItemPrice = u.Price,
                                     ItemCode=u.ItemCode,
-                                    SubCategoryAName=dbContext.SubCategories.Where(x=>x.SubCategID==u.SubCategID).Select(x=>x.SubCategDesc).FirstOrDefault(),
+                                    //SubCategoryAName=dbContext.SubCategories.Where(x=>x.SubCategID==u.SubCategID).Select(x=>x.SubCategDesc).FirstOrDefault(),
                                     ItemPacking=u.Packing,
                                     SortOrder=u.SortOrder,
                                     IsActiveYes = u.IsActive == true ? "Yes" : "No"
@@ -1207,7 +1217,7 @@ namespace FOS.Setup
                             AreaObj.Price = (decimal)obj.ItemPrice;
                             AreaObj.Packing = obj.ItemPacking;
                             AreaObj.MainCategID = obj.MainCategoryID;
-                            AreaObj.SubCategID = obj.SubCatID;
+                            AreaObj.SubCategID = 1;
                             AreaObj.SubCategIDA = 1;
                             AreaObj.IsActive = true;
                             AreaObj.IsDeleted = false;
@@ -1228,7 +1238,7 @@ namespace FOS.Setup
                             AreaObj.Price = (decimal)obj.ItemPrice;
                             AreaObj.Packing = obj.ItemPacking;
                             AreaObj.MainCategID = obj.MainCategoryID;
-                            AreaObj.SubCategID = obj.SubCatID;
+                            AreaObj.SubCategID = 1;
                             AreaObj.SubCategIDA = 1;
                             AreaObj.IsActive = obj.IsActive;
                             AreaObj.IsDeleted = false;

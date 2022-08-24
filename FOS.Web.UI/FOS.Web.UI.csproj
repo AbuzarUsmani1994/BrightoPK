@@ -280,10 +280,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>brand.xsd</DependentUpon>
     </Compile>
+    <Compile Include="BrandGridInRpt.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrandGridInRpt.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BrandMMC.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrandMMC.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Brandwise.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Brandwise.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BrandWiseSummary.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BrandWiseSummary.xsd</DependentUpon>
     </Compile>
     <Compile Include="CalForReport.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -306,6 +321,21 @@
     <Compile Include="Common\Settings.cs" />
     <Compile Include="Common\Token\TokenAttribute.cs" />
     <Compile Include="Common\UserManager.cs" />
+    <Compile Include="CompititorMMC.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CompititorMMC.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\API\DashboardDataController.cs" />
+    <Compile Include="Controllers\API\GetCurrentRouteOfSOController.cs" />
+    <Compile Include="Controllers\API\GetSOListAsPerDistributorController.cs" />
+    <Compile Include="Controllers\API\LastThreeCurrentStockController.cs" />
+    <Compile Include="Controllers\API\LastThreeVisitsController.cs" />
+    <Compile Include="Controllers\API\OrderForExcelForDistributorController.cs" />
+    <Compile Include="Controllers\API\RSMSummaryController.cs" />
+    <Compile Include="Controllers\API\RSMOrderVisitController.cs" />
+    <Compile Include="Controllers\API\SOOrderVisitController.cs" />
+    <Compile Include="Controllers\API\RouteSelectionController.cs" />
     <Compile Include="Controllers\API\SOReportsController.cs" />
     <Compile Include="Controllers\API\SOAttendanceController.cs" />
     <Compile Include="Controllers\API\DeleteRetailerController.cs" />
@@ -402,6 +432,11 @@
     <Compile Include="Controllers\SaleOfficerController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Controllers\AdminPanelController.cs" />
+    <Compile Include="DailySOPDF.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DailySOPDF.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataForAll.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -433,6 +468,11 @@
       <DependentUpon>DistributorWise.xsd</DependentUpon>
     </Compile>
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="FinalOrder.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FinalOrder.xsd</DependentUpon>
+    </Compile>
     <Compile Include="FollowupRangeA.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -466,6 +506,41 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Itemwise.xsd</DependentUpon>
     </Compile>
+    <Compile Include="MMCDailyDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCDailyDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCFollowUp.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCFollowUp.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCOrder.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCOrder.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCOrdersFinalReport.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCOrdersFinalReport.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCPDFDaily.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCPDFDaily.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="MMCStock.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MMCStock.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Models\MVCDatatableApp.cs" />
     <Compile Include="Monthly.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -482,10 +557,30 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OnvsOff.xsd</DependentUpon>
     </Compile>
+    <Compile Include="OrderForExcelDaily.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrderForExcelDaily.xsd</DependentUpon>
+    </Compile>
     <Compile Include="OrderInExcel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>OrderInExcel.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="OrdersInMMC.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OrdersInMMC.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="PDFORDER.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PDFORDER.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="PDFORDERMMC.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PDFORDERMMC.xsd</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\RegionalHeadViewModel.cs" />
@@ -647,6 +742,11 @@
       <DependentUpon>ShopVisit_Summary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="RSMOrdersDailyPDF.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RSMOrdersDailyPDF.xsd</DependentUpon>
+    </Compile>
     <Compile Include="SOWise.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -800,6 +900,7 @@
     <Content Include="Images\accent.png" />
     <Content Include="Images\banner_big.jpg" />
     <Content Include="Images\bullet.png" />
+    <Content Include="Images\e8e1be93-0bcb-4b54-a2a5-7744d9b33839.jpg" />
     <Content Include="Images\GoldenPearl.jpg" />
     <Content Include="Images\GPC_Banner.bmp" />
     <Content Include="Images\heroAccent.png" />
@@ -819,6 +920,7 @@
     <Content Include="Images\orderedList7.png" />
     <Content Include="Images\orderedList8.png" />
     <Content Include="Images\orderedList9.png" />
+    <Content Include="Images\Panda-Logo-with-cap.png" />
     <Content Include="Images\pin.png" />
     <Content Include="Images\RetailerJobImages\1724KhizarButt25-27-2017032703.jpg" />
     <Content Include="Images\RetailerJobImages\1724KhizarButt25-33-2017033355.jpg" />
@@ -836,6 +938,7 @@
     <Content Include="Images\SchoolPictures\School13-09-2018030904.jpg" />
     <Content Include="Images\SchoolPictures\School13-09-2018030952.jpg" />
     <Content Include="Images\SchoolPictures\School13-10-2018031028.jpg" />
+    <Content Include="Images\Servislogo.jpeg" />
     <Content Include="Images\shell_large.jpg" />
     <Content Include="Images\UserImages\11059668_10153919969241011_3297493721568984608_n.jpg" />
     <Content Include="Images\UserImages\12418023_1021983467899412_1895152289259641402_n.jpg" />
@@ -848,6 +951,7 @@
     <Content Include="Images\UserImages\Khizar.jpg" />
     <Content Include="Images\UserImages\Untitled-1.png" />
     <Content Include="Images\UserImages\user.png" />
+    <Content Include="Images\WhatsApp Image 2022-02-16 at 7.34.17 PM.jpeg" />
     <Content Include="Images\Whitening_REpairing_Cream__10736.1413186187.500.750.jpg" />
     <Content Include="LOGO16.ico" />
     <Content Include="favicon.ico" />
@@ -899,6 +1003,28 @@
     <Content Include="brand.xss">
       <DependentUpon>brand.xsd</DependentUpon>
     </Content>
+    <Content Include="BrandMMC.xsc">
+      <DependentUpon>BrandMMC.xsd</DependentUpon>
+    </Content>
+    <Content Include="BrandGridInRpt.xsc">
+      <DependentUpon>BrandGridInRpt.xsd</DependentUpon>
+    </Content>
+    <None Include="BrandGridInRpt.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BrandGridInRpt.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="BrandGridInRpt.xss">
+      <DependentUpon>BrandGridInRpt.xsd</DependentUpon>
+    </Content>
+    <None Include="BrandMMC.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BrandMMC.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="BrandMMC.xss">
+      <DependentUpon>BrandMMC.xsd</DependentUpon>
+    </Content>
     <None Include="Brandwise.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>Brandwise.Designer.cs</LastGenOutput>
@@ -909,6 +1035,17 @@
     </Content>
     <Content Include="CalForReport.xsc">
       <DependentUpon>CalForReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="BrandWiseSummary.xsc">
+      <DependentUpon>BrandWiseSummary.xsd</DependentUpon>
+    </Content>
+    <None Include="BrandWiseSummary.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BrandWiseSummary.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="BrandWiseSummary.xss">
+      <DependentUpon>BrandWiseSummary.xsd</DependentUpon>
     </Content>
     <None Include="CalForReport.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -931,6 +1068,28 @@
     </None>
     <Content Include="CityWiseItemSummary.xss">
       <DependentUpon>CityWiseItemSummary.xsd</DependentUpon>
+    </Content>
+    <Content Include="CompititorMMC.xsc">
+      <DependentUpon>CompititorMMC.xsd</DependentUpon>
+    </Content>
+    <None Include="CompititorMMC.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>CompititorMMC.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="CompititorMMC.xss">
+      <DependentUpon>CompititorMMC.xsd</DependentUpon>
+    </Content>
+    <Content Include="DailySOPDF.xsc">
+      <DependentUpon>DailySOPDF.xsd</DependentUpon>
+    </Content>
+    <None Include="DailySOPDF.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DailySOPDF.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="DailySOPDF.xss">
+      <DependentUpon>DailySOPDF.xsd</DependentUpon>
     </Content>
     <None Include="DataForAll.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -991,6 +1150,17 @@
     </Content>
     <Content Include="FollowupRangeA.xsc">
       <DependentUpon>FollowupRangeA.xsd</DependentUpon>
+    </Content>
+    <Content Include="FinalOrder.xsc">
+      <DependentUpon>FinalOrder.xsd</DependentUpon>
+    </Content>
+    <None Include="FinalOrder.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>FinalOrder.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="FinalOrder.xss">
+      <DependentUpon>FinalOrder.xsd</DependentUpon>
     </Content>
     <None Include="FollowupRangeA.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -1054,6 +1224,83 @@
     </None>
     <Content Include="Itemwise.xss">
       <DependentUpon>Itemwise.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCOrder.xsc">
+      <DependentUpon>MMCOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCFollowUp.xsc">
+      <DependentUpon>MMCFollowUp.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCDataSet.xsc">
+      <DependentUpon>MMCDataSet.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCDailyDataSet.xsc">
+      <DependentUpon>MMCDailyDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCDailyDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCDailyDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCDailyDataSet.xss">
+      <DependentUpon>MMCDailyDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCDataSet.xss">
+      <DependentUpon>MMCDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCFollowUp.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCFollowUp.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCFollowUp.xss">
+      <DependentUpon>MMCFollowUp.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCOrder.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCOrder.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCOrder.xss">
+      <DependentUpon>MMCOrder.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCStock.xsc">
+      <DependentUpon>MMCStock.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCOrdersFinalReport.xsc">
+      <DependentUpon>MMCOrdersFinalReport.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCOrdersFinalReport.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCOrdersFinalReport.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCOrdersFinalReport.xss">
+      <DependentUpon>MMCOrdersFinalReport.xsd</DependentUpon>
+    </Content>
+    <Content Include="MMCPDFDaily.xsc">
+      <DependentUpon>MMCPDFDaily.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCPDFDaily.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCPDFDaily.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCPDFDaily.xss">
+      <DependentUpon>MMCPDFDaily.xsd</DependentUpon>
+    </Content>
+    <None Include="MMCStock.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>MMCStock.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="MMCStock.xss">
+      <DependentUpon>MMCStock.xsd</DependentUpon>
     </Content>
     <None Include="Monthly.xsd">
       <Generator>MSDataSetGenerator</Generator>
@@ -1148,6 +1395,17 @@
     <Content Include="OnvsOff.xss">
       <DependentUpon>OnvsOff.xsd</DependentUpon>
     </Content>
+    <Content Include="OrderForExcelDaily.xsc">
+      <DependentUpon>OrderForExcelDaily.xsd</DependentUpon>
+    </Content>
+    <None Include="OrderForExcelDaily.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrderForExcelDaily.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="OrderForExcelDaily.xss">
+      <DependentUpon>OrderForExcelDaily.xsd</DependentUpon>
+    </Content>
     <None Include="OrderInExcel.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>OrderInExcel.Designer.cs</LastGenOutput>
@@ -1155,6 +1413,39 @@
     </None>
     <Content Include="OrderInExcel.xss">
       <DependentUpon>OrderInExcel.xsd</DependentUpon>
+    </Content>
+    <Content Include="OrdersInMMC.xsc">
+      <DependentUpon>OrdersInMMC.xsd</DependentUpon>
+    </Content>
+    <None Include="OrdersInMMC.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>OrdersInMMC.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="OrdersInMMC.xss">
+      <DependentUpon>OrdersInMMC.xsd</DependentUpon>
+    </Content>
+    <Content Include="PDFORDER.xsc">
+      <DependentUpon>PDFORDER.xsd</DependentUpon>
+    </Content>
+    <None Include="PDFORDER.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PDFORDER.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="PDFORDER.xss">
+      <DependentUpon>PDFORDER.xsd</DependentUpon>
+    </Content>
+    <Content Include="PDFORDERMMC.xsc">
+      <DependentUpon>PDFORDERMMC.xsd</DependentUpon>
+    </Content>
+    <None Include="PDFORDERMMC.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>PDFORDERMMC.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="PDFORDERMMC.xss">
+      <DependentUpon>PDFORDERMMC.xsd</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\WallCoatFOS.pubxml" />
     <Content Include="regionwiseordersandfollowups.xsc">
@@ -1167,6 +1458,17 @@
     </None>
     <Content Include="regionwiseordersandfollowups.xss">
       <DependentUpon>regionwiseordersandfollowups.xsd</DependentUpon>
+    </Content>
+    <Content Include="RSMOrdersDailyPDF.xsc">
+      <DependentUpon>RSMOrdersDailyPDF.xsd</DependentUpon>
+    </Content>
+    <None Include="RSMOrdersDailyPDF.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>RSMOrdersDailyPDF.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="RSMOrdersDailyPDF.xss">
+      <DependentUpon>RSMOrdersDailyPDF.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\bootstrap-popover.js" />
@@ -1335,7 +1637,6 @@
     <Content Include="Views\Reports\FOSPlanning.cshtml" />
     <Content Include="Views\Item\MainCategory.cshtml" />
     <Content Include="Views\Item\SubCategory.cshtml" />
-    <Content Include="Views\Item\Item.cshtml" />
     <Content Include="Views\Item\SubCategoryA.cshtml" />
     <Content Include="Views\Setup\ActivityPurpose.cshtml" />
     <Content Include="Views\Job\StockTaking.cshtml" />
@@ -1412,6 +1713,8 @@
     <Content Include="Views\Setup\DelieveryBoys.cshtml" />
     <Content Include="Views\Dealer\DealerDispatch.cshtml" />
     <Content Include="Views\Reports\ItemSaleSummary.cshtml" />
+    <Content Include="Views\Item\Item.cshtml" />
+    <Content Include="Views\Reports\RetailerSummery.cshtml" />
     <None Include="WeeklyReport.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>WeeklyReport.Designer.cs</LastGenOutput>
@@ -1560,12 +1863,14 @@
     <EmbeddedResource Include="Views\Reports\DispatchForVan.rdlc" />
     <EmbeddedResource Include="Views\Reports\ItemCityWise.rdlc" />
     <EmbeddedResource Include="Views\Reports\ItemRegionWise.rdlc" />
+    <EmbeddedResource Include="Views\Reports\MMCOrdersRSM.rdlc" />
     <EmbeddedResource Include="Views\Reports\OnlineOfflineWise.rdlc" />
     <EmbeddedResource Include="Views\Reports\DistributorWise.rdlc" />
     <EmbeddedResource Include="Views\Reports\MonthlyReport.rdlc" />
     <EmbeddedResource Include="Views\Reports\ItemWise.rdlc" />
     <EmbeddedResource Include="Views\Reports\DailyKPI.rdlc" />
     <EmbeddedResource Include="Views\Reports\StockPosition.rdlc" />
+    <EmbeddedResource Include="Views\Reports\MMCOrders.rdlc" />
     <EmbeddedResource Include="Views\Reports\Weeklymonthly.rdlc" />
     <EmbeddedResource Include="Views\Reports\SOWise.rdlc" />
     <EmbeddedResource Include="Views\Reports\RegionWise.rdlc" />

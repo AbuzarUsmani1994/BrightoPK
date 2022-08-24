@@ -296,9 +296,7 @@
            
 
         $("#RegionID").change(function () {
-            $('#Name').val('');
-            $('#CityCode').val('');
-            $('#ShortCode').val('');
+           
             $('#datatab').dataTable().fnDestroy();
             GenerateDetailGrid();
 

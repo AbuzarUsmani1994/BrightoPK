@@ -20,6 +20,13 @@ namespace FOS.DataLayer
         public Nullable<int> CityID { get; set; }
         public string Type { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
+        public Nullable<int> DealerID { get; set; }
+        public Nullable<decimal> MarketStartLat { get; set; }
+        public Nullable<decimal> MarketStartLong { get; set; }
+        public string MarketStartLatlong { get; set; }
+        public Nullable<decimal> MarketCloseLat { get; set; }
+        public Nullable<decimal> MarketCloseLong { get; set; }
+        public string MarketCloseLatlong { get; set; }
     
         public virtual City City { get; set; }
         public virtual Region Region { get; set; }

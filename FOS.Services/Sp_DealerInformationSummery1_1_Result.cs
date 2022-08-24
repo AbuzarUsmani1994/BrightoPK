@@ -22,5 +22,7 @@ namespace FOS.DataLayer
         public string Contact2 { get; set; }
         public string CNIC { get; set; }
         public string Active { get; set; }
+        public int DistID { get; set; }
+        public string Region { get; set; }
     }
 }

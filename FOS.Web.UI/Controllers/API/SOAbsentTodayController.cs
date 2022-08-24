@@ -56,6 +56,7 @@ namespace FOS.Web.UI.Controllers.API
 
                                     SaleOfficerName = itm.SaleOfficer.Name,
                                     SaleOfficerID = itm.SaleOfficerID,
+                                    LoginDate=itm.CreatedOn
 
                                 });
 
@@ -69,7 +70,7 @@ namespace FOS.Web.UI.Controllers.API
 
                                 SaleOfficerName = itm.SaleOfficer.Name,
                                 SaleOfficerID = itm.SaleOfficerID,
-
+                                LoginDate = itm.CreatedOn
                             });
                         }
 

@@ -219,6 +219,19 @@
           <Property Name="InvoicedDate" Type="datetime" />
           <Property Name="DispatchDate" Type="datetime" />
           <Property Name="DelieveryboyID" Type="int" />
+          <Property Name="FromDateOnInvoiced" Type="datetime" />
+          <Property Name="ToDateOnInvoiced" Type="datetime" />
+          <Property Name="DispatchInVanMasterID" Type="int" />
+        </EntityType>
+        <EntityType Name="DispatchInVanMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Jobid" Type="int" />
+          <Property Name="SoNames" Type="varchar" MaxLength="50" />
+          <Property Name="DelieveryboyName" Type="varchar" MaxLength="50" />
+          <Property Name="DealerID" Type="int" />
         </EntityType>
         <EntityType Name="FeeStructure">
           <Key>
@@ -291,6 +304,26 @@
           <Property Name="DispatchQuantity" Type="varchar" MaxLength="255" />
           <Property Name="DispatchDate" Type="datetime" />
           <Property Name="Status" Type="varchar" MaxLength="255" />
+          <Property Name="Danda" Type="int" />
+          <Property Name="Carton" Type="int" />
+          <Property Name="FinalValue" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CompititorProductID" Type="int" />
+          <Property Name="CompititorProductName" Type="varchar" MaxLength="100" />
+          <Property Name="CompititorPurchaseRate" Type="varchar" MaxLength="100" />
+          <Property Name="CompititorSaleRate" Type="varchar" MaxLength="100" />
+          <Property Name="CompititorSize" Type="varchar" MaxLength="100" />
+          <Property Name="OrderQuantity" Type="varchar" MaxLength="100" />
+          <Property Name="OwnProductID" Type="int" />
+          <Property Name="OwnProductName" Type="varchar" MaxLength="100" />
+          <Property Name="OwnPurchaseRate" Type="varchar" MaxLength="100" />
+          <Property Name="OwnSaleRate" Type="varchar" MaxLength="100" />
+          <Property Name="StockQuantity" Type="varchar" MaxLength="100" />
+          <Property Name="DistSOP" Type="bit" />
+          <Property Name="SSSOP" Type="bit" />
+          <Property Name="WSSOP" Type="bit" />
+          <Property Name="DealerID" Type="int" />
+          <Property Name="Availability" Type="varchar" MaxLength="50" />
+          <Property Name="AvailableProductID" Type="int" />
         </EntityType>
         <EntityType Name="Jobs">
           <Key>
@@ -419,6 +452,11 @@
           <Property Name="OrderTotal" Type="int" />
           <Property Name="DiscountedTotal" Type="int" />
           <Property Name="Dispatchstatus" Type="varchar" MaxLength="255" />
+          <Property Name="Lastvisitdate" Type="datetime" />
+          <Property Name="LastvisitType" Type="varchar" MaxLength="500" />
+          <Property Name="ReasonForNoSaleID" Type="int" />
+          <Property Name="VisitTypeID" Type="int" />
+          <Property Name="OtherReasonFornoSale" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="JobsDetail_HTR">
           <Key>
@@ -766,6 +804,9 @@
           <Property Name="RangeBDealer" Type="int" />
           <Property Name="RangeCDealer" Type="int" />
           <Property Name="RangeID" Type="int" />
+          <Property Name="Shoptype" Type="varchar" MaxLength="255" />
+          <Property Name="NewOrOld" Type="varchar" MaxLength="255" />
+          <Property Name="Quota" Type="int" />
         </EntityType>
         <EntityType Name="RetailersForApproval">
           <Key>
@@ -872,6 +913,7 @@
           <Property Name="LeaveOn" Type="datetime" />
           <Property Name="JoiningDate" Type="datetime" />
           <Property Name="SOType" Type="varchar" MaxLength="255" />
+          <Property Name="SORoleID" Type="int" />
         </EntityType>
         <EntityType Name="SalesOfficerJobs">
           <Key>
@@ -909,6 +951,13 @@
           <Property Name="CityID" Type="int" />
           <Property Name="Type" Type="varchar" MaxLength="500" />
           <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="DealerID" Type="int" />
+          <Property Name="MarketStartLat" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="MarketStartLong" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="MarketStartLatlong" Type="varchar" MaxLength="100" />
+          <Property Name="MarketCloseLat" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="MarketCloseLong" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="MarketCloseLatlong" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="SODesignations">
           <Key>
@@ -917,6 +966,14 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="500" />
           <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="SOTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
         </EntityType>
         <EntityType Name="StockInvoice">
           <Key>
@@ -999,6 +1056,57 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="RegionID" Type="int" />
         </EntityType>
+        <EntityType Name="Tbl_ChecklistBeforeVisit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Tbl_CompititorBrand">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemID" Type="int" />
+          <Property Name="PRCarton" Type="int" />
+          <Property Name="PRDanda" Type="int" />
+          <Property Name="PRGhatta" Type="int" />
+          <Property Name="SRCarton" Type="int" />
+          <Property Name="SRDanda" Type="int" />
+          <Property Name="SRGhatta" Type="int" />
+          <Property Name="SourceOfPurchase" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="Brandname" Type="varchar" MaxLength="500" />
+          <Property Name="JobID" Type="int" />
+          <Property Name="ProdAvailability" Type="varchar" MaxLength="255" />
+          <Property Name="Size" Type="varchar" MaxLength="30" />
+          <Property Name="PurchaseFinalValue" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SaleFinalValue" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="TBL_CompititorBrandsForDropDown">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="TBL_CurrentStock">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobID" Type="int" />
+          <Property Name="ItemID" Type="int" />
+          <Property Name="Carton" Type="int" />
+          <Property Name="Danda" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="FinalValue" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
         <EntityType Name="Tbl_FollowupReasons">
           <Key>
             <PropertyRef Name="ID" />
@@ -1022,6 +1130,33 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="Createdby" Type="int" />
         </EntityType>
+        <EntityType Name="Tbl_NoSaleReason">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Tbl_OurBrandRate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemID" Type="int" />
+          <Property Name="PRCarton" Type="int" />
+          <Property Name="PRDanda" Type="int" />
+          <Property Name="PRGhatta" Type="int" />
+          <Property Name="SRCarton" Type="int" />
+          <Property Name="SRDanda" Type="int" />
+          <Property Name="SRGhatta" Type="int" />
+          <Property Name="SourceOfPurchase" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="JobID" Type="int" />
+          <Property Name="ProdAvailability" Type="varchar" MaxLength="255" />
+          <Property Name="PurchaseFinalValue" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SaleFinalValue" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
         <EntityType Name="Tbl_RetailerClass">
           <Key>
             <PropertyRef Name="ID" />
@@ -1040,6 +1175,40 @@
           <Property Name="IsActive" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
           <Property Name="CreatedBy" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TBL_RouteSelection">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SOID" Type="int" />
+          <Property Name="RegionID" Type="int" />
+          <Property Name="CityID" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tbl_RSMCheckList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SummaryID" Type="int" />
+          <Property Name="CheckListID" Type="int" />
+          <Property Name="CreatedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tbl_RSMSummary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityID" Type="int" />
+          <Property Name="DistributorID" Type="int" />
+          <Property Name="SOID" Type="int" />
+          <Property Name="VisitObjectives" Type="varchar" MaxLength="500" />
+          <Property Name="DistributorPerformance" Type="varchar" MaxLength="500" />
+          <Property Name="SOPerformance" Type="varchar" MaxLength="500" />
+          <Property Name="MarketGap" Type="varchar" MaxLength="500" />
+          <Property Name="Comments" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Tbl_SchoolException">
           <Key>
@@ -1093,6 +1262,14 @@
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="DealerID" Type="int" />
+        </EntityType>
+        <EntityType Name="Tbl_VisittypesOfSO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="TblDetailScheme">
           <Key>
@@ -1226,7 +1403,7 @@
           <Property Name="UpdatedBy" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'MMC.dbo.vActiveJobs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vActiveJobs">
           <Key>
             <PropertyRef Name="TID" />
@@ -1541,6 +1718,18 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             </Principal>
             <Dependent Role="DispatchInVan">
               <PropertyRef Name="SOID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DispatchInVanMaster_Dealers">
+          <End Role="Dealers" Type="Self.Dealers" Multiplicity="0..1" />
+          <End Role="DispatchInVanMaster" Type="Self.DispatchInVanMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dealers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DispatchInVanMaster">
+              <PropertyRef Name="DealerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2222,6 +2411,30 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TBL_CurrentStock_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="TBL_CurrentStock" Type="Self.TBL_CurrentStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemID" />
+            </Principal>
+            <Dependent Role="TBL_CurrentStock">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_CurrentStock_Jobs">
+          <End Role="Jobs" Type="Self.Jobs" Multiplicity="0..1" />
+          <End Role="TBL_CurrentStock" Type="Self.TBL_CurrentStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Jobs">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TBL_CurrentStock">
+              <PropertyRef Name="JobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Tbl_MasterStock_RegionalHeads">
           <End Role="RegionalHeads" Type="Self.RegionalHeads" Multiplicity="1" />
           <End Role="Tbl_MasterStock" Type="Self.Tbl_MasterStock" Multiplicity="*" />
@@ -2255,6 +2468,78 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             </Principal>
             <Dependent Role="Tbl_MasterStock">
               <PropertyRef Name="SaleOfficerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_OurBrandRate_Item">
+          <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+          <End Role="Tbl_OurBrandRate" Type="Self.Tbl_OurBrandRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemID" />
+            </Principal>
+            <Dependent Role="Tbl_OurBrandRate">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit">
+          <End Role="Tbl_ChecklistBeforeVisit" Type="Self.Tbl_ChecklistBeforeVisit" Multiplicity="0..1" />
+          <End Role="Tbl_RSMCheckList" Type="Self.Tbl_RSMCheckList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_ChecklistBeforeVisit">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMCheckList">
+              <PropertyRef Name="CheckListID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMCheckList_Tbl_RSMSummary">
+          <End Role="Tbl_RSMSummary" Type="Self.Tbl_RSMSummary" Multiplicity="0..1" />
+          <End Role="Tbl_RSMCheckList" Type="Self.Tbl_RSMCheckList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_RSMSummary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMCheckList">
+              <PropertyRef Name="SummaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMSummary_Cities">
+          <End Role="Cities" Type="Self.Cities" Multiplicity="0..1" />
+          <End Role="Tbl_RSMSummary" Type="Self.Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cities">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMSummary_Dealers">
+          <End Role="Dealers" Type="Self.Dealers" Multiplicity="0..1" />
+          <End Role="Tbl_RSMSummary" Type="Self.Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dealers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="DistributorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMSummary_SaleOfficers">
+          <End Role="SaleOfficers" Type="Self.SaleOfficers" Multiplicity="0..1" />
+          <End Role="Tbl_RSMSummary" Type="Self.Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SaleOfficers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="SOID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2557,6 +2842,13 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="RangeID" Type="int" Mode="In" />
           <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_FollowUpVisitsDailyForMMC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_FollowUpVisitsDailyRangeB" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="StartingDate" Type="date" Mode="In" />
           <Parameter Name="EndingDate" Type="date" Mode="In" />
@@ -2595,6 +2887,14 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="SOID" Type="int" Mode="In" />
           <Parameter Name="DateFrom" Type="date" Mode="In" />
           <Parameter Name="dateto" Type="date" Mode="In" />
+        </Function>
+        <Function Name="sp_GetDashboardData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="datefrom" Type="date" Mode="In" />
+          <Parameter Name="dateto" Type="date" Mode="In" />
+          <Parameter Name="RHID" Type="int" Mode="In" />
+          <Parameter Name="dateLastMonthStart" Type="date" Mode="In" />
+          <Parameter Name="dateLastMonthend" Type="date" Mode="In" />
+          <Parameter Name="rangeID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_GetDealersForEditFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="saleofficerID" Type="int" Mode="In" />
@@ -2737,6 +3037,11 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="RegionID" Type="int" Mode="In" />
           <Parameter Name="RangeID" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_GetSOListAccordingToDistributor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SoID" Type="int" Mode="In" />
+          <Parameter Name="datefrom" Type="date" Mode="In" />
+          <Parameter Name="dateto" Type="date" Mode="In" />
+        </Function>
         <Function Name="sp_GetSOListInDSR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SoID" Type="int" Mode="In" />
           <Parameter Name="datefrom" Type="date" Mode="In" />
@@ -2820,6 +3125,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="regionID" Type="int" Mode="In" />
           <Parameter Name="RangeID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_LastthreeCurrentStock" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="JobID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_LessItemsSoldRegionandCityWise" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DateFrom" Type="date" Mode="In" />
           <Parameter Name="dateTo" Type="date" Mode="In" />
@@ -2846,6 +3154,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="HeadId" Type="int" Mode="In" />
           <Parameter Name="SaleOfficerId" Type="int" Mode="In" />
           <Parameter Name="dealerId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_MyLastThreeVisits" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="JobID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_MyOrderListDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="JobID" Type="int" Mode="In" />
@@ -2923,8 +3234,28 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="dateFrom" Type="date" Mode="In" />
           <Parameter Name="dateTo" Type="date" Mode="In" />
         </Function>
+        <Function Name="Sp_MyVisitsMapViewForGPC1_4" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="Sp_MyVisitsMapViewForGPC1.4">
+          <Parameter Name="saleofficerID" Type="int" Mode="In" />
+          <Parameter Name="dateFrom" Type="date" Mode="In" />
+          <Parameter Name="dateTo" Type="date" Mode="In" />
+          <Parameter Name="RegionID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_MyVisitsMapViewForGPCFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="saleofficerID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_OrderForPDFinMMC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_OrderForPDFinMMCTest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_OrdersCurrentMonthQuantityWise" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DateFrom" Type="date" Mode="In" />
@@ -3104,6 +3435,20 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="RangeID" Type="int" Mode="In" />
           <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_OurBrandForPDFinMMC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_OurCompititorForPDFinMMC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_PresentSOBarGraph" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_PresentSOBarGraph1_1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="Sp_PresentSOBarGraph1.1">
           <Parameter Name="DateFrom" Type="date" Mode="In" />
@@ -3209,6 +3554,13 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="DateFrom" Type="date" Mode="In" />
           <Parameter Name="dateTo" Type="date" Mode="In" />
           <Parameter Name="rangeID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_StockForPDFinMMC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartingDate" Type="date" Mode="In" />
+          <Parameter Name="EndingDate" Type="date" Mode="In" />
+          <Parameter Name="DistributorID" Type="int" Mode="In" />
+          <Parameter Name="RangeID" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerID" Type="int" Mode="In" />
         </Function>
         <Function Name="Sp_StockInvoiceReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DateFrom" Type="date" Mode="In" />
@@ -3344,6 +3696,14 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="enddate" Type="date" Mode="In" />
           <Parameter Name="rangeID" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_Total_RetailerInformationSummery" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" StoreFunctionName="Sp_Total RetailerInformationSummery">
+          <Parameter Name="HeadId" Type="int" Mode="In" />
+          <Parameter Name="SaleOfficerId" Type="int" Mode="In" />
+          <Parameter Name="CityId" Type="int" Mode="In" />
+          <Parameter Name="startdate" Type="date" Mode="In" />
+          <Parameter Name="enddate" Type="date" Mode="In" />
+          <Parameter Name="rangeID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_Total_RetailerInformationSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="HeadId" Type="int" Mode="In" />
           <Parameter Name="SaleOfficerId" Type="int" Mode="In" />
@@ -3392,6 +3752,7 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySet Name="Dealers" EntityType="Self.Dealers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DelieveryBoys" EntityType="Self.DelieveryBoys" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DispatchInVan" EntityType="Self.DispatchInVan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DispatchInVanMaster" EntityType="Self.DispatchInVanMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FeeStructure" EntityType="Self.FeeStructure" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemGroupDetail" EntityType="Self.ItemGroupDetail" Schema="dbo" store:Type="Tables" />
@@ -3426,20 +3787,31 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySet Name="SMSLog" EntityType="Self.SMSLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SOAttendance" EntityType="Self.SOAttendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SODesignations" EntityType="Self.SODesignations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SOTypes" EntityType="Self.SOTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StockInvoice" EntityType="Self.StockInvoice" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StockPosition" EntityType="Self.StockPosition" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubCategory" EntityType="Self.SubCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SubCtegoryA" EntityType="Self.SubCtegoryA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sylabus" EntityType="Self.Sylabus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_Access" EntityType="Self.Tbl_Access" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_ChecklistBeforeVisit" EntityType="Self.Tbl_ChecklistBeforeVisit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_CompititorBrand" EntityType="Self.Tbl_CompititorBrand" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_CompititorBrandsForDropDown" EntityType="Self.TBL_CompititorBrandsForDropDown" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_CurrentStock" EntityType="Self.TBL_CurrentStock" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_FollowupReasons" EntityType="Self.Tbl_FollowupReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_MasterStock" EntityType="Self.Tbl_MasterStock" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_NoSaleReason" EntityType="Self.Tbl_NoSaleReason" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_OurBrandRate" EntityType="Self.Tbl_OurBrandRate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_RetailerClass" EntityType="Self.Tbl_RetailerClass" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_RetailerType" EntityType="Self.Tbl_RetailerType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_RouteSelection" EntityType="Self.TBL_RouteSelection" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_RSMCheckList" EntityType="Self.Tbl_RSMCheckList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_RSMSummary" EntityType="Self.Tbl_RSMSummary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_SchoolException" EntityType="Self.Tbl_SchoolException" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_SMSLogs" EntityType="Self.Tbl_SMSLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_SOREGIONS" EntityType="Self.Tbl_SOREGIONS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_StockDetail" EntityType="Self.tbl_StockDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_VisittypesOfSO" EntityType="Self.Tbl_VisittypesOfSO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblDetailScheme" EntityType="Self.TblDetailScheme" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblMasterScheme" EntityType="Self.TblMasterScheme" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblReminders" EntityType="Self.TblReminders" Schema="dbo" store:Type="Tables" />
@@ -3572,6 +3944,10 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <AssociationSet Name="FK_DispatchInVan_SaleOfficers" Association="Self.FK_DispatchInVan_SaleOfficers">
             <End Role="SaleOfficers" EntitySet="SaleOfficers" />
             <End Role="DispatchInVan" EntitySet="DispatchInVan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DispatchInVanMaster_Dealers" Association="Self.FK_DispatchInVanMaster_Dealers">
+            <End Role="Dealers" EntitySet="Dealers" />
+            <End Role="DispatchInVanMaster" EntitySet="DispatchInVanMaster" />
           </AssociationSet>
           <AssociationSet Name="FK_Item_MainCategory" Association="Self.FK_Item_MainCategory">
             <End Role="MainCategory" EntitySet="MainCategory" />
@@ -3797,6 +4173,14 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <End Role="SaleOfficers" EntitySet="SaleOfficers" />
             <End Role="Tbl_Access" EntitySet="Tbl_Access" />
           </AssociationSet>
+          <AssociationSet Name="FK_TBL_CurrentStock_Item" Association="Self.FK_TBL_CurrentStock_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="TBL_CurrentStock" EntitySet="TBL_CurrentStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_CurrentStock_Jobs" Association="Self.FK_TBL_CurrentStock_Jobs">
+            <End Role="Jobs" EntitySet="Jobs" />
+            <End Role="TBL_CurrentStock" EntitySet="TBL_CurrentStock" />
+          </AssociationSet>
           <AssociationSet Name="FK_Tbl_MasterStock_RegionalHeads" Association="Self.FK_Tbl_MasterStock_RegionalHeads">
             <End Role="RegionalHeads" EntitySet="RegionalHeads" />
             <End Role="Tbl_MasterStock" EntitySet="Tbl_MasterStock" />
@@ -3808,6 +4192,30 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <AssociationSet Name="FK_Tbl_MasterStock_SaleOfficers" Association="Self.FK_Tbl_MasterStock_SaleOfficers">
             <End Role="SaleOfficers" EntitySet="SaleOfficers" />
             <End Role="Tbl_MasterStock" EntitySet="Tbl_MasterStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_OurBrandRate_Item" Association="Self.FK_Tbl_OurBrandRate_Item">
+            <End Role="Item" EntitySet="Item" />
+            <End Role="Tbl_OurBrandRate" EntitySet="Tbl_OurBrandRate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit" Association="Self.FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit">
+            <End Role="Tbl_ChecklistBeforeVisit" EntitySet="Tbl_ChecklistBeforeVisit" />
+            <End Role="Tbl_RSMCheckList" EntitySet="Tbl_RSMCheckList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMCheckList_Tbl_RSMSummary" Association="Self.FK_Tbl_RSMCheckList_Tbl_RSMSummary">
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+            <End Role="Tbl_RSMCheckList" EntitySet="Tbl_RSMCheckList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMSummary_Cities" Association="Self.FK_Tbl_RSMSummary_Cities">
+            <End Role="Cities" EntitySet="Cities" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMSummary_Dealers" Association="Self.FK_Tbl_RSMSummary_Dealers">
+            <End Role="Dealers" EntitySet="Dealers" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMSummary_SaleOfficers" Association="Self.FK_Tbl_RSMSummary_SaleOfficers">
+            <End Role="SaleOfficers" EntitySet="SaleOfficers" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
           </AssociationSet>
           <AssociationSet Name="FK_Tbl_SchoolException_SaleOfficers" Association="Self.FK_Tbl_SchoolException_SaleOfficers">
             <End Role="SaleOfficers" EntitySet="SaleOfficers" />
@@ -4216,9 +4624,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <FunctionImport Name="Sp_MyOrderListSummery" ReturnType="Collection(FOS_WallCoatModel.Sp_MyOrderListSummery_Result)">
           <Parameter Name="RegionID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_MyOrderListDetail" ReturnType="Collection(FOS_WallCoatModel.Sp_MyOrderListDetail_Result)">
-          <Parameter Name="JobID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_GetItemsRelatedtoStock" ReturnType="Collection(FOS_WallCoatModel.Sp_GetItemsRelatedtoStock_Result)">
           <Parameter Name="JobID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -4262,9 +4667,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Parameter Name="JobID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_GetDealersForEditFinalRequest" ReturnType="Collection(FOS_WallCoatModel.Sp_GetDealersForEditFinalRequest_Result)">
-          <Parameter Name="saleofficerID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_GetRetailerForEditFinalRequest" ReturnType="Collection(FOS_WallCoatModel.Sp_GetRetailerForEditFinalRequest_Result)">
           <Parameter Name="saleofficerID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_StockTakingDetail" ReturnType="Collection(FOS_WallCoatModel.Sp_StockTakingDetail_Result)">
@@ -4469,10 +4871,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="dateTo" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="Sp_SOVisitsToday1_1" ReturnType="Collection(FOS_WallCoatModel.Sp_SOVisitsToday1_1_Result)">
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="Sp_Top10DistributorOrdersCityWiseGraph1_3" ReturnType="Collection(FOS_WallCoatModel.Sp_Top10DistributorOrdersCityWiseGraph1_3_Result)">
             <Parameter Name="date" Mode="In" Type="DateTime" />
             <Parameter Name="SOID" Mode="In" Type="Int32" />
@@ -4623,11 +5021,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
             <Parameter Name="RangeID" Mode="In" Type="Int32" />
             <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="spGetSalesOfficerWithLoginDate" ReturnType="Collection(FOS_WallCoatModel.spGetSalesOfficerWithLoginDate_Result)">
-            <Parameter Name="RID" Mode="In" Type="Int32" />
-            <Parameter Name="startDate" Mode="In" Type="DateTime" />
-            <Parameter Name="endDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="Sp__ShopBrandWiseDisplay2" ReturnType="Collection(FOS_WallCoatModel.Sp__ShopBrandWiseDisplay2_Result)">
             <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
@@ -4861,13 +5254,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="RangeID" Mode="In" Type="Int32" />
             <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_OrderSummeryReportInExcel2_5" ReturnType="Collection(FOS_WallCoatModel.Sp_OrderSummeryReportInExcel2_5_Result)">
-            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
-            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
-            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
-            <Parameter Name="RangeID" Mode="In" Type="Int32" />
-            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="sp_getOnlineVsOffline" ReturnType="Collection(FOS_WallCoatModel.sp_getOnlineVsOffline_Result)">
             <Parameter Name="datefrom" Mode="In" Type="DateTime" />
             <Parameter Name="dateto" Mode="In" Type="DateTime" />
@@ -4932,18 +5318,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <FunctionImport Name="Sp_Top10RetailersOrderCityWiseGraphMonthly" ReturnType="Collection(FOS_WallCoatModel.Sp_Top10RetailersOrderCityWiseGraphMonthly_Result)">
             <Parameter Name="datetart" Mode="In" Type="DateTime" />
             <Parameter Name="dateend" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_OrdersCurrentMonthQuantityWise" ReturnType="Collection(FOS_WallCoatModel.Sp_OrdersCurrentMonthQuantityWise_Result)">
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Top10OrderAmount" ReturnType="Collection(FOS_WallCoatModel.Sp_Top10OrderAmount_Result)">
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_Top30ItemsSoldMonthWise" ReturnType="Collection(FOS_WallCoatModel.Sp_Top30ItemsSoldMonthWise_Result)">
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="Sp_TotalLinesForSummaryInDSR" ReturnType="Collection(Int32)">
             <Parameter Name="RegionID" Mode="In" Type="Int32" />
@@ -5215,14 +5589,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="rangeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="RSMPortalUsers" EntityType="FOS_WallCoatModel.RSMPortalUser" />
-          <FunctionImport Name="Sp_Total_RetailerInformation1_5" ReturnType="Collection(FOS_WallCoatModel.Sp_Total_RetailerInformation1_5_Result)">
-            <Parameter Name="HeadId" Mode="In" Type="Int32" />
-            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
-            <Parameter Name="CityId" Mode="In" Type="Int32" />
-            <Parameter Name="startdate" Mode="In" Type="DateTime" />
-            <Parameter Name="enddate" Mode="In" Type="DateTime" />
-            <Parameter Name="rangeID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_AttandaceReport" ReturnType="Collection(FOS_WallCoatModel.Sp_AttandaceReport_Result)">
             <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
             <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
@@ -5239,27 +5605,11 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="dateto" Mode="In" Type="DateTime" />
             <Parameter Name="headid" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="Sp_GetTotalFollowup1_3" ReturnType="Collection(FOS_WallCoatModel.Sp_GetTotalFollowup1_3_Result)">
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
-            <Parameter Name="HeadID" Mode="In" Type="Int32" />
-            <Parameter Name="RangeID" Mode="In" Type="Int32" />
-            <Parameter Name="SOID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="sp_ShopsNotVisitedBySo1_3" ReturnType="Collection(FOS_WallCoatModel.sp_ShopsNotVisitedBySo1_3_Result)">
             <Parameter Name="SoID" Mode="In" Type="Int32" />
             <Parameter Name="cityID" Mode="In" Type="Int32" />
             <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="DateTo" Mode="In" Type="DateTime" />
-            <Parameter Name="rangeID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="sp_BrandAndItemWiseReport" ReturnType="Collection(FOS_WallCoatModel.sp_BrandAndItemWiseReport_Result)">
-            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
-            <Parameter Name="dateto" Mode="In" Type="DateTime" />
-            <Parameter Name="RHID" Mode="In" Type="Int32" />
-            <Parameter Name="SOID" Mode="In" Type="Int32" />
-            <Parameter Name="BrandID" Mode="In" Type="Int32" />
-            <Parameter Name="ItemId" Mode="In" Type="Int32" />
             <Parameter Name="rangeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="Sp_SOVisitsTodayForManagers" ReturnType="Collection(FOS_WallCoatModel.Sp_SOVisitsTodayForManagers_Result)">
@@ -5292,12 +5642,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <FunctionImport Name="Sp_SOVisitsTodayRangeWise" ReturnType="Collection(FOS_WallCoatModel.Sp_SOVisitsTodayRangeWise_Result)">
             <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="dateTo" Mode="In" Type="DateTime" />
-            <Parameter Name="rangeID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_DealerInformationSummery1_1" ReturnType="Collection(FOS_WallCoatModel.Sp_DealerInformationSummery1_1_Result)">
-            <Parameter Name="HeadId" Mode="In" Type="Int32" />
-            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
-            <Parameter Name="CityId" Mode="In" Type="Int32" />
             <Parameter Name="rangeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="ManagersLoginHsts" EntityType="FOS_WallCoatModel.ManagersLoginHst" />
@@ -5363,13 +5707,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="DistributorID" Mode="In" Type="Int32" />
             <Parameter Name="RangeID" Mode="In" Type="Int32" />
             <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="Sp_RetailersOrderDetailFinal1_3" ReturnType="Collection(FOS_WallCoatModel.Sp_RetailersOrderDetailFinal1_3_Result)">
-            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
-            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
-            <Parameter Name="HeadId" Mode="In" Type="Int32" />
-            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
-            <Parameter Name="RangeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="sp_GetSOListInDSR" ReturnType="Collection(FOS_WallCoatModel.sp_GetSOListInDSR_Result)">
             <Parameter Name="SoID" Mode="In" Type="Int32" />
@@ -5451,11 +5788,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="start" Mode="In" Type="DateTime" />
             <Parameter Name="end" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="Sp_GetDispatchDataForReport" ReturnType="Collection(FOS_WallCoatModel.Sp_GetDispatchDataForReport_Result)">
-            <Parameter Name="BoyID" Mode="In" Type="Int32" />
-            <Parameter Name="start" Mode="In" Type="DateTime" />
-            <Parameter Name="end" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="Sp_GetAllDataForExportofSO" ReturnType="Collection(FOS_WallCoatModel.Sp_GetAllDataForExportofSO_Result)">
             <Parameter Name="BoyID" Mode="In" Type="Int32" />
             <Parameter Name="start" Mode="In" Type="DateTime" />
@@ -5488,6 +5820,205 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
             <Parameter Name="dateto" Mode="In" Type="DateTime" />
             <Parameter Name="regionID" Mode="In" Type="Int32" />
             <Parameter Name="RangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetDispatchDataForReport" ReturnType="Collection(FOS_WallCoatModel.Sp_GetDispatchDataForReport_Result)">
+            <Parameter Name="BoyID" Mode="In" Type="Int32" />
+            <Parameter Name="start" Mode="In" Type="DateTime" />
+            <Parameter Name="end" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="DispatchInVanMasters" EntityType="FOS_WallCoatModel.DispatchInVanMaster" />
+          <AssociationSet Name="FK_DispatchInVanMaster_Dealers" Association="FOS_WallCoatModel.FK_DispatchInVanMaster_Dealers">
+            <End Role="Dealer" EntitySet="Dealers" />
+            <End Role="DispatchInVanMaster" EntitySet="DispatchInVanMasters" />
+          </AssociationSet>
+          <FunctionImport Name="Sp_Top30ItemsSoldMonthWise" ReturnType="Collection(FOS_WallCoatModel.Sp_Top30ItemsSoldMonthWise_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Top10OrderAmount" ReturnType="Collection(FOS_WallCoatModel.Sp_Top10OrderAmount_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_OrdersCurrentMonthQuantityWise" ReturnType="Collection(FOS_WallCoatModel.Sp_OrdersCurrentMonthQuantityWise_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetTotalFollowup1_3" ReturnType="Collection(FOS_WallCoatModel.Sp_GetTotalFollowup1_3_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="HeadID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SOID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_OrderSummeryReportInExcel2_5" ReturnType="Collection(FOS_WallCoatModel.Sp_OrderSummeryReportInExcel2_5_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_SOVisitsToday1_1" ReturnType="Collection(FOS_WallCoatModel.Sp_SOVisitsToday1_1_Result)">
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <EntitySet Name="TBL_RouteSelection" EntityType="FOS_WallCoatModel.TBL_RouteSelection" />
+          <EntitySet Name="Tbl_CompititorBrand" EntityType="FOS_WallCoatModel.Tbl_CompititorBrand" />
+          <EntitySet Name="TBL_CurrentStock" EntityType="FOS_WallCoatModel.TBL_CurrentStock" />
+          <EntitySet Name="Tbl_OurBrandRate" EntityType="FOS_WallCoatModel.Tbl_OurBrandRate" />
+          <AssociationSet Name="FK_TBL_CurrentStock_Item" Association="FOS_WallCoatModel.FK_TBL_CurrentStock_Item">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="TBL_CurrentStock" EntitySet="TBL_CurrentStock" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_OurBrandRate_Item" Association="FOS_WallCoatModel.FK_Tbl_OurBrandRate_Item">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="Tbl_OurBrandRate" EntitySet="Tbl_OurBrandRate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_CurrentStock_Jobs" Association="FOS_WallCoatModel.FK_TBL_CurrentStock_Jobs">
+            <End Role="Job" EntitySet="Jobs" />
+            <End Role="TBL_CurrentStock" EntitySet="TBL_CurrentStock" />
+          </AssociationSet>
+          <EntitySet Name="Tbl_NoSaleReason" EntityType="FOS_WallCoatModel.Tbl_NoSaleReason" />
+          <EntitySet Name="Tbl_VisittypesOfSO" EntityType="FOS_WallCoatModel.Tbl_VisittypesOfSO" />
+          <EntitySet Name="TBL_CompititorBrandsForDropDown" EntityType="FOS_WallCoatModel.TBL_CompititorBrandsForDropDown" />
+          <EntitySet Name="Tbl_ChecklistBeforeVisit" EntityType="FOS_WallCoatModel.Tbl_ChecklistBeforeVisit" />
+          <EntitySet Name="Tbl_RSMCheckList" EntityType="FOS_WallCoatModel.Tbl_RSMCheckList" />
+          <EntitySet Name="Tbl_RSMSummary" EntityType="FOS_WallCoatModel.Tbl_RSMSummary" />
+          <AssociationSet Name="FK_Tbl_RSMSummary_Cities" Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_Cities">
+            <End Role="City" EntitySet="Cities" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMSummary_Dealers" Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_Dealers">
+            <End Role="Dealer" EntitySet="Dealers" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMSummary_SaleOfficers" Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_SaleOfficers">
+            <End Role="SaleOfficer" EntitySet="SaleOfficers" />
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit" Association="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit">
+            <End Role="Tbl_ChecklistBeforeVisit" EntitySet="Tbl_ChecklistBeforeVisit" />
+            <End Role="Tbl_RSMCheckList" EntitySet="Tbl_RSMCheckList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_RSMCheckList_Tbl_RSMSummary" Association="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_RSMSummary">
+            <End Role="Tbl_RSMSummary" EntitySet="Tbl_RSMSummary" />
+            <End Role="Tbl_RSMCheckList" EntitySet="Tbl_RSMCheckList" />
+          </AssociationSet>
+          <EntitySet Name="SOTypes" EntityType="FOS_WallCoatModel.SOType" />
+          <FunctionImport Name="Sp_OrderForPDFinMMC" ReturnType="Collection(FOS_WallCoatModel.Sp_OrderForPDFinMMC_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_StockForPDFinMMC" ReturnType="Collection(FOS_WallCoatModel.Sp_StockForPDFinMMC_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_OurBrandForPDFinMMC" ReturnType="Collection(FOS_WallCoatModel.Sp_OurBrandForPDFinMMC_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_OurCompititorForPDFinMMC" ReturnType="Collection(FOS_WallCoatModel.Sp_OurCompititorForPDFinMMC_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetSOListAccordingToDistributor" ReturnType="Collection(FOS_WallCoatModel.sp_GetSOListAccordingToDistributor_Result)">
+            <Parameter Name="SoID" Mode="In" Type="Int32" />
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_LastthreeCurrentStock" ReturnType="Collection(FOS_WallCoatModel.Sp_LastthreeCurrentStock_Result)">
+          <Parameter Name="JobID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_GetRetailerForEditFinalRequest" ReturnType="Collection(FOS_WallCoatModel.Sp_GetRetailerForEditFinalRequest_Result)">
+          <Parameter Name="saleofficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_MyLastThreeVisits" ReturnType="Collection(FOS_WallCoatModel.Sp_MyLastThreeVisits_Result)">
+          <Parameter Name="JobID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_MyOrderListDetail" ReturnType="Collection(FOS_WallCoatModel.Sp_MyOrderListDetail_Result)">
+          <Parameter Name="JobID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_FollowUpVisitsDailyForMMC" ReturnType="Collection(FOS_WallCoatModel.Sp_FollowUpVisitsDailyForMMC_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_MyVisitsMapViewForGPC1_4" ReturnType="Collection(FOS_WallCoatModel.Sp_MyVisitsMapViewForGPC1_4_Result)">
+            <Parameter Name="saleofficerID" Mode="In" Type="Int32" />
+            <Parameter Name="dateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="RegionID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetSalesOfficerWithLoginDate" ReturnType="Collection(FOS_WallCoatModel.spGetSalesOfficerWithLoginDate_Result)">
+            <Parameter Name="RID" Mode="In" Type="Int32" />
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetDashboardData" ReturnType="Collection(FOS_WallCoatModel.sp_GetDashboardData_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+            <Parameter Name="RHID" Mode="In" Type="Int32" />
+            <Parameter Name="dateLastMonthStart" Mode="In" Type="DateTime" />
+            <Parameter Name="dateLastMonthend" Mode="In" Type="DateTime" />
+            <Parameter Name="rangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_DealerInformationSummery1_1" ReturnType="Collection(FOS_WallCoatModel.Sp_DealerInformationSummery1_1_Result)">
+            <Parameter Name="HeadId" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
+            <Parameter Name="CityId" Mode="In" Type="Int32" />
+            <Parameter Name="rangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Total_RetailerInformation1_5" ReturnType="Collection(FOS_WallCoatModel.Sp_Total_RetailerInformation1_5_Result)">
+            <Parameter Name="HeadId" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
+            <Parameter Name="CityId" Mode="In" Type="Int32" />
+            <Parameter Name="startdate" Mode="In" Type="DateTime" />
+            <Parameter Name="enddate" Mode="In" Type="DateTime" />
+            <Parameter Name="rangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Total_RetailerInformationSummery" ReturnType="Collection(FOS_WallCoatModel.Sp_Total_RetailerInformationSummery_Result)">
+            <Parameter Name="HeadId" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
+            <Parameter Name="CityId" Mode="In" Type="Int32" />
+            <Parameter Name="startdate" Mode="In" Type="DateTime" />
+            <Parameter Name="enddate" Mode="In" Type="DateTime" />
+            <Parameter Name="rangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_RetailersOrderDetailFinal1_3" ReturnType="Collection(FOS_WallCoatModel.Sp_RetailersOrderDetailFinal1_3_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="HeadId" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerId" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_OrderForPDFinMMCTest" ReturnType="Collection(FOS_WallCoatModel.Sp_OrderForPDFinMMCTest_Result)">
+            <Parameter Name="StartingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndingDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DistributorID" Mode="In" Type="Int32" />
+            <Parameter Name="RangeID" Mode="In" Type="Int32" />
+            <Parameter Name="SaleOfficerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_BrandAndItemWiseReport" ReturnType="Collection(FOS_WallCoatModel.sp_BrandAndItemWiseReport_Result)">
+            <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="dateto" Mode="In" Type="DateTime" />
+            <Parameter Name="RHID" Mode="In" Type="Int32" />
+            <Parameter Name="SOID" Mode="In" Type="Int32" />
+            <Parameter Name="BrandID" Mode="In" Type="Int32" />
+            <Parameter Name="ItemId" Mode="In" Type="Int32" />
+            <Parameter Name="rangeID" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="AreasRelatedtoCities_Result">
@@ -5877,6 +6408,7 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="StockPositions" Relationship="FOS_WallCoatModel.FK_StockPosition_Cities" FromRole="City" ToRole="StockPosition" />
           <NavigationProperty Name="SOAttendances" Relationship="FOS_WallCoatModel.FK_SOAttendance_Cities" FromRole="City" ToRole="SOAttendance" />
           <NavigationProperty Name="StockInvoices" Relationship="FOS_WallCoatModel.FK_StockInvoice_Cities" FromRole="City" ToRole="StockInvoice" />
+          <NavigationProperty Name="Tbl_RSMSummary" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_Cities" FromRole="City" ToRole="Tbl_RSMSummary" />
         </EntityType>
         <EntityType Name="CityZone">
           <Key>
@@ -5972,6 +6504,7 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="JobItems" Relationship="FOS_WallCoatModel.FK_JobItem_Jobs" FromRole="Job" ToRole="JobItem" />
           <NavigationProperty Name="SaleOfficer" Relationship="FOS_WallCoatModel.FK_Jobs_SaleOfficers" FromRole="Job" ToRole="SaleOfficer" />
           <NavigationProperty Name="JobsDetails" Relationship="FOS_WallCoatModel.FK_SoRetailersJobs_Jobs" FromRole="Job" ToRole="JobsDetail" />
+          <NavigationProperty Name="TBL_CurrentStock" Relationship="FOS_WallCoatModel.FK_TBL_CurrentStock_Jobs" FromRole="Job" ToRole="TBL_CurrentStock" />
         </EntityType>
         <EntityType Name="Jobs_HTR">
           <Key>
@@ -7041,11 +7574,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="DateTime" Name="VisitDate" Nullable="true" Precision="23" />
           <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="200" />
         </ComplexType>
-        <ComplexType Name="Sp_MyOrderListDetail_Result">
-          <Property Type="Int32" Name="JobID" Nullable="false" />
-          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
-          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="18" Scale="2" />
-        </ComplexType>
         <ComplexType Name="Sp_GetItemsRelatedtoStock_Result">
           <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
@@ -7164,23 +7692,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="String" Name="AreaName" Nullable="true" MaxLength="80" />
           <Property Type="String" Name="Area" Nullable="true" MaxLength="200" />
         </ComplexType>
-        <ComplexType Name="Sp_GetRetailerForEditFinalRequest_Result">
-          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="Name" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="Phone1" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Phone2" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Email" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="Address" Nullable="true" MaxLength="150" />
-          <Property Type="Int32" Name="RegionID" Nullable="true" />
-          <Property Type="String" Name="RegionName" Nullable="true" MaxLength="80" />
-          <Property Type="Int32" Name="CityID" Nullable="true" />
-          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
-          <Property Type="Int32" Name="AreaID" Nullable="true" />
-          <Property Type="String" Name="AreaName" Nullable="true" MaxLength="80" />
-          <Property Type="Int32" Name="RetailerClass" Nullable="true" />
-          <Property Type="String" Name="RetailerType" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Area" Nullable="true" MaxLength="200" />
-        </ComplexType>
         <ComplexType Name="Sp_StockTakingDetail_Result">
           <Property Type="Int32" Name="JobID" Nullable="false" />
           <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
@@ -7232,6 +7743,26 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Name="Status" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Job" Relationship="FOS_WallCoatModel.FK_JobItem_Jobs" FromRole="JobItem" ToRole="Job" />
           <NavigationProperty Name="Item" Relationship="FOS_WallCoatModel.FK_JobItem_Item" FromRole="JobItem" ToRole="Item" />
+          <Property Name="Danda" Type="Int32" />
+          <Property Name="Carton" Type="Int32" />
+          <Property Name="FinalValue" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CompititorProductID" Type="Int32" />
+          <Property Name="CompititorProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CompititorPurchaseRate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CompititorSaleRate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CompititorSize" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OrderQuantity" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OwnProductID" Type="Int32" />
+          <Property Name="OwnProductName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OwnPurchaseRate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OwnSaleRate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StockQuantity" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DistSOP" Type="Boolean" />
+          <Property Name="SSSOP" Type="Boolean" />
+          <Property Name="WSSOP" Type="Boolean" />
+          <Property Name="DealerID" Type="Int32" />
+          <Property Name="Availability" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AvailableProductID" Type="Int32" />
         </EntityType>
         <Association Name="FK_JobItem_Jobs">
           <End Type="FOS_WallCoatModel.Job" Role="Job" Multiplicity="1" />
@@ -7463,6 +7994,8 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="ItemGroupDetails" Relationship="FOS_WallCoatModel.FK_ItemGroupDetail_Item" FromRole="Item" ToRole="ItemGroupDetail" />
           <NavigationProperty Name="StockInvoices" Relationship="FOS_WallCoatModel.FK_StockInvoice_Item" FromRole="Item" ToRole="StockInvoice" />
           <NavigationProperty Name="DispatchInVans" Relationship="FOS_WallCoatModel.FK_DispatchInVan_Item" FromRole="Item" ToRole="DispatchInVan" />
+          <NavigationProperty Name="TBL_CurrentStock" Relationship="FOS_WallCoatModel.FK_TBL_CurrentStock_Item" FromRole="Item" ToRole="TBL_CurrentStock" />
+          <NavigationProperty Name="Tbl_OurBrandRate" Relationship="FOS_WallCoatModel.FK_Tbl_OurBrandRate_Item" FromRole="Item" ToRole="Tbl_OurBrandRate" />
         </EntityType>
         <Association Name="FK_Item_MainCategory">
           <End Type="FOS_WallCoatModel.MainCategory" Role="MainCategory" Multiplicity="1" />
@@ -7635,10 +8168,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="Statuss" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="Sp_SOVisitsToday1_1_Result">
-          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="Visits" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="Sp_Top10DistributorOrdersCityWiseGraph1_3_Result">
           <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
           <Property Type="Int32" Name="SalesOficerID" Nullable="true" />
@@ -7700,6 +8229,8 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="DispatchInVans" Relationship="FOS_WallCoatModel.FK_DispatchInVan_SaleOfficers" FromRole="SaleOfficer" ToRole="DispatchInVan" />
           <Property Name="JoiningDate" Type="DateTime" Precision="3" />
           <Property Name="SOType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Tbl_RSMSummary" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_SaleOfficers" FromRole="SaleOfficer" ToRole="Tbl_RSMSummary" />
+          <Property Name="SORoleID" Type="Int32" />
         </EntityType>
         <Association Name="FK_AccessLog_SaleOfficers">
           <End Type="FOS_WallCoatModel.SaleOfficer" Role="SaleOfficer" Multiplicity="1" />
@@ -7973,12 +8504,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="2" />
           <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
           <Property Type="DateTime" Name="VisitDate" Nullable="true" Precision="23" />
-        </ComplexType>
-        <ComplexType Name="spGetSalesOfficerWithLoginDate_Result">
-          <Property Type="String" Name="SalesOfficer" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RegionalHead" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
-          <Property Type="DateTime" Name="LoginDate" Nullable="true" Precision="23" />
         </ComplexType>
         <ComplexType Name="Sp__ShopBrandWiseDisplay2_Result">
           <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
@@ -8290,6 +8815,11 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="Dealer" Relationship="FOS_WallCoatModel.FK_JobsDetail_Dealers" FromRole="JobsDetail" ToRole="Dealer" />
           <NavigationProperty Name="Retailer" Relationship="FOS_WallCoatModel.FK_SoRetailersJobs_Retailers" FromRole="JobsDetail" ToRole="Retailer" />
           <Property Name="Dispatchstatus" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Lastvisitdate" Type="DateTime" Precision="3" />
+          <Property Name="LastvisitType" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ReasonForNoSaleID" Type="Int32" />
+          <Property Name="VisitTypeID" Type="Int32" />
+          <Property Name="OtherReasonFornoSale" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_JobsDetail_Areas">
           <End Type="FOS_WallCoatModel.Area" Role="Area" Multiplicity="0..1" />
@@ -8342,18 +8872,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="Int32" Name="OrderTotal" Nullable="true" />
         </ComplexType>
         <ComplexType Name="Sp_OrderSummeryReportInExcel2_31_Result">
-          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="Quantity" Nullable="true" />
-          <Property Type="Int32" Name="SortOrder" Nullable="true" />
-          <Property Type="DateTime" Name="Datee" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="LastVisitDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="DiscountPercentage" Nullable="true" />
-          <Property Type="Int32" Name="DiscountedTotal" Nullable="true" />
-          <Property Type="Int32" Name="OrderTotal" Nullable="true" />
-          <Property Type="Int32" Name="Total" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="Sp_OrderSummeryReportInExcel2_5_Result">
           <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
           <Property Type="Int32" Name="Quantity" Nullable="true" />
@@ -8502,19 +9020,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
           <Property Type="Int32" Name="Orders" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="Sp_OrdersCurrentMonthQuantityWise_Result">
-          <Property Type="Int32" Name="TotalOrders" Nullable="true" />
-          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
-        </ComplexType>
-        <ComplexType Name="Sp_Top10OrderAmount_Result">
-          <Property Type="Int32" Name="TotalOrders" Nullable="true" />
-          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
-        </ComplexType>
-        <ComplexType Name="Sp_Top30ItemsSoldMonthWise_Result">
-          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="Orders" Nullable="true" />
-          <Property Type="Decimal" Name="Total" Nullable="true" Precision="29" Scale="2" />
-        </ComplexType>
         <EntityType Name="DealerRanx">
           <Key>
             <PropertyRef Name="ID" />
@@ -8575,6 +9080,8 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="Retailers" Relationship="FOS_WallCoatModel.FK_Retailers_Dealers" FromRole="Dealer" ToRole="Retailer" />
           <Property Name="RangeID" Type="Int32" />
           <NavigationProperty Name="DelieveryBoys" Relationship="FOS_WallCoatModel.FK_DelieveryBoys_Dealers" FromRole="Dealer" ToRole="DelieveryBoy" />
+          <NavigationProperty Name="DispatchInVanMasters" Relationship="FOS_WallCoatModel.FK_DispatchInVanMaster_Dealers" FromRole="Dealer" ToRole="DispatchInVanMaster" />
+          <NavigationProperty Name="Tbl_RSMSummary" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_Dealers" FromRole="Dealer" ToRole="Tbl_RSMSummary" />
         </EntityType>
         <EntityType Name="Retailer">
           <Key>
@@ -8664,6 +9171,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Name="RangeCDealer" Type="Int32" />
           <Property Name="RangeID" Type="Int32" />
           <NavigationProperty Name="DispatchInVans" Relationship="FOS_WallCoatModel.FK_DispatchInVan_Retailers" FromRole="Retailer" ToRole="DispatchInVan" />
+          <Property Name="Shoptype" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NewOrOld" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Quota" Type="Int32" />
         </EntityType>
         <Association Name="FK_Retailers_Areas">
           <End Type="FOS_WallCoatModel.Area" Role="Area" Multiplicity="0..1" />
@@ -9215,6 +9725,13 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <NavigationProperty Name="City" Relationship="FOS_WallCoatModel.FK_SOAttendance_Cities" FromRole="SOAttendance" ToRole="City" />
           <NavigationProperty Name="Region" Relationship="FOS_WallCoatModel.FK_SOAttendance_Regions" FromRole="SOAttendance" ToRole="Region" />
           <NavigationProperty Name="SaleOfficer" Relationship="FOS_WallCoatModel.FK_SOAttendance_SaleOfficers" FromRole="SOAttendance" ToRole="SaleOfficer" />
+          <Property Name="DealerID" Type="Int32" />
+          <Property Name="MarketStartLat" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="MarketStartLong" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="MarketStartLatlong" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MarketCloseLat" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="MarketCloseLong" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="MarketCloseLatlong" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="StockInvoice">
           <Key>
@@ -9363,21 +9880,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Name="RangeID" Type="Int32" />
           <Property Name="RegionID" Type="Int32" />
         </EntityType>
-        <ComplexType Name="Sp_Total_RetailerInformation1_5_Result">
-          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="RetailerName" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="DealerName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RegionName" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="Address" Nullable="true" MaxLength="150" />
-          <Property Type="String" Name="Contact1" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Contact2" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="CNIC" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RetailerType" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RangeBDealer" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="RangeCDealer" Nullable="true" MaxLength="250" />
-        </ComplexType>
         <ComplexType Name="Sp_AttandaceReport_Result">
           <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
@@ -9398,28 +9900,10 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="Int32" Name="OfflineOrders" Nullable="true" />
           <Property Type="Int32" Name="NotOrders" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="Sp_GetTotalFollowup1_3_Result">
-          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="HeadName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Saleofficer" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="FollowUp" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="FollowupReason" Nullable="true" MaxLength="50" />
-          <Property Type="DateTime" Name="JobDate" Nullable="true" Precision="23" />
-        </ComplexType>
         <ComplexType Name="sp_ShopsNotVisitedBySo1_3_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
-        </ComplexType>
-        <ComplexType Name="sp_BrandAndItemWiseReport_Result">
-          <Property Type="Int32" Name="SalesOficerID" Nullable="true" />
-          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="HeadName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Brand" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
-          <Property Type="Decimal" Name="TotalQuantity" Nullable="true" Precision="38" Scale="2" />
-          <Property Type="Decimal" Name="Carton" Nullable="true" Precision="20" Scale="2" />
         </ComplexType>
         <ComplexType Name="Sp_SOVisitsTodayForManagers_Result">
           <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
@@ -9444,17 +9928,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
         <ComplexType Name="Sp_SOVisitsTodayRangeWise_Result">
           <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="Visits" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="Sp_DealerInformationSummery1_1_Result">
-          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="ShopSchoolName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="PrincipleName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="Address" Nullable="true" MaxLength="255" />
-          <Property Type="String" Name="Contact1" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Contact2" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="CNIC" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="Active" Nullable="false" MaxLength="3" />
         </ComplexType>
         <EntityType Name="ManagersLoginHst">
           <Key>
@@ -9555,24 +10028,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="Int32" Name="DiscountedTotal" Nullable="true" />
           <Property Type="Int32" Name="OrderTotal" Nullable="true" />
           <Property Type="Int32" Name="Total" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="Sp_RetailersOrderDetailFinal1_3_Result">
-          <Property Type="Int32" Name="OrderID" Nullable="false" />
-          <Property Type="String" Name="Zone" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="Channel" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RegionalHeadName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="RetailerName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
-          <Property Type="Decimal" Name="QuantityPcs" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="Price" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
-          <Property Type="DateTime" Name="VisitDate" Nullable="true" Precision="23" />
-          <Property Type="Decimal" Name="Value" Nullable="true" Precision="37" Scale="4" />
-          <Property Type="Int32" Name="discountPercentage" Nullable="true" />
-          <Property Type="String" Name="DealerName" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="RangeBDealername" Nullable="true" MaxLength="250" />
-          <Property Type="String" Name="rangeCDealername" Nullable="true" MaxLength="250" />
         </ComplexType>
         <ComplexType Name="sp_GetSOListInDSR_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
@@ -9722,6 +10177,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Name="InvoicedDate" Type="DateTime" Precision="3" />
           <Property Name="DispatchDate" Type="DateTime" Precision="3" />
           <Property Name="DelieveryboyID" Type="Int32" />
+          <Property Name="FromDateOnInvoiced" Type="DateTime" Precision="3" />
+          <Property Name="ToDateOnInvoiced" Type="DateTime" Precision="3" />
+          <Property Name="DispatchInVanMasterID" Type="Int32" />
         </EntityType>
         <Association Name="FK_DispatchInVan_Item">
           <End Type="FOS_WallCoatModel.Item" Role="Item" Multiplicity="0..1" />
@@ -9767,13 +10225,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="String" Name="Dispatchstatus" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="DBoyName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="SOName" Nullable="true" MaxLength="50" />
-        </ComplexType>
-        <ComplexType Name="Sp_GetDispatchDataForReport_Result">
-          <Property Type="Int32" Name="ItemID" Nullable="true" />
-          <Property Type="String" Name="itemName" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="Quantity" Nullable="true" />
-          <Property Type="Int32" Name="packing" Nullable="true" />
-          <Property Type="Decimal" Name="price" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
         <ComplexType Name="Sp_GetAllDataForExportofSO_Result">
           <Property Type="Int32" Name="JobID" Nullable="false" />
@@ -9846,6 +10297,541 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
           <Property Type="Decimal" Name="TotalQuantity" Nullable="true" Precision="38" Scale="2" />
           <Property Type="Decimal" Name="Carton" Nullable="true" Precision="20" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetDispatchDataForReport_Result">
+          <Property Type="Int32" Name="ItemID" Nullable="true" />
+          <Property Type="String" Name="itemName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="packing" Nullable="true" />
+          <Property Type="Decimal" Name="price" Nullable="true" Precision="18" Scale="2" />
+        </ComplexType>
+        <EntityType Name="DispatchInVanMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Jobid" Type="Int32" />
+          <Property Name="SoNames" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DelieveryboyName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DealerID" Type="Int32" />
+          <NavigationProperty Name="Dealer" Relationship="FOS_WallCoatModel.FK_DispatchInVanMaster_Dealers" FromRole="DispatchInVanMaster" ToRole="Dealer" />
+        </EntityType>
+        <Association Name="FK_DispatchInVanMaster_Dealers">
+          <End Type="FOS_WallCoatModel.Dealer" Role="Dealer" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.DispatchInVanMaster" Role="DispatchInVanMaster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dealer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DispatchInVanMaster">
+              <PropertyRef Name="DealerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="Sp_Top30ItemsSoldMonthWise_Result">
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="Orders" Nullable="true" />
+          <Property Type="Decimal" Name="Total" Nullable="true" Precision="29" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="Sp_Top10OrderAmount_Result">
+          <Property Type="Int32" Name="TotalOrders" Nullable="true" />
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+        </ComplexType>
+        <ComplexType Name="Sp_OrdersCurrentMonthQuantityWise_Result">
+          <Property Type="Int32" Name="TotalOrders" Nullable="true" />
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetTotalFollowup1_3_Result">
+          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="HeadName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Saleofficer" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="FollowUp" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FollowupReason" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="JobDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+        </ComplexType>
+        <ComplexType Name="Sp_OrderSummeryReportInExcel2_5_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="Quantity" Nullable="true" />
+          <Property Type="Int32" Name="SortOrder" Nullable="true" />
+          <Property Type="DateTime" Name="Datee" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="LineTotal" Nullable="true" Precision="38" Scale="4" />
+          <Property Type="DateTime" Name="LastVisitDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="DiscountPercentage" Nullable="true" />
+          <Property Type="Int32" Name="DiscountedTotal" Nullable="true" />
+          <Property Type="Int32" Name="OrderTotal" Nullable="true" />
+          <Property Type="Int32" Name="Total" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_SOVisitsToday1_1_Result">
+          <Property Type="Int32" Name="id" Nullable="true" />
+          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Productive" Nullable="true" />
+          <Property Type="Int32" Name="NonProductive" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="TBL_RouteSelection">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SOID" Type="Int32" />
+          <Property Name="RegionID" Type="Int32" />
+          <Property Name="CityID" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Tbl_CompititorBrand">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemID" Type="Int32" />
+          <Property Name="PRCarton" Type="Int32" />
+          <Property Name="PRDanda" Type="Int32" />
+          <Property Name="PRGhatta" Type="Int32" />
+          <Property Name="SRCarton" Type="Int32" />
+          <Property Name="SRDanda" Type="Int32" />
+          <Property Name="SRGhatta" Type="Int32" />
+          <Property Name="SourceOfPurchase" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="Brandname" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="JobID" Type="Int32" />
+          <Property Name="ProdAvailability" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Size" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="PurchaseFinalValue" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SaleFinalValue" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="TBL_CurrentStock">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobID" Type="Int32" />
+          <Property Name="ItemID" Type="Int32" />
+          <Property Name="Carton" Type="Int32" />
+          <Property Name="Danda" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Item" Relationship="FOS_WallCoatModel.FK_TBL_CurrentStock_Item" FromRole="TBL_CurrentStock" ToRole="Item" />
+          <NavigationProperty Name="Job" Relationship="FOS_WallCoatModel.FK_TBL_CurrentStock_Jobs" FromRole="TBL_CurrentStock" ToRole="Job" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FinalValue" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Tbl_OurBrandRate">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemID" Type="Int32" />
+          <Property Name="PRCarton" Type="Int32" />
+          <Property Name="PRDanda" Type="Int32" />
+          <Property Name="PRGhatta" Type="Int32" />
+          <Property Name="SRCarton" Type="Int32" />
+          <Property Name="SRDanda" Type="Int32" />
+          <Property Name="SRGhatta" Type="Int32" />
+          <Property Name="SourceOfPurchase" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Item" Relationship="FOS_WallCoatModel.FK_Tbl_OurBrandRate_Item" FromRole="Tbl_OurBrandRate" ToRole="Item" />
+          <Property Name="JobID" Type="Int32" />
+          <Property Name="ProdAvailability" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="PurchaseFinalValue" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SaleFinalValue" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <Association Name="FK_TBL_CurrentStock_Item">
+          <End Type="FOS_WallCoatModel.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.TBL_CurrentStock" Role="TBL_CurrentStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemID" />
+            </Principal>
+            <Dependent Role="TBL_CurrentStock">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_OurBrandRate_Item">
+          <End Type="FOS_WallCoatModel.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_OurBrandRate" Role="Tbl_OurBrandRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ItemID" />
+            </Principal>
+            <Dependent Role="Tbl_OurBrandRate">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_CurrentStock_Jobs">
+          <End Type="FOS_WallCoatModel.Job" Role="Job" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.TBL_CurrentStock" Role="TBL_CurrentStock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Job">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TBL_CurrentStock">
+              <PropertyRef Name="JobID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Tbl_NoSaleReason">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Tbl_VisittypesOfSO">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="TBL_CompititorBrandsForDropDown">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Tbl_ChecklistBeforeVisit">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="Tbl_RSMCheckList" Relationship="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit" FromRole="Tbl_ChecklistBeforeVisit" ToRole="Tbl_RSMCheckList" />
+        </EntityType>
+        <EntityType Name="Tbl_RSMCheckList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SummaryID" Type="Int32" />
+          <Property Name="CheckListID" Type="Int32" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Tbl_ChecklistBeforeVisit" Relationship="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit" FromRole="Tbl_RSMCheckList" ToRole="Tbl_ChecklistBeforeVisit" />
+          <NavigationProperty Name="Tbl_RSMSummary" Relationship="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_RSMSummary" FromRole="Tbl_RSMCheckList" ToRole="Tbl_RSMSummary" />
+        </EntityType>
+        <EntityType Name="Tbl_RSMSummary">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityID" Type="Int32" />
+          <Property Name="DistributorID" Type="Int32" />
+          <Property Name="SOID" Type="Int32" />
+          <Property Name="VisitObjectives" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DistributorPerformance" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SOPerformance" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="MarketGap" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="City" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_Cities" FromRole="Tbl_RSMSummary" ToRole="City" />
+          <NavigationProperty Name="Dealer" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_Dealers" FromRole="Tbl_RSMSummary" ToRole="Dealer" />
+          <NavigationProperty Name="SaleOfficer" Relationship="FOS_WallCoatModel.FK_Tbl_RSMSummary_SaleOfficers" FromRole="Tbl_RSMSummary" ToRole="SaleOfficer" />
+          <NavigationProperty Name="Tbl_RSMCheckList" Relationship="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_RSMSummary" FromRole="Tbl_RSMSummary" ToRole="Tbl_RSMCheckList" />
+        </EntityType>
+        <Association Name="FK_Tbl_RSMSummary_Cities">
+          <End Type="FOS_WallCoatModel.City" Role="City" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_RSMSummary" Role="Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMSummary_Dealers">
+          <End Type="FOS_WallCoatModel.Dealer" Role="Dealer" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_RSMSummary" Role="Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dealer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="DistributorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMSummary_SaleOfficers">
+          <End Type="FOS_WallCoatModel.SaleOfficer" Role="SaleOfficer" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_RSMSummary" Role="Tbl_RSMSummary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SaleOfficer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMSummary">
+              <PropertyRef Name="SOID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit">
+          <End Type="FOS_WallCoatModel.Tbl_ChecklistBeforeVisit" Role="Tbl_ChecklistBeforeVisit" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_RSMCheckList" Role="Tbl_RSMCheckList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_ChecklistBeforeVisit">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMCheckList">
+              <PropertyRef Name="CheckListID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_RSMCheckList_Tbl_RSMSummary">
+          <End Type="FOS_WallCoatModel.Tbl_RSMSummary" Role="Tbl_RSMSummary" Multiplicity="0..1" />
+          <End Type="FOS_WallCoatModel.Tbl_RSMCheckList" Role="Tbl_RSMCheckList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_RSMSummary">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Tbl_RSMCheckList">
+              <PropertyRef Name="SummaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SOType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <ComplexType Name="Sp_OrderForPDFinMMC_Result">
+          <Property Type="Int32" Name="jobid" Nullable="true" />
+          <Property Type="String" Name="Shopname" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="itemname" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="itemID" Nullable="false" />
+          <Property Type="Int32" Name="CtnOrder" Nullable="true" />
+          <Property Type="Int32" Name="OrderDanda" Nullable="true" />
+          <Property Type="Int32" Name="DandaStock" Nullable="true" />
+          <Property Type="Int32" Name="CartonStock" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchasecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseGattaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SalecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleGattaBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseDandaCompi" Nullable="true" />
+          <Property Type="Int32" Name="PurchasecartonCompi" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseGattaCompi" Nullable="true" />
+          <Property Type="Int32" Name="SaleDandaCompi" Nullable="true" />
+          <Property Type="Int32" Name="SalecartonCompi" Nullable="true" />
+          <Property Type="Int32" Name="SaleGattaCompi" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_StockForPDFinMMC_Result">
+          <Property Type="Int32" Name="jobid" Nullable="true" />
+          <Property Type="String" Name="Shopname" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Itemname" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="itemID" Nullable="true" />
+          <Property Type="Int32" Name="CtnStock" Nullable="true" />
+          <Property Type="Int32" Name="StockDanda" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_OurBrandForPDFinMMC_Result">
+          <Property Type="Int32" Name="jobid" Nullable="true" />
+          <Property Type="String" Name="Shopname" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="itemname" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="itemID" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchasecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseGattaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SalecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleGattaBrand" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_OurCompititorForPDFinMMC_Result">
+          <Property Type="Int32" Name="jobid" Nullable="true" />
+          <Property Type="String" Name="Shopname" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="itemname" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="itemID" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchasecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="PurchaseGattaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleDandaBrand" Nullable="true" />
+          <Property Type="Int32" Name="SalecartonBrand" Nullable="true" />
+          <Property Type="Int32" Name="SaleGattaBrand" Nullable="true" />
+          <Property Type="String" Name="Size" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="sp_GetSOListAccordingToDistributor_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Sp_LastthreeCurrentStock_Result">
+          <Property Type="String" Name="ItemName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="VisitDate" Nullable="true" />
+          <Property Type="Int32" Name="Carton" Nullable="true" />
+          <Property Type="Int32" Name="Danda" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetRetailerForEditFinalRequest_Result">
+          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Phone1" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Phone2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="150" />
+          <Property Type="Int32" Name="RegionID" Nullable="true" />
+          <Property Type="String" Name="RegionName" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="CityID" Nullable="true" />
+          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="AreaID" Nullable="true" />
+          <Property Type="String" Name="AreaName" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="RetailerClass" Nullable="true" />
+          <Property Type="String" Name="RetailerType" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Area" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="RetailerChannel" Nullable="true" />
+          <Property Type="Int32" Name="DealerID" Nullable="true" />
+          <Property Type="String" Name="shoptype" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="Quota" Nullable="true" />
+          <Property Type="String" Name="OldOrNew" Nullable="true" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="Sp_MyLastThreeVisits_Result">
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="VisitDate" Nullable="true" />
+          <Property Type="String" Name="OrderQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StockQuantity" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="Sp_MyOrderListDetail_Result">
+          <Property Type="String" Name="ItemName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="VisitDate" Nullable="true" />
+          <Property Type="Int32" Name="Carton" Nullable="true" />
+          <Property Type="Int32" Name="Danda" Nullable="true" />
+          <Property Type="String" Name="OrderQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StockQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="lastvisitdate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="Sp_FollowUpVisitsDailyForMMC_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="Datee" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Reason" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Sp_MyVisitsMapViewForGPC1_4_Result">
+          <Property Type="DateTime" Name="VisitDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="Lattitude" Nullable="true" Precision="18" Scale="10" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="18" Scale="10" />
+          <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="VisitPurpose" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="spGetSalesOfficerWithLoginDate_Result">
+          <Property Type="String" Name="SalesOfficer" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RegionalHead" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+          <Property Type="DateTime" Name="LoginDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="TypeofAttendance" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="MarketStartLatlong" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="MarketCloseLatlong" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="sp_GetDashboardData_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="TotalRetailers" Nullable="true" />
+          <Property Type="Int32" Name="TotalRetailersThisMonth" Nullable="true" />
+          <Property Type="Int32" Name="TotalRetailersPreviousMonth" Nullable="true" />
+          <Property Type="Decimal" Name="OrderValueThisMonth" Nullable="true" Precision="38" Scale="4" />
+          <Property Type="Decimal" Name="OrderValuePreviousMonth" Nullable="true" Precision="38" Scale="4" />
+        </ComplexType>
+        <ComplexType Name="Sp_DealerInformationSummery1_1_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="ShopSchoolName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="PrincipleName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Contact1" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Contact2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CNIC" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Active" Nullable="false" MaxLength="3" />
+          <Property Type="Int32" Name="DistID" Nullable="false" />
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+        </ComplexType>
+        <ComplexType Name="Sp_Total_RetailerInformation1_5_Result">
+          <Property Type="String" Name="ShopName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="RetailerName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DealerName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RegionName" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="Address" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Contact1" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Contact2" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CNIC" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RetailerType" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Shoptype" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="Quota" Nullable="true" />
+          <Property Type="String" Name="NewOrOld" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NewArea" Nullable="true" MaxLength="200" />
+          <Property Type="DateTime" Name="lastupdate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="ShopID" Nullable="false" />
+          <Property Type="String" Name="address1" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="location" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ActiveInactive" Nullable="false" MaxLength="8" />
+        </ComplexType>
+        <ComplexType Name="Sp_Total_RetailerInformationSummery_Result">
+          <Property Type="String" Name="Region" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="City" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="RetailersCount" Nullable="true" />
+          <Property Type="Int32" Name="DealersCount" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="Sp_RetailersOrderDetailFinal1_3_Result">
+          <Property Type="Int32" Name="OrderID" Nullable="false" />
+          <Property Type="String" Name="Zone" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="Channel" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RegionalHeadName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="RetailerName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Quantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OwnProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CityName" Nullable="true" MaxLength="80" />
+          <Property Type="DateTime" Name="VisitDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="OwnPurchaserate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OwnSaleRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StockQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DealerName" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="CompititorProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompititorPurchaseRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompititorSaleRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ReasonForNoSale" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="OtherReasonFornoSale" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="Sp_OrderForPDFinMMCTest_Result">
+          <Property Type="Int32" Name="jobid" Nullable="true" />
+          <Property Type="DateTime" Name="JobDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateOf" Nullable="true" />
+          <Property Type="Time" Name="TimeOF" Nullable="true" />
+          <Property Type="Int32" Name="ShopID" Nullable="true" />
+          <Property Type="String" Name="ShopType" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Shopname" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="itemID" Nullable="false" />
+          <Property Type="String" Name="OwnProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OrderQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="StockQuantity" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OwnPurchaseRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OwnSaleRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompititorProductName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompititorPurchaseRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="CompititorSaleRate" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="newarea" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="OtherReasonForNoSale" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Availability" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AvailableProduct" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="lastvisitdate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Reason" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Phone" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_BrandAndItemWiseReport_Result">
+          <Property Type="Int32" Name="SalesOficerID" Nullable="true" />
+          <Property Type="String" Name="SaleOfficerName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="HeadName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Brand" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="TotalQuantity" Nullable="true" Precision="38" Scale="2" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -11035,15 +12021,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_MyOrderListDetail" FunctionName="FOS_WallCoatModel.Store.Sp_MyOrderListDetail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_MyOrderListDetail_Result">
-                <ScalarProperty Name="JobID" ColumnName="JobID" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_GetItemsRelatedtoStock" FunctionName="FOS_WallCoatModel.Store.Sp_GetItemsRelatedtoStock">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetItemsRelatedtoStock_Result">
@@ -11213,27 +12190,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GetRetailerForEditFinalRequest" FunctionName="FOS_WallCoatModel.Store.Sp_GetRetailerForEditFinalRequest">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetRetailerForEditFinalRequest_Result">
-                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Phone1" ColumnName="Phone1" />
-                <ScalarProperty Name="Phone2" ColumnName="Phone2" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
-                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
-                <ScalarProperty Name="CityID" ColumnName="CityID" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="AreaID" ColumnName="AreaID" />
-                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
-                <ScalarProperty Name="RetailerClass" ColumnName="RetailerClass" />
-                <ScalarProperty Name="RetailerType" ColumnName="RetailerType" />
-                <ScalarProperty Name="Area" ColumnName="Area" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_StockTakingDetail" FunctionName="FOS_WallCoatModel.Store.Sp_StockTakingDetail">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_StockTakingDetail_Result">
@@ -11288,6 +12244,26 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="JobItems">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.JobItem">
               <MappingFragment StoreEntitySet="JobItem">
+                <ScalarProperty Name="AvailableProductID" ColumnName="AvailableProductID" />
+                <ScalarProperty Name="Availability" ColumnName="Availability" />
+                <ScalarProperty Name="DealerID" ColumnName="DealerID" />
+                <ScalarProperty Name="WSSOP" ColumnName="WSSOP" />
+                <ScalarProperty Name="SSSOP" ColumnName="SSSOP" />
+                <ScalarProperty Name="DistSOP" ColumnName="DistSOP" />
+                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+                <ScalarProperty Name="OwnSaleRate" ColumnName="OwnSaleRate" />
+                <ScalarProperty Name="OwnPurchaseRate" ColumnName="OwnPurchaseRate" />
+                <ScalarProperty Name="OwnProductName" ColumnName="OwnProductName" />
+                <ScalarProperty Name="OwnProductID" ColumnName="OwnProductID" />
+                <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+                <ScalarProperty Name="CompititorSize" ColumnName="CompititorSize" />
+                <ScalarProperty Name="CompititorSaleRate" ColumnName="CompititorSaleRate" />
+                <ScalarProperty Name="CompititorPurchaseRate" ColumnName="CompititorPurchaseRate" />
+                <ScalarProperty Name="CompititorProductName" ColumnName="CompititorProductName" />
+                <ScalarProperty Name="CompititorProductID" ColumnName="CompititorProductID" />
+                <ScalarProperty Name="FinalValue" ColumnName="FinalValue" />
+                <ScalarProperty Name="Carton" ColumnName="Carton" />
+                <ScalarProperty Name="Danda" ColumnName="Danda" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
                 <ScalarProperty Name="DispatchQuantity" ColumnName="DispatchQuantity" />
@@ -11744,14 +12720,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_SOVisitsToday1_1" FunctionName="FOS_WallCoatModel.Store.Sp_SOVisitsToday1_1">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_SOVisitsToday1_1_Result">
-                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
-                <ScalarProperty Name="Visits" ColumnName="Visits" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_Top10DistributorOrdersCityWiseGraph1_3" FunctionName="FOS_WallCoatModel.Store.Sp_Top10DistributorOrdersCityWiseGraph1_3">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Top10DistributorOrdersCityWiseGraph1_3_Result">
@@ -11790,6 +12758,7 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="SaleOfficers">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.SaleOfficer">
               <MappingFragment StoreEntitySet="SaleOfficers">
+                <ScalarProperty Name="SORoleID" ColumnName="SORoleID" />
                 <ScalarProperty Name="SOType" ColumnName="SOType" />
                 <ScalarProperty Name="JoiningDate" ColumnName="JoiningDate" />
                 <ScalarProperty Name="LeaveOn" ColumnName="LeaveOn" />
@@ -11978,16 +12947,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="spGetSalesOfficerWithLoginDate" FunctionName="FOS_WallCoatModel.Store.spGetSalesOfficerWithLoginDate">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.spGetSalesOfficerWithLoginDate_Result">
-                <ScalarProperty Name="SalesOfficer" ColumnName="SalesOfficer" />
-                <ScalarProperty Name="RegionalHead" ColumnName="RegionalHead" />
-                <ScalarProperty Name="Region" ColumnName="Region" />
-                <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -12209,6 +13168,11 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="JobsDetails">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.JobsDetail">
               <MappingFragment StoreEntitySet="JobsDetail">
+                <ScalarProperty Name="OtherReasonFornoSale" ColumnName="OtherReasonFornoSale" />
+                <ScalarProperty Name="VisitTypeID" ColumnName="VisitTypeID" />
+                <ScalarProperty Name="ReasonForNoSaleID" ColumnName="ReasonForNoSaleID" />
+                <ScalarProperty Name="LastvisitType" ColumnName="LastvisitType" />
+                <ScalarProperty Name="Lastvisitdate" ColumnName="Lastvisitdate" />
                 <ScalarProperty Name="Dispatchstatus" ColumnName="Dispatchstatus" />
                 <ScalarProperty Name="DiscountedTotal" ColumnName="DiscountedTotal" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
@@ -12293,22 +13257,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
                 <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
                 <ScalarProperty Name="DiscountedTotal" ColumnName="DiscountedTotal" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_OrderSummeryReportInExcel2_5" FunctionName="FOS_WallCoatModel.Store.Sp_OrderSummeryReportInExcel2_5">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrderSummeryReportInExcel2_5_Result">
-                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="Datee" ColumnName="Datee" />
-                <ScalarProperty Name="LastVisitDate" ColumnName="LastVisitDate" />
-                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
-                <ScalarProperty Name="DiscountedTotal" ColumnName="DiscountedTotal" />
-                <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -12473,31 +13421,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_OrdersCurrentMonthQuantityWise" FunctionName="FOS_WallCoatModel.Store.Sp_OrdersCurrentMonthQuantityWise">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrdersCurrentMonthQuantityWise_Result">
-                <ScalarProperty Name="TotalOrders" ColumnName="TotalOrders" />
-                <ScalarProperty Name="Region" ColumnName="Region" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Top10OrderAmount" FunctionName="FOS_WallCoatModel.Store.Sp_Top10OrderAmount">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Top10OrderAmount_Result">
-                <ScalarProperty Name="TotalOrders" ColumnName="TotalOrders" />
-                <ScalarProperty Name="Region" ColumnName="Region" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Top30ItemsSoldMonthWise" FunctionName="FOS_WallCoatModel.Store.Sp_Top30ItemsSoldMonthWise">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Top30ItemsSoldMonthWise_Result">
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="Orders" ColumnName="Orders" />
-                <ScalarProperty Name="Total" ColumnName="Total" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_TotalLinesForSummaryInDSR" FunctionName="FOS_WallCoatModel.Store.Sp_TotalLinesForSummaryInDSR" />
           <EntitySetMapping Name="DealerRanges">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.DealerRanx">
@@ -12553,6 +13476,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="Retailers">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.Retailer">
               <MappingFragment StoreEntitySet="Retailers">
+                <ScalarProperty Name="Quota" ColumnName="Quota" />
+                <ScalarProperty Name="NewOrOld" ColumnName="NewOrOld" />
+                <ScalarProperty Name="Shoptype" ColumnName="Shoptype" />
                 <ScalarProperty Name="RangeID" ColumnName="RangeID" />
                 <ScalarProperty Name="RangeCDealer" ColumnName="RangeCDealer" />
                 <ScalarProperty Name="RangeBDealer" ColumnName="RangeBDealer" />
@@ -12822,6 +13748,13 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="SOAttendances">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.SOAttendance">
               <MappingFragment StoreEntitySet="SOAttendance">
+                <ScalarProperty Name="MarketCloseLatlong" ColumnName="MarketCloseLatlong" />
+                <ScalarProperty Name="MarketCloseLong" ColumnName="MarketCloseLong" />
+                <ScalarProperty Name="MarketCloseLat" ColumnName="MarketCloseLat" />
+                <ScalarProperty Name="MarketStartLatlong" ColumnName="MarketStartLatlong" />
+                <ScalarProperty Name="MarketStartLong" ColumnName="MarketStartLong" />
+                <ScalarProperty Name="MarketStartLat" ColumnName="MarketStartLat" />
+                <ScalarProperty Name="DealerID" ColumnName="DealerID" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="CityID" ColumnName="CityID" />
@@ -12926,25 +13859,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Total_RetailerInformation1_5" FunctionName="FOS_WallCoatModel.Store.Sp_Total_RetailerInformation1_5">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Total_RetailerInformation1_5_Result">
-                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
-                <ScalarProperty Name="RetailerName" ColumnName="RetailerName" />
-                <ScalarProperty Name="DealerName" ColumnName="DealerName" />
-                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
-                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Contact1" ColumnName="Contact1" />
-                <ScalarProperty Name="Contact2" ColumnName="Contact2" />
-                <ScalarProperty Name="CNIC" ColumnName="CNIC" />
-                <ScalarProperty Name="RetailerType" ColumnName="RetailerType" />
-                <ScalarProperty Name="RangeBDealer" ColumnName="RangeBDealer" />
-                <ScalarProperty Name="RangeCDealer" ColumnName="RangeCDealer" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_AttandaceReport" FunctionName="FOS_WallCoatModel.Store.Sp_AttandaceReport">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_AttandaceReport_Result">
@@ -12977,38 +13891,12 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GetTotalFollowup1_3" FunctionName="FOS_WallCoatModel.Store.Sp_GetTotalFollowup1_3">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetTotalFollowup1_3_Result">
-                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
-                <ScalarProperty Name="HeadName" ColumnName="HeadName" />
-                <ScalarProperty Name="Saleofficer" ColumnName="Saleofficer" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="FollowUp" ColumnName="FollowUp" />
-                <ScalarProperty Name="FollowupReason" ColumnName="FollowupReason" />
-                <ScalarProperty Name="JobDate" ColumnName="JobDate" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="sp_ShopsNotVisitedBySo1_3" FunctionName="FOS_WallCoatModel.Store.sp_ShopsNotVisitedBySo1_3">
             <ResultMapping>
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.sp_ShopsNotVisitedBySo1_3_Result">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="ShopName" ColumnName="ShopName" />
                 <ScalarProperty Name="CityName" ColumnName="CityName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_BrandAndItemWiseReport" FunctionName="FOS_WallCoatModel.Store.sp_BrandAndItemWiseReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.sp_BrandAndItemWiseReport_Result">
-                <ScalarProperty Name="SalesOficerID" ColumnName="SalesOficerID" />
-                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
-                <ScalarProperty Name="HeadName" ColumnName="HeadName" />
-                <ScalarProperty Name="Brand" ColumnName="Brand" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
-                <ScalarProperty Name="Carton" ColumnName="Carton" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -13057,21 +13945,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
               <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_SOVisitsTodayRangeWise_Result">
                 <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
                 <ScalarProperty Name="Visits" ColumnName="Visits" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_DealerInformationSummery1_1" FunctionName="FOS_WallCoatModel.Store.Sp_DealerInformationSummery1_1">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_DealerInformationSummery1_1_Result">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ShopSchoolName" ColumnName="ShopSchoolName" />
-                <ScalarProperty Name="PrincipleName" ColumnName="PrincipleName" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Contact1" ColumnName="Contact1" />
-                <ScalarProperty Name="Contact2" ColumnName="Contact2" />
-                <ScalarProperty Name="CNIC" ColumnName="CNIC" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -13196,28 +14069,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
                 <ScalarProperty Name="DiscountedTotal" ColumnName="DiscountedTotal" />
                 <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_RetailersOrderDetailFinal1_3" FunctionName="FOS_WallCoatModel.Store.Sp_RetailersOrderDetailFinal1_3">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_RetailersOrderDetailFinal1_3_Result">
-                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
-                <ScalarProperty Name="Zone" ColumnName="Zone" />
-                <ScalarProperty Name="Channel" ColumnName="Channel" />
-                <ScalarProperty Name="RegionalHeadName" ColumnName="RegionalHeadName" />
-                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
-                <ScalarProperty Name="RetailerName" ColumnName="RetailerName" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="QuantityPcs" ColumnName="QuantityPcs" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="discountPercentage" ColumnName="discountPercentage" />
-                <ScalarProperty Name="DealerName" ColumnName="DealerName" />
-                <ScalarProperty Name="RangeBDealername" ColumnName="RangeBDealername" />
-                <ScalarProperty Name="rangeCDealername" ColumnName="rangeCDealername" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -13380,6 +14231,9 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
           <EntitySetMapping Name="DispatchInVans">
             <EntityTypeMapping TypeName="FOS_WallCoatModel.DispatchInVan">
               <MappingFragment StoreEntitySet="DispatchInVan">
+                <ScalarProperty Name="DispatchInVanMasterID" ColumnName="DispatchInVanMasterID" />
+                <ScalarProperty Name="ToDateOnInvoiced" ColumnName="ToDateOnInvoiced" />
+                <ScalarProperty Name="FromDateOnInvoiced" ColumnName="FromDateOnInvoiced" />
                 <ScalarProperty Name="DelieveryboyID" ColumnName="DelieveryboyID" />
                 <ScalarProperty Name="DispatchDate" ColumnName="DispatchDate" />
                 <ScalarProperty Name="InvoicedDate" ColumnName="InvoicedDate" />
@@ -13404,17 +14258,6 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
                 <ScalarProperty Name="Dispatchstatus" ColumnName="Dispatchstatus" />
                 <ScalarProperty Name="DBoyName" ColumnName="DBoyName" />
                 <ScalarProperty Name="SOName" ColumnName="SOName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GetDispatchDataForReport" FunctionName="FOS_WallCoatModel.Store.Sp_GetDispatchDataForReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetDispatchDataForReport_Result">
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="itemName" ColumnName="itemName" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="packing" ColumnName="packing" />
-                <ScalarProperty Name="price" ColumnName="price" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -13511,6 +14354,538 @@ warning 6002: The table/view 'GPSalesForceApp.dbo.vActiveJobs' does not have a p
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
                 <ScalarProperty Name="Carton" ColumnName="Carton" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetDispatchDataForReport" FunctionName="FOS_WallCoatModel.Store.Sp_GetDispatchDataForReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetDispatchDataForReport_Result">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="itemName" ColumnName="itemName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="packing" ColumnName="packing" />
+                <ScalarProperty Name="price" ColumnName="price" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="DispatchInVanMasters">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.DispatchInVanMaster">
+              <MappingFragment StoreEntitySet="DispatchInVanMaster">
+                <ScalarProperty Name="DealerID" ColumnName="DealerID" />
+                <ScalarProperty Name="DelieveryboyName" ColumnName="DelieveryboyName" />
+                <ScalarProperty Name="SoNames" ColumnName="SoNames" />
+                <ScalarProperty Name="Jobid" ColumnName="Jobid" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Top30ItemsSoldMonthWise" FunctionName="FOS_WallCoatModel.Store.Sp_Top30ItemsSoldMonthWise">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Top30ItemsSoldMonthWise_Result">
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="Orders" ColumnName="Orders" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Top10OrderAmount" FunctionName="FOS_WallCoatModel.Store.Sp_Top10OrderAmount">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Top10OrderAmount_Result">
+                <ScalarProperty Name="TotalOrders" ColumnName="TotalOrders" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OrdersCurrentMonthQuantityWise" FunctionName="FOS_WallCoatModel.Store.Sp_OrdersCurrentMonthQuantityWise">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrdersCurrentMonthQuantityWise_Result">
+                <ScalarProperty Name="TotalOrders" ColumnName="TotalOrders" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetTotalFollowup1_3" FunctionName="FOS_WallCoatModel.Store.Sp_GetTotalFollowup1_3">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetTotalFollowup1_3_Result">
+                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
+                <ScalarProperty Name="HeadName" ColumnName="HeadName" />
+                <ScalarProperty Name="Saleofficer" ColumnName="Saleofficer" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="FollowUp" ColumnName="FollowUp" />
+                <ScalarProperty Name="FollowupReason" ColumnName="FollowupReason" />
+                <ScalarProperty Name="JobDate" ColumnName="JobDate" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OrderSummeryReportInExcel2_5" FunctionName="FOS_WallCoatModel.Store.Sp_OrderSummeryReportInExcel2_5">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrderSummeryReportInExcel2_5_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="Datee" ColumnName="Datee" />
+                <ScalarProperty Name="LineTotal" ColumnName="LineTotal" />
+                <ScalarProperty Name="LastVisitDate" ColumnName="LastVisitDate" />
+                <ScalarProperty Name="DiscountPercentage" ColumnName="DiscountPercentage" />
+                <ScalarProperty Name="DiscountedTotal" ColumnName="DiscountedTotal" />
+                <ScalarProperty Name="OrderTotal" ColumnName="OrderTotal" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_SOVisitsToday1_1" FunctionName="FOS_WallCoatModel.Store.Sp_SOVisitsToday1_1">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_SOVisitsToday1_1_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
+                <ScalarProperty Name="Productive" ColumnName="Productive" />
+                <ScalarProperty Name="NonProductive" ColumnName="NonProductive" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="TBL_RouteSelection">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.TBL_RouteSelection">
+              <MappingFragment StoreEntitySet="TBL_RouteSelection">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
+                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
+                <ScalarProperty Name="SOID" ColumnName="SOID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_CompititorBrand">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_CompititorBrand">
+              <MappingFragment StoreEntitySet="Tbl_CompititorBrand">
+                <ScalarProperty Name="SaleFinalValue" ColumnName="SaleFinalValue" />
+                <ScalarProperty Name="PurchaseFinalValue" ColumnName="PurchaseFinalValue" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="ProdAvailability" ColumnName="ProdAvailability" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="Brandname" ColumnName="Brandname" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="SourceOfPurchase" ColumnName="SourceOfPurchase" />
+                <ScalarProperty Name="SRGhatta" ColumnName="SRGhatta" />
+                <ScalarProperty Name="SRDanda" ColumnName="SRDanda" />
+                <ScalarProperty Name="SRCarton" ColumnName="SRCarton" />
+                <ScalarProperty Name="PRGhatta" ColumnName="PRGhatta" />
+                <ScalarProperty Name="PRDanda" ColumnName="PRDanda" />
+                <ScalarProperty Name="PRCarton" ColumnName="PRCarton" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_CurrentStock">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.TBL_CurrentStock">
+              <MappingFragment StoreEntitySet="TBL_CurrentStock">
+                <ScalarProperty Name="FinalValue" ColumnName="FinalValue" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Danda" ColumnName="Danda" />
+                <ScalarProperty Name="Carton" ColumnName="Carton" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_OurBrandRate">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_OurBrandRate">
+              <MappingFragment StoreEntitySet="Tbl_OurBrandRate">
+                <ScalarProperty Name="SaleFinalValue" ColumnName="SaleFinalValue" />
+                <ScalarProperty Name="PurchaseFinalValue" ColumnName="PurchaseFinalValue" />
+                <ScalarProperty Name="ProdAvailability" ColumnName="ProdAvailability" />
+                <ScalarProperty Name="JobID" ColumnName="JobID" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="SourceOfPurchase" ColumnName="SourceOfPurchase" />
+                <ScalarProperty Name="SRGhatta" ColumnName="SRGhatta" />
+                <ScalarProperty Name="SRDanda" ColumnName="SRDanda" />
+                <ScalarProperty Name="SRCarton" ColumnName="SRCarton" />
+                <ScalarProperty Name="PRGhatta" ColumnName="PRGhatta" />
+                <ScalarProperty Name="PRDanda" ColumnName="PRDanda" />
+                <ScalarProperty Name="PRCarton" ColumnName="PRCarton" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_NoSaleReason">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_NoSaleReason">
+              <MappingFragment StoreEntitySet="Tbl_NoSaleReason">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_VisittypesOfSO">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_VisittypesOfSO">
+              <MappingFragment StoreEntitySet="Tbl_VisittypesOfSO">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_CompititorBrandsForDropDown">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.TBL_CompititorBrandsForDropDown">
+              <MappingFragment StoreEntitySet="TBL_CompititorBrandsForDropDown">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_ChecklistBeforeVisit">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_ChecklistBeforeVisit">
+              <MappingFragment StoreEntitySet="Tbl_ChecklistBeforeVisit">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_RSMCheckList">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_RSMCheckList">
+              <MappingFragment StoreEntitySet="Tbl_RSMCheckList">
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="CheckListID" ColumnName="CheckListID" />
+                <ScalarProperty Name="SummaryID" ColumnName="SummaryID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_RSMSummary">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.Tbl_RSMSummary">
+              <MappingFragment StoreEntitySet="Tbl_RSMSummary">
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="MarketGap" ColumnName="MarketGap" />
+                <ScalarProperty Name="SOPerformance" ColumnName="SOPerformance" />
+                <ScalarProperty Name="DistributorPerformance" ColumnName="DistributorPerformance" />
+                <ScalarProperty Name="VisitObjectives" ColumnName="VisitObjectives" />
+                <ScalarProperty Name="SOID" ColumnName="SOID" />
+                <ScalarProperty Name="DistributorID" ColumnName="DistributorID" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SOTypes">
+            <EntityTypeMapping TypeName="FOS_WallCoatModel.SOType">
+              <MappingFragment StoreEntitySet="SOTypes">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OrderForPDFinMMC" FunctionName="FOS_WallCoatModel.Store.Sp_OrderForPDFinMMC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrderForPDFinMMC_Result">
+                <ScalarProperty Name="jobid" ColumnName="jobid" />
+                <ScalarProperty Name="Shopname" ColumnName="Shopname" />
+                <ScalarProperty Name="itemname" ColumnName="itemname" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="CtnOrder" ColumnName="CtnOrder" />
+                <ScalarProperty Name="OrderDanda" ColumnName="OrderDanda" />
+                <ScalarProperty Name="DandaStock" ColumnName="DandaStock" />
+                <ScalarProperty Name="CartonStock" ColumnName="CartonStock" />
+                <ScalarProperty Name="PurchaseDandaBrand" ColumnName="PurchaseDandaBrand" />
+                <ScalarProperty Name="PurchasecartonBrand" ColumnName="PurchasecartonBrand" />
+                <ScalarProperty Name="PurchaseGattaBrand" ColumnName="PurchaseGattaBrand" />
+                <ScalarProperty Name="SaleDandaBrand" ColumnName="SaleDandaBrand" />
+                <ScalarProperty Name="SalecartonBrand" ColumnName="SalecartonBrand" />
+                <ScalarProperty Name="SaleGattaBrand" ColumnName="SaleGattaBrand" />
+                <ScalarProperty Name="PurchaseDandaCompi" ColumnName="PurchaseDandaCompi" />
+                <ScalarProperty Name="PurchasecartonCompi" ColumnName="PurchasecartonCompi" />
+                <ScalarProperty Name="PurchaseGattaCompi" ColumnName="PurchaseGattaCompi" />
+                <ScalarProperty Name="SaleDandaCompi" ColumnName="SaleDandaCompi" />
+                <ScalarProperty Name="SalecartonCompi" ColumnName="SalecartonCompi" />
+                <ScalarProperty Name="SaleGattaCompi" ColumnName="SaleGattaCompi" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_StockForPDFinMMC" FunctionName="FOS_WallCoatModel.Store.Sp_StockForPDFinMMC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_StockForPDFinMMC_Result">
+                <ScalarProperty Name="jobid" ColumnName="jobid" />
+                <ScalarProperty Name="Shopname" ColumnName="Shopname" />
+                <ScalarProperty Name="Itemname" ColumnName="Itemname" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="CtnStock" ColumnName="CtnStock" />
+                <ScalarProperty Name="StockDanda" ColumnName="StockDanda" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OurBrandForPDFinMMC" FunctionName="FOS_WallCoatModel.Store.Sp_OurBrandForPDFinMMC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OurBrandForPDFinMMC_Result">
+                <ScalarProperty Name="jobid" ColumnName="jobid" />
+                <ScalarProperty Name="Shopname" ColumnName="Shopname" />
+                <ScalarProperty Name="itemname" ColumnName="itemname" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="PurchaseDandaBrand" ColumnName="PurchaseDandaBrand" />
+                <ScalarProperty Name="PurchasecartonBrand" ColumnName="PurchasecartonBrand" />
+                <ScalarProperty Name="PurchaseGattaBrand" ColumnName="PurchaseGattaBrand" />
+                <ScalarProperty Name="SaleDandaBrand" ColumnName="SaleDandaBrand" />
+                <ScalarProperty Name="SalecartonBrand" ColumnName="SalecartonBrand" />
+                <ScalarProperty Name="SaleGattaBrand" ColumnName="SaleGattaBrand" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OurCompititorForPDFinMMC" FunctionName="FOS_WallCoatModel.Store.Sp_OurCompititorForPDFinMMC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OurCompititorForPDFinMMC_Result">
+                <ScalarProperty Name="jobid" ColumnName="jobid" />
+                <ScalarProperty Name="Shopname" ColumnName="Shopname" />
+                <ScalarProperty Name="itemname" ColumnName="itemname" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="PurchaseDandaBrand" ColumnName="PurchaseDandaBrand" />
+                <ScalarProperty Name="PurchasecartonBrand" ColumnName="PurchasecartonBrand" />
+                <ScalarProperty Name="PurchaseGattaBrand" ColumnName="PurchaseGattaBrand" />
+                <ScalarProperty Name="SaleDandaBrand" ColumnName="SaleDandaBrand" />
+                <ScalarProperty Name="SalecartonBrand" ColumnName="SalecartonBrand" />
+                <ScalarProperty Name="SaleGattaBrand" ColumnName="SaleGattaBrand" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetSOListAccordingToDistributor" FunctionName="FOS_WallCoatModel.Store.sp_GetSOListAccordingToDistributor">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.sp_GetSOListAccordingToDistributor_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_LastthreeCurrentStock" FunctionName="FOS_WallCoatModel.Store.Sp_LastthreeCurrentStock">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_LastthreeCurrentStock_Result">
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="Carton" ColumnName="Carton" />
+                <ScalarProperty Name="Danda" ColumnName="Danda" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetRetailerForEditFinalRequest" FunctionName="FOS_WallCoatModel.Store.Sp_GetRetailerForEditFinalRequest">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_GetRetailerForEditFinalRequest_Result">
+                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Phone1" ColumnName="Phone1" />
+                <ScalarProperty Name="Phone2" ColumnName="Phone2" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="RegionID" ColumnName="RegionID" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="AreaID" ColumnName="AreaID" />
+                <ScalarProperty Name="AreaName" ColumnName="AreaName" />
+                <ScalarProperty Name="RetailerClass" ColumnName="RetailerClass" />
+                <ScalarProperty Name="RetailerType" ColumnName="RetailerType" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="RetailerChannel" ColumnName="RetailerChannel" />
+                <ScalarProperty Name="DealerID" ColumnName="DealerID" />
+                <ScalarProperty Name="shoptype" ColumnName="shoptype" />
+                <ScalarProperty Name="Quota" ColumnName="Quota" />
+                <ScalarProperty Name="OldOrNew" ColumnName="OldOrNew" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_MyLastThreeVisits" FunctionName="FOS_WallCoatModel.Store.Sp_MyLastThreeVisits">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_MyLastThreeVisits_Result">
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_MyOrderListDetail" FunctionName="FOS_WallCoatModel.Store.Sp_MyOrderListDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_MyOrderListDetail_Result">
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="Carton" ColumnName="Carton" />
+                <ScalarProperty Name="Danda" ColumnName="Danda" />
+                <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+                <ScalarProperty Name="lastvisitdate" ColumnName="lastvisitdate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_FollowUpVisitsDailyForMMC" FunctionName="FOS_WallCoatModel.Store.Sp_FollowUpVisitsDailyForMMC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_FollowUpVisitsDailyForMMC_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
+                <ScalarProperty Name="Datee" ColumnName="Datee" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_MyVisitsMapViewForGPC1_4" FunctionName="FOS_WallCoatModel.Store.Sp_MyVisitsMapViewForGPC1_4">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_MyVisitsMapViewForGPC1_4_Result">
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="Lattitude" ColumnName="Lattitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="VisitPurpose" ColumnName="VisitPurpose" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetSalesOfficerWithLoginDate" FunctionName="FOS_WallCoatModel.Store.spGetSalesOfficerWithLoginDate">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.spGetSalesOfficerWithLoginDate_Result">
+                <ScalarProperty Name="SalesOfficer" ColumnName="SalesOfficer" />
+                <ScalarProperty Name="RegionalHead" ColumnName="RegionalHead" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="LoginDate" ColumnName="LoginDate" />
+                <ScalarProperty Name="TypeofAttendance" ColumnName="TypeofAttendance" />
+                <ScalarProperty Name="MarketStartLatlong" ColumnName="MarketStartLatlong" />
+                <ScalarProperty Name="MarketCloseLatlong" ColumnName="MarketCloseLatlong" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetDashboardData" FunctionName="FOS_WallCoatModel.Store.sp_GetDashboardData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.sp_GetDashboardData_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TotalRetailers" ColumnName="TotalRetailers" />
+                <ScalarProperty Name="TotalRetailersThisMonth" ColumnName="TotalRetailersThisMonth" />
+                <ScalarProperty Name="TotalRetailersPreviousMonth" ColumnName="TotalRetailersPreviousMonth" />
+                <ScalarProperty Name="OrderValueThisMonth" ColumnName="OrderValueThisMonth" />
+                <ScalarProperty Name="OrderValuePreviousMonth" ColumnName="OrderValuePreviousMonth" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_DealerInformationSummery1_1" FunctionName="FOS_WallCoatModel.Store.Sp_DealerInformationSummery1_1">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_DealerInformationSummery1_1_Result">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ShopSchoolName" ColumnName="ShopSchoolName" />
+                <ScalarProperty Name="PrincipleName" ColumnName="PrincipleName" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Contact1" ColumnName="Contact1" />
+                <ScalarProperty Name="Contact2" ColumnName="Contact2" />
+                <ScalarProperty Name="CNIC" ColumnName="CNIC" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="DistID" ColumnName="DistID" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Total_RetailerInformation1_5" FunctionName="FOS_WallCoatModel.Store.Sp_Total_RetailerInformation1_5">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Total_RetailerInformation1_5_Result">
+                <ScalarProperty Name="ShopName" ColumnName="ShopName" />
+                <ScalarProperty Name="RetailerName" ColumnName="RetailerName" />
+                <ScalarProperty Name="DealerName" ColumnName="DealerName" />
+                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
+                <ScalarProperty Name="RegionName" ColumnName="RegionName" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Contact1" ColumnName="Contact1" />
+                <ScalarProperty Name="Contact2" ColumnName="Contact2" />
+                <ScalarProperty Name="CNIC" ColumnName="CNIC" />
+                <ScalarProperty Name="RetailerType" ColumnName="RetailerType" />
+                <ScalarProperty Name="Shoptype" ColumnName="Shoptype" />
+                <ScalarProperty Name="Quota" ColumnName="Quota" />
+                <ScalarProperty Name="NewOrOld" ColumnName="NewOrOld" />
+                <ScalarProperty Name="NewArea" ColumnName="NewArea" />
+                <ScalarProperty Name="lastupdate" ColumnName="lastupdate" />
+                <ScalarProperty Name="ShopID" ColumnName="ShopID" />
+                <ScalarProperty Name="address1" ColumnName="address1" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="ActiveInactive" ColumnName="ActiveInactive" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Total_RetailerInformationSummery" FunctionName="FOS_WallCoatModel.Store.Sp_Total_RetailerInformationSummery">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_Total_RetailerInformationSummery_Result">
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="RetailersCount" ColumnName="RetailersCount" />
+                <ScalarProperty Name="DealersCount" ColumnName="DealersCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_RetailersOrderDetailFinal1_3" FunctionName="FOS_WallCoatModel.Store.Sp_RetailersOrderDetailFinal1_3">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_RetailersOrderDetailFinal1_3_Result">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="Zone" ColumnName="Zone" />
+                <ScalarProperty Name="Channel" ColumnName="Channel" />
+                <ScalarProperty Name="RegionalHeadName" ColumnName="RegionalHeadName" />
+                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
+                <ScalarProperty Name="RetailerName" ColumnName="RetailerName" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OwnProductName" ColumnName="OwnProductName" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="VisitDate" ColumnName="VisitDate" />
+                <ScalarProperty Name="OwnPurchaserate" ColumnName="OwnPurchaserate" />
+                <ScalarProperty Name="OwnSaleRate" ColumnName="OwnSaleRate" />
+                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+                <ScalarProperty Name="DealerName" ColumnName="DealerName" />
+                <ScalarProperty Name="CompititorProductName" ColumnName="CompititorProductName" />
+                <ScalarProperty Name="CompititorPurchaseRate" ColumnName="CompititorPurchaseRate" />
+                <ScalarProperty Name="CompititorSaleRate" ColumnName="CompititorSaleRate" />
+                <ScalarProperty Name="ReasonForNoSale" ColumnName="ReasonForNoSale" />
+                <ScalarProperty Name="OtherReasonFornoSale" ColumnName="OtherReasonFornoSale" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_OrderForPDFinMMCTest" FunctionName="FOS_WallCoatModel.Store.Sp_OrderForPDFinMMCTest">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.Sp_OrderForPDFinMMCTest_Result">
+                <ScalarProperty Name="jobid" ColumnName="jobid" />
+                <ScalarProperty Name="JobDate" ColumnName="JobDate" />
+                <ScalarProperty Name="DateOf" ColumnName="DateOf" />
+                <ScalarProperty Name="TimeOF" ColumnName="TimeOF" />
+                <ScalarProperty Name="ShopID" ColumnName="ShopID" />
+                <ScalarProperty Name="ShopType" ColumnName="ShopType" />
+                <ScalarProperty Name="Shopname" ColumnName="Shopname" />
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="OwnProductName" ColumnName="OwnProductName" />
+                <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+                <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+                <ScalarProperty Name="OwnPurchaseRate" ColumnName="OwnPurchaseRate" />
+                <ScalarProperty Name="OwnSaleRate" ColumnName="OwnSaleRate" />
+                <ScalarProperty Name="CompititorProductName" ColumnName="CompititorProductName" />
+                <ScalarProperty Name="CompititorPurchaseRate" ColumnName="CompititorPurchaseRate" />
+                <ScalarProperty Name="CompititorSaleRate" ColumnName="CompititorSaleRate" />
+                <ScalarProperty Name="newarea" ColumnName="newarea" />
+                <ScalarProperty Name="OtherReasonForNoSale" ColumnName="OtherReasonForNoSale" />
+                <ScalarProperty Name="Availability" ColumnName="Availability" />
+                <ScalarProperty Name="AvailableProduct" ColumnName="AvailableProduct" />
+                <ScalarProperty Name="lastvisitdate" ColumnName="lastvisitdate" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_BrandAndItemWiseReport" FunctionName="FOS_WallCoatModel.Store.sp_BrandAndItemWiseReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FOS_WallCoatModel.sp_BrandAndItemWiseReport_Result">
+                <ScalarProperty Name="SalesOficerID" ColumnName="SalesOficerID" />
+                <ScalarProperty Name="SaleOfficerName" ColumnName="SaleOfficerName" />
+                <ScalarProperty Name="HeadName" ColumnName="HeadName" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="TotalQuantity" ColumnName="TotalQuantity" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -832,445 +832,445 @@ namespace FOS.Web.UI.Controllers
                 return Json(new { error = ex.Message });
             }
         }
-        public JsonResult SubmitItem(string cont, SchemeData tas)
-        {
+        //public JsonResult SubmitItem(string cont, SchemeData tas)
+        //{
 
-            try
-            {
-                var serialize = JsonConvert.DeserializeObject<List<Items>>(cont);
-                FOSDataModel dbContext = new FOSDataModel();
-                ValidationResult results = new ValidationResult();
-                if (serialize != null)
-                {
-                    var Schemeinfos = dbContext.TblMasterSchemes.Where(x => x.rangeID == tas.RangeID).ToList();
-                    foreach (var item in Schemeinfos)
-                    {
-                        item.isActive = false;
-                        item.isDeleted = true;
-                        dbContext.SaveChanges();
-                    }
+        //    try
+        //    {
+        //        var serialize = JsonConvert.DeserializeObject<List<Items>>(cont);
+        //        FOSDataModel dbContext = new FOSDataModel();
+        //        ValidationResult results = new ValidationResult();
+        //        if (serialize != null)
+        //        {
+        //            var Schemeinfos = dbContext.TblMasterSchemes.Where(x => x.rangeID == tas.RangeID).ToList();
+        //            foreach (var item in Schemeinfos)
+        //            {
+        //                item.isActive = false;
+        //                item.isDeleted = true;
+        //                dbContext.SaveChanges();
+        //            }
 
-                    TblMasterScheme ms = new TblMasterScheme();
-                    TblDetailScheme ds = new TblDetailScheme();
-                    ms.rangeID = tas.RangeID;
-                    ms.SchemeDateFrom = tas.SchemeDateFrom;
-                    ms.SchemeDateTo = tas.SchemeDateTo;
-                    ms.SchemeInfo = tas.SchemeInfo;
-                    ms.isActive = true;
-                    ms.isDeleted = false;
-                    dbContext.TblMasterSchemes.Add(ms);
-                    dbContext.SaveChanges();
-                    ms.MasterSchemeID = dbContext.TblMasterSchemes.OrderByDescending(u => u.MasterSchemeID).Select(u => u.MasterSchemeID).FirstOrDefault();
-                    if (ms.MasterSchemeID > 0)
-                    {
-                        foreach (var items in serialize)
-                        {
-                            ds.ItemID = items.ItemID;
-                            ds.ItemName = items.ItemName;
-                            ds.Packing = items.ItemPacking.ToString();
-                            ds.TradePrice = items.ItemPrice.ToString();
-                            ds.Scheme = items.Scheme;
-                            if (items.SchemePrice == "")
-                            {
-                                ds.SchemePrice = 0;
-                            }
-                            else
-                            {
-                                ds.SchemePrice = Convert.ToInt32(items.SchemePrice);
-                            }
+        //            TblMasterScheme ms = new TblMasterScheme();
+        //            TblDetailScheme ds = new TblDetailScheme();
+        //            ms.rangeID = tas.RangeID;
+        //            ms.SchemeDateFrom = tas.SchemeDateFrom;
+        //            ms.SchemeDateTo = tas.SchemeDateTo;
+        //            ms.SchemeInfo = tas.SchemeInfo;
+        //            ms.isActive = true;
+        //            ms.isDeleted = false;
+        //            dbContext.TblMasterSchemes.Add(ms);
+        //            dbContext.SaveChanges();
+        //            ms.MasterSchemeID = dbContext.TblMasterSchemes.OrderByDescending(u => u.MasterSchemeID).Select(u => u.MasterSchemeID).FirstOrDefault();
+        //            if (ms.MasterSchemeID > 0)
+        //            {
+        //                foreach (var items in serialize)
+        //                {
+        //                    ds.ItemID = items.ItemID;
+        //                    ds.ItemName = items.ItemName;
+        //                    ds.Packing = items.ItemPacking.ToString();
+        //                    ds.TradePrice = items.ItemPrice.ToString();
+        //                    ds.Scheme = items.Scheme;
+        //                    if (items.SchemePrice == "")
+        //                    {
+        //                        ds.SchemePrice = 0;
+        //                    }
+        //                    else
+        //                    {
+        //                        ds.SchemePrice = Convert.ToInt32(items.SchemePrice);
+        //                    }
 
-                            ds.MasterID = ms.MasterSchemeID;
-                            dbContext.TblDetailSchemes.Add(ds);
-                            dbContext.SaveChanges();
-                        }
-                    }
-                }
-                return Json("1");
-            }
-            catch (Exception ex)
-            {
-                return Json("2");
-            }
-
-
-        }
+        //                    ds.MasterID = ms.MasterSchemeID;
+        //                    dbContext.TblDetailSchemes.Add(ds);
+        //                    dbContext.SaveChanges();
+        //                }
+        //            }
+        //        }
+        //        return Json("1");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json("2");
+        //    }
 
 
-        public JsonResult SubmitDealerDSRPrint(string cont, SchemeData tas)
-        {
-            DateTime start = DateTime.Now;
-            DateTime end= DateTime.Now;
-            DateTime final= DateTime.Now;
-            if (tas.SchemeDateFrom != null && tas.SchemeDateTo != null)
-            {
-                 start = tas.SchemeDateFrom;
-                 end   = tas.SchemeDateTo;
-                 final = end.AddDays(1);
-            }
-            else
-            {
-                start = DateTime.UtcNow.AddHours(5);
-
-                end = start.Date;
-                final = end.AddDays(1);
-            }
+        //}
 
 
+        //public JsonResult SubmitDealerDSRPrint(string cont, SchemeData tas)
+        //{
+        //    DateTime start = DateTime.Now;
+        //    DateTime end= DateTime.Now;
+        //    DateTime final= DateTime.Now;
+        //    if (tas.SchemeDateFrom != null && tas.SchemeDateTo != null)
+        //    {
+        //         start = tas.SchemeDateFrom;
+        //         end   = tas.SchemeDateTo;
+        //         final = end.AddDays(1);
+        //    }
+        //    else
+        //    {
+        //        start = DateTime.UtcNow.AddHours(5);
 
-            FOSDataModel dbContext = new FOSDataModel();
-            var rangeid = dbContext.Dealers.Where(x => x.ShopName == tas.DealerName && x.IsActive == true).FirstOrDefault();
-            string FilePathReturn = "";
-            string BillNo = "";
-            var schemeData = new TblDetailScheme();
-            var editdata = new DealerDispatchCalculation();
-            var counter = dbContext.DealerDispatchCalculations.Where(x => x.DealerID==rangeid.ID).OrderByDescending(u => u.ID).Select(u => u.BillNo).FirstOrDefault();
-
-
-            if (counter == null)
-            {   var datein= DateTime.Now.Year.ToString();
-                var ticketCount = 1;
-                string s = ticketCount.ToString().PadLeft(3, '0');
-                BillNo = rangeid.DealerCode+"-"+ datein  + "-" + s;
-            }
-            else
-            {
-                var datein = DateTime.Now.Year.ToString();
-                var splittedcounter = counter.Split('-');
-                var val = splittedcounter[2];
-                int value = Convert.ToInt32(val) + 1;
-                string s = value.ToString().PadLeft(3, '0');
-                BillNo = rangeid.DealerCode + "-" + datein + "-" + s;
-            }
-            List<Items> Itemdata = new List<Items>();
-            DealerDSRDispatch ms = new DealerDSRDispatch();
-            DealerDispatchCalculation cal = new DealerDispatchCalculation();
-            Items cty;
-            var Orderid = 0;
-            decimal GrossAmount = 0;
-            decimal Scheme = 0;
-            var masterID = dbContext.TblMasterSchemes.Where(x => x.rangeID == rangeid.RangeID && x.isActive == true).FirstOrDefault();
-            try
-            {
-                var serialize = JsonConvert.DeserializeObject<List<Items>>(cont);
-
-                var OrderIdData = serialize.Select(x => x.OrderID).FirstOrDefault();
-                editdata = dbContext.DealerDispatchCalculations.Where(x => x.OrderID == OrderIdData).FirstOrDefault();
-                if (editdata == null)
-                {
-                    ValidationResult results = new ValidationResult();
-                    if (serialize != null)
-                    {
-
-                        foreach (var items in serialize)
-                        {
-                            Orderid = items.OrderID;
-                            cty = new Items();
-                            ms.ItemID = items.ItemID;
-                            ms.ItemName = items.ItemName;
-                            ms.JobID = items.OrderID;
-                            ms.OrderQuantity = items.OrderedQuan;
-                            ms.SOID = tas.SOID;
-                            ms.FromDate = start;
-                            ms.ToDate = final;
-                            if (items.Scheme == "")
-                            {
-                                ms.DispatchQuantity = items.OrderedQuan;
-                            }
-                            else
-                            {
-                                ms.DispatchQuantity = Convert.ToInt32(items.Scheme);
-                            }
-
-                            ms.Createddate = DateTime.UtcNow.AddHours(5);
-
-                            cty.ItemID = items.ItemID;
-                            var data = dbContext.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
-                            if (masterID != null)
-                            {
-                                schemeData = dbContext.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
-                            }
-                            cty.ItemName = items.ItemName;
-                            cty.OrderID = items.OrderID;
-                            cty.Packing = data.Packing;
-                            if (schemeData.SchemePrice != null)
-                            {
-                                cty.Slab = "RS" +schemeData.SchemePrice  + "/" + data.Packing;
-
-                            }
-                            else
-                            {
-                                cty.Slab = "0";
-                                cty.SchemeValue = 0;
-                            }
-                            cty.Rate = data.Price;
+        //        end = start.Date;
+        //        final = end.AddDays(1);
+        //    }
 
 
-                            cty.OrderedQuan = items.OrderedQuan;
-                            if (items.Scheme == "")
-                            {
-                                cty.DispatchQuantity = items.OrderedQuan;
-                                cty.Value = data.Price * items.OrderedQuan;
-                                cty.Amount = data.Price * items.OrderedQuan;
-                                GrossAmount += data.Price * items.OrderedQuan;
-                                if (schemeData.SchemePrice != 0)
-                                {
-                                    double val = items.OrderedQuan / data.Packing;
-                                    int rounded = (int)Math.Round(val);
-                                    cty.SchemeValue = rounded * schemeData.SchemePrice;
-                                    Scheme += Convert.ToDecimal(cty.SchemeValue);
-                                }
-                                else
-                                {
-                                    cty.Slab = "0";
-                                    cty.SchemeValue = 0;
 
-                                }
-                            }
-                            else
-                            {
-                                cty.DispatchQuantity = Convert.ToInt32(items.Scheme);
-                                cty.Value = data.Price * Convert.ToInt32(items.Scheme);
-                                cty.Amount = data.Price * Convert.ToInt32(items.Scheme);
-                                GrossAmount += data.Price * Convert.ToInt32(items.Scheme);
-                                if (schemeData.SchemePrice != 0)
-                                {
-                                    double val = Convert.ToInt32(items.Scheme) / data.Packing;
-                                    int rounded = (int)Math.Round(val);
-                                    cty.SchemeValue = rounded * schemeData.SchemePrice;
-                                    Scheme += Convert.ToDecimal(cty.SchemeValue);
-                                }
-                                else
-                                {
-                                    cty.Slab = "0";
-                                    cty.SchemeValue = 0;
-                                }
-                            }
-
-                            cty.Createddate = DateTime.UtcNow.AddHours(5);
-                            Itemdata.Add(cty);
-                            dbContext.DealerDSRDispatches.Add(ms);
-                            dbContext.SaveChanges();
+        //    FOSDataModel dbContext = new FOSDataModel();
+        //    var rangeid = dbContext.Dealers.Where(x => x.ShopName == tas.DealerName && x.IsActive == true).FirstOrDefault();
+        //    string FilePathReturn = "";
+        //    string BillNo = "";
+        //    var schemeData = new TblDetailScheme();
+        //    var editdata = new DealerDispatchCalculation();
+        //    var counter = dbContext.DealerDispatchCalculations.Where(x => x.DealerID==rangeid.ID).OrderByDescending(u => u.ID).Select(u => u.BillNo).FirstOrDefault();
 
 
-                        }
-                    }
-                }
-                else
-                {
-                    DealerDispatchCalculation obj = dbContext.DealerDispatchCalculations.Where(u => u.OrderID == OrderIdData).FirstOrDefault();
-                    dbContext.DealerDispatchCalculations.Remove(obj);
-                    var obj2 = dbContext.DealerDSRDispatches.Where(u => u.JobID == OrderIdData).ToList();
-                    foreach (var item in obj2)
-                    {
-                        dbContext.DealerDSRDispatches.Remove(item);
-                    }
+        //    if (counter == null)
+        //    {   var datein= DateTime.Now.Year.ToString();
+        //        var ticketCount = 1;
+        //        string s = ticketCount.ToString().PadLeft(3, '0');
+        //        BillNo = rangeid.DealerCode+"-"+ datein  + "-" + s;
+        //    }
+        //    else
+        //    {
+        //        var datein = DateTime.Now.Year.ToString();
+        //        var splittedcounter = counter.Split('-');
+        //        var val = splittedcounter[2];
+        //        int value = Convert.ToInt32(val) + 1;
+        //        string s = value.ToString().PadLeft(3, '0');
+        //        BillNo = rangeid.DealerCode + "-" + datein + "-" + s;
+        //    }
+        //    List<Items> Itemdata = new List<Items>();
+        //    DealerDSRDispatch ms = new DealerDSRDispatch();
+        //    DealerDispatchCalculation cal = new DealerDispatchCalculation();
+        //    Items cty;
+        //    var Orderid = 0;
+        //    decimal GrossAmount = 0;
+        //    decimal Scheme = 0;
+        //    var masterID = dbContext.TblMasterSchemes.Where(x => x.rangeID == rangeid.RangeID && x.isActive == true).FirstOrDefault();
+        //    try
+        //    {
+        //        var serialize = JsonConvert.DeserializeObject<List<Items>>(cont);
 
-                    if (serialize != null)
-                    {
+        //        var OrderIdData = serialize.Select(x => x.OrderID).FirstOrDefault();
+        //        editdata = dbContext.DealerDispatchCalculations.Where(x => x.OrderID == OrderIdData).FirstOrDefault();
+        //        if (editdata == null)
+        //        {
+        //            ValidationResult results = new ValidationResult();
+        //            if (serialize != null)
+        //            {
 
-                        foreach (var items in serialize)
-                        {
-                            Orderid = items.OrderID;
-                            cty = new Items();
-                            ms.ItemID = items.ItemID;
-                            ms.ItemName = items.ItemName;
-                            ms.JobID = items.OrderID;
-                            ms.OrderQuantity = items.OrderedQuan;
-                            if (items.Scheme == "")
-                            {
-                                ms.DispatchQuantity = items.OrderedQuan;
-                            }
-                            else
-                            {
-                                ms.DispatchQuantity = Convert.ToInt32(items.Scheme);
-                            }
+        //                foreach (var items in serialize)
+        //                {
+        //                    Orderid = items.OrderID;
+        //                    cty = new Items();
+        //                    ms.ItemID = items.ItemID;
+        //                    ms.ItemName = items.ItemName;
+        //                    ms.JobID = items.OrderID;
+        //                    ms.OrderQuantity = items.OrderedQuan;
+        //                    ms.SOID = tas.SOID;
+        //                    ms.FromDate = start;
+        //                    ms.ToDate = final;
+        //                    if (items.Scheme == "")
+        //                    {
+        //                        ms.DispatchQuantity = items.OrderedQuan;
+        //                    }
+        //                    else
+        //                    {
+        //                        ms.DispatchQuantity = Convert.ToInt32(items.Scheme);
+        //                    }
 
-                            ms.Createddate = DateTime.UtcNow.AddHours(5);
-                            ms.SOID = tas.SOID;
-                            cty.ItemID = items.ItemID;
-                            var data = dbContext.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
-                            if (masterID != null)
-                            {
-                                schemeData = dbContext.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
-                            }
-                            cty.ItemName = items.ItemName;
-                            cty.OrderID = items.OrderID;
-                            cty.Packing = data.Packing;
-                            if (schemeData.SchemePrice != null)
-                            {
-                                cty.Slab = schemeData.SchemePrice + "RS" + "/" + data.Packing;
+        //                    ms.Createddate = DateTime.UtcNow.AddHours(5);
 
-                            }
-                            else
-                            {
-                                cty.Slab = "0";
-                                cty.SchemeValue = 0;
-                            }
-                            cty.Rate = data.Price;
+        //                    cty.ItemID = items.ItemID;
+        //                    var data = dbContext.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
+        //                    if (masterID != null)
+        //                    {
+        //                        schemeData = dbContext.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
+        //                    }
+        //                    cty.ItemName = items.ItemName;
+        //                    cty.OrderID = items.OrderID;
+        //                    cty.Packing = data.Packing;
+        //                    if (schemeData.SchemePrice != null)
+        //                    {
+        //                        cty.Slab = "RS" +schemeData.SchemePrice  + "/" + data.Packing;
 
-
-                            cty.OrderedQuan = items.OrderedQuan;
-                            if (items.Scheme == "")
-                            {
-                                cty.DispatchQuantity = items.OrderedQuan;
-                                cty.Value = data.Price * items.OrderedQuan;
-                                cty.Amount = data.Price * items.OrderedQuan;
-                                GrossAmount += data.Price * items.OrderedQuan;
-                                if (schemeData.SchemePrice != 0)
-                                {
-                                    double val = items.OrderedQuan / data.Packing;
-                                    int rounded = (int)Math.Round(val);
-                                    cty.SchemeValue = rounded * schemeData.SchemePrice;
-                                    Scheme += Convert.ToDecimal(cty.SchemeValue);
-                                }
-                                else
-                                {
-                                    cty.Slab = "0";
-                                    cty.SchemeValue = 0;
-
-                                }
-                            }
-                            else
-                            {
-                                cty.DispatchQuantity = Convert.ToInt32(items.Scheme);
-                                cty.Value = data.Price * Convert.ToInt32(items.Scheme);
-                                cty.Amount = data.Price * Convert.ToInt32(items.Scheme);
-                                GrossAmount += data.Price * Convert.ToInt32(items.Scheme);
-                                if (schemeData.SchemePrice != 0)
-                                {
-                                    double val = Convert.ToInt32(items.Scheme) / data.Packing;
-                                    int rounded = (int)Math.Round(val);
-                                    cty.SchemeValue = rounded * schemeData.SchemePrice;
-                                    Scheme += Convert.ToDecimal(cty.SchemeValue);
-                                }
-                                else
-                                {
-                                    cty.Slab = "0";
-                                    cty.SchemeValue = 0;
-                                }
-                            }
-
-                            cty.Createddate = DateTime.UtcNow.AddHours(5);
-                            Itemdata.Add(cty);
-                            dbContext.DealerDSRDispatches.Add(ms);
-                            dbContext.SaveChanges();
+        //                    }
+        //                    else
+        //                    {
+        //                        cty.Slab = "0";
+        //                        cty.SchemeValue = 0;
+        //                    }
+        //                    cty.Rate = data.Price;
 
 
-                        }
-                    }
+        //                    cty.OrderedQuan = items.OrderedQuan;
+        //                    if (items.Scheme == "")
+        //                    {
+        //                        cty.DispatchQuantity = items.OrderedQuan;
+        //                        cty.Value = data.Price * items.OrderedQuan;
+        //                        cty.Amount = data.Price * items.OrderedQuan;
+        //                        GrossAmount += data.Price * items.OrderedQuan;
+        //                        if (schemeData.SchemePrice != 0)
+        //                        {
+        //                            double val = items.OrderedQuan / data.Packing;
+        //                            int rounded = (int)Math.Round(val);
+        //                            cty.SchemeValue = rounded * schemeData.SchemePrice;
+        //                            Scheme += Convert.ToDecimal(cty.SchemeValue);
+        //                        }
+        //                        else
+        //                        {
+        //                            cty.Slab = "0";
+        //                            cty.SchemeValue = 0;
+
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        cty.DispatchQuantity = Convert.ToInt32(items.Scheme);
+        //                        cty.Value = data.Price * Convert.ToInt32(items.Scheme);
+        //                        cty.Amount = data.Price * Convert.ToInt32(items.Scheme);
+        //                        GrossAmount += data.Price * Convert.ToInt32(items.Scheme);
+        //                        if (schemeData.SchemePrice != 0)
+        //                        {
+        //                            double val = Convert.ToInt32(items.Scheme) / data.Packing;
+        //                            int rounded = (int)Math.Round(val);
+        //                            cty.SchemeValue = rounded * schemeData.SchemePrice;
+        //                            Scheme += Convert.ToDecimal(cty.SchemeValue);
+        //                        }
+        //                        else
+        //                        {
+        //                            cty.Slab = "0";
+        //                            cty.SchemeValue = 0;
+        //                        }
+        //                    }
+
+        //                    cty.Createddate = DateTime.UtcNow.AddHours(5);
+        //                    Itemdata.Add(cty);
+        //                    dbContext.DealerDSRDispatches.Add(ms);
+        //                    dbContext.SaveChanges();
 
 
-                }
-                cal.GrossAmount = GrossAmount;
-                var display = GrossAmount * 3 / 100;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            DealerDispatchCalculation obj = dbContext.DealerDispatchCalculations.Where(u => u.OrderID == OrderIdData).FirstOrDefault();
+        //            dbContext.DealerDispatchCalculations.Remove(obj);
+        //            var obj2 = dbContext.DealerDSRDispatches.Where(u => u.JobID == OrderIdData).ToList();
+        //            foreach (var item in obj2)
+        //            {
+        //                dbContext.DealerDSRDispatches.Remove(item);
+        //            }
+
+        //            if (serialize != null)
+        //            {
+
+        //                foreach (var items in serialize)
+        //                {
+        //                    Orderid = items.OrderID;
+        //                    cty = new Items();
+        //                    ms.ItemID = items.ItemID;
+        //                    ms.ItemName = items.ItemName;
+        //                    ms.JobID = items.OrderID;
+        //                    ms.OrderQuantity = items.OrderedQuan;
+        //                    if (items.Scheme == "")
+        //                    {
+        //                        ms.DispatchQuantity = items.OrderedQuan;
+        //                    }
+        //                    else
+        //                    {
+        //                        ms.DispatchQuantity = Convert.ToInt32(items.Scheme);
+        //                    }
+
+        //                    ms.Createddate = DateTime.UtcNow.AddHours(5);
+        //                    ms.SOID = tas.SOID;
+        //                    cty.ItemID = items.ItemID;
+        //                    var data = dbContext.Items.Where(x => x.ItemID == items.ItemID).FirstOrDefault();
+        //                    if (masterID != null)
+        //                    {
+        //                        schemeData = dbContext.TblDetailSchemes.Where(x => x.MasterID == masterID.MasterSchemeID && x.ItemID == items.ItemID).FirstOrDefault();
+        //                    }
+        //                    cty.ItemName = items.ItemName;
+        //                    cty.OrderID = items.OrderID;
+        //                    cty.Packing = data.Packing;
+        //                    if (schemeData.SchemePrice != null)
+        //                    {
+        //                        cty.Slab = schemeData.SchemePrice + "RS" + "/" + data.Packing;
+
+        //                    }
+        //                    else
+        //                    {
+        //                        cty.Slab = "0";
+        //                        cty.SchemeValue = 0;
+        //                    }
+        //                    cty.Rate = data.Price;
+
+
+        //                    cty.OrderedQuan = items.OrderedQuan;
+        //                    if (items.Scheme == "")
+        //                    {
+        //                        cty.DispatchQuantity = items.OrderedQuan;
+        //                        cty.Value = data.Price * items.OrderedQuan;
+        //                        cty.Amount = data.Price * items.OrderedQuan;
+        //                        GrossAmount += data.Price * items.OrderedQuan;
+        //                        if (schemeData.SchemePrice != 0)
+        //                        {
+        //                            double val = items.OrderedQuan / data.Packing;
+        //                            int rounded = (int)Math.Round(val);
+        //                            cty.SchemeValue = rounded * schemeData.SchemePrice;
+        //                            Scheme += Convert.ToDecimal(cty.SchemeValue);
+        //                        }
+        //                        else
+        //                        {
+        //                            cty.Slab = "0";
+        //                            cty.SchemeValue = 0;
+
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        cty.DispatchQuantity = Convert.ToInt32(items.Scheme);
+        //                        cty.Value = data.Price * Convert.ToInt32(items.Scheme);
+        //                        cty.Amount = data.Price * Convert.ToInt32(items.Scheme);
+        //                        GrossAmount += data.Price * Convert.ToInt32(items.Scheme);
+        //                        if (schemeData.SchemePrice != 0)
+        //                        {
+        //                            double val = Convert.ToInt32(items.Scheme) / data.Packing;
+        //                            int rounded = (int)Math.Round(val);
+        //                            cty.SchemeValue = rounded * schemeData.SchemePrice;
+        //                            Scheme += Convert.ToDecimal(cty.SchemeValue);
+        //                        }
+        //                        else
+        //                        {
+        //                            cty.Slab = "0";
+        //                            cty.SchemeValue = 0;
+        //                        }
+        //                    }
+
+        //                    cty.Createddate = DateTime.UtcNow.AddHours(5);
+        //                    Itemdata.Add(cty);
+        //                    dbContext.DealerDSRDispatches.Add(ms);
+        //                    dbContext.SaveChanges();
+
+
+        //                }
+        //            }
+
+
+        //        }
+        //        cal.GrossAmount = GrossAmount;
+        //        var display = GrossAmount * 3 / 100;
                 
-                cal.Display = Math.Round(display, 2);
-                cal.OrderID = Orderid;
-                var dis = GrossAmount * 2 / 100;
-                var balamount1= GrossAmount - display;
-                cal.Balanceamount1 = Math.Round(balamount1, 2);
-                var balamo1 = cal.Balanceamount1;
-                cal.Scheme = Scheme;
+        //        cal.Display = Math.Round(display, 2);
+        //        cal.OrderID = Orderid;
+        //        var dis = GrossAmount * 2 / 100;
+        //        var balamount1= GrossAmount - display;
+        //        cal.Balanceamount1 = Math.Round(balamount1, 2);
+        //        var balamo1 = cal.Balanceamount1;
+        //        cal.Scheme = Scheme;
                
-                cal.Balanceamount2 = balamo1 - dis;
-                var balamo2 = cal.Balanceamount2;
+        //        cal.Balanceamount2 = balamo1 - dis;
+        //        var balamo2 = cal.Balanceamount2;
                
-                cal.WSDiscount = dis;
-                cal.NetAmount = cal.Balanceamount2 - Scheme;
-                cal.BillNo = BillNo;
-                cal.DealerID = rangeid.ID;
-                var Net = cal.Balanceamount2 - Scheme;
+        //        cal.WSDiscount = dis;
+        //        cal.NetAmount = cal.Balanceamount2 - Scheme;
+        //        cal.BillNo = BillNo;
+        //        cal.DealerID = rangeid.ID;
+        //        var Net = cal.Balanceamount2 - Scheme;
                
-                    dbContext.DealerDispatchCalculations.Add(cal);
-                    dbContext.SaveChanges();
+        //            dbContext.DealerDispatchCalculations.Add(cal);
+        //            dbContext.SaveChanges();
             
-                var changeStatus = dbContext.JobsDetails.Where(x => x.JobID == Orderid).FirstOrDefault();
-                changeStatus.Dispatchstatus = "Invoiced";
-                dbContext.SaveChanges();
+        //        var changeStatus = dbContext.JobsDetails.Where(x => x.JobID == Orderid).FirstOrDefault();
+        //        changeStatus.Dispatchstatus = "Invoiced";
+        //        dbContext.SaveChanges();
 
-                try
-                {
-                    // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
-                    ReportViewer reportViewer = new ReportViewer();
-                    var DealerName = dbContext.JobsDetails.Where(x => x.JobID == Orderid).Select(x => x.RetailerID).FirstOrDefault();
+        //        try
+        //        {
+        //            // Microsoft.Reporting.WebForms.LocalReport ReportViewer1 = new LocalReport();
+        //            ReportViewer reportViewer = new ReportViewer();
+        //            var DealerName = dbContext.JobsDetails.Where(x => x.JobID == Orderid).Select(x => x.RetailerID).FirstOrDefault();
 
-                    var ShopName = dbContext.Retailers.Where(x => x.ID == DealerName).FirstOrDefault();
+        //            var ShopName = dbContext.Retailers.Where(x => x.ID == DealerName).FirstOrDefault();
 
-                    ReportParameter[] prm = new ReportParameter[12];
-
-
-                    prm[0] = new ReportParameter("DealerName", tas.DealerName + "/"+ rangeid.DealerCode );
-                    prm[1] = new ReportParameter("SOName", tas.SOName);
-                    prm[2] = new ReportParameter("ShopName", ShopName.ShopName);
-                    prm[3] = new ReportParameter("GrossAmount", GrossAmount.ToString());
-                    prm[4] = new ReportParameter("Display", display.ToString());
-                    prm[5] = new ReportParameter("Balance1", balamo1.ToString());
-                    prm[6] = new ReportParameter("Scheme", Scheme.ToString());
-                    prm[7] = new ReportParameter("Balance2", balamo2.ToString());
-                    prm[8] = new ReportParameter("Discount", dis.ToString());
-                    prm[9] = new ReportParameter("NetAmount", Net.ToString());
-                    prm[10] = new ReportParameter("Address", ShopName.Address);
-                    prm[11] = new ReportParameter("BillNo", BillNo);
-                    reportViewer.ProcessingMode = ProcessingMode.Local;
-                    reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DealerDSR.rdlc");
-                    reportViewer.LocalReport.EnableExternalImages = true;
-                    ReportDataSource dt1 = new ReportDataSource("DataSet1", Itemdata);
-
-                    reportViewer.LocalReport.SetParameters(prm);
-                    reportViewer.LocalReport.DataSources.Clear();
-                    reportViewer.LocalReport.DataSources.Add(dt1);
-                    reportViewer.LocalReport.Refresh();
-                    // PrintReport.PrintToPrinter(ReportViewer1);
-
-                    Warning[] warnings;
-                    string[] streamids;
-                    string mimeType, encoding, filenameExtension;
-
-                    byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
-
-                    //File  
-                    string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
-                    string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
-
-                    //create and set PdfReader  
-                    PdfReader reader = new PdfReader(bytes);
-                    FileStream output = new FileStream(FilePath, FileMode.Create);
-
-                    string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
-
-                    //create and set PdfStamper  
-                    PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
-
-                    if (Agent.Contains("Firefox"))
-                        pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
-                    else
-                        pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
-
-                    pdfStamper.FormFlattening = false;
-                    pdfStamper.Close();
-                    reader.Close();
-
-                    //return file path  
-                    FilePathReturn = @"TempFiles/" + FileName;
-
-                }
-
-                catch (Exception exp)
-                {
-                    Log.Instance.Error(exp, "Report Not Working");
-
-                }
+        //            ReportParameter[] prm = new ReportParameter[12];
 
 
+        //            prm[0] = new ReportParameter("DealerName", tas.DealerName + "/"+ rangeid.DealerCode );
+        //            prm[1] = new ReportParameter("SOName", tas.SOName);
+        //            prm[2] = new ReportParameter("ShopName", ShopName.ShopName);
+        //            prm[3] = new ReportParameter("GrossAmount", GrossAmount.ToString());
+        //            prm[4] = new ReportParameter("Display", display.ToString());
+        //            prm[5] = new ReportParameter("Balance1", balamo1.ToString());
+        //            prm[6] = new ReportParameter("Scheme", Scheme.ToString());
+        //            prm[7] = new ReportParameter("Balance2", balamo2.ToString());
+        //            prm[8] = new ReportParameter("Discount", dis.ToString());
+        //            prm[9] = new ReportParameter("NetAmount", Net.ToString());
+        //            prm[10] = new ReportParameter("Address", ShopName.Address);
+        //            prm[11] = new ReportParameter("BillNo", BillNo);
+        //            reportViewer.ProcessingMode = ProcessingMode.Local;
+        //            reportViewer.LocalReport.ReportPath = Server.MapPath("~\\Views\\Reports\\DealerDSR.rdlc");
+        //            reportViewer.LocalReport.EnableExternalImages = true;
+        //            ReportDataSource dt1 = new ReportDataSource("DataSet1", Itemdata);
 
-            }
-            catch (Exception ex)
-            {
+        //            reportViewer.LocalReport.SetParameters(prm);
+        //            reportViewer.LocalReport.DataSources.Clear();
+        //            reportViewer.LocalReport.DataSources.Add(dt1);
+        //            reportViewer.LocalReport.Refresh();
+        //            // PrintReport.PrintToPrinter(ReportViewer1);
 
-            }
+        //            Warning[] warnings;
+        //            string[] streamids;
+        //            string mimeType, encoding, filenameExtension;
 
-            return Json(FilePathReturn);
-        }
+        //            byte[] bytes = reportViewer.LocalReport.Render("Pdf", null, out mimeType, out encoding, out filenameExtension, out streamids, out warnings);
+
+        //            //File  
+        //            string FileName = "Test_" + DateTime.Now.Ticks.ToString() + ".pdf";
+        //            string FilePath = HttpContext.Server.MapPath(@"~\TempFiles\") + FileName;
+
+        //            //create and set PdfReader  
+        //            PdfReader reader = new PdfReader(bytes);
+        //            FileStream output = new FileStream(FilePath, FileMode.Create);
+
+        //            string Agent = HttpContext.Request.Headers["User-Agent"].ToString();
+
+        //            //create and set PdfStamper  
+        //            PdfStamper pdfStamper = new PdfStamper(reader, output, '0', true);
+
+        //            if (Agent.Contains("Firefox"))
+        //                pdfStamper.JavaScript = "var res = app.loaded('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);');";
+        //            else
+        //                pdfStamper.JavaScript = "var res = app.setTimeOut('var pp = this.getPrintParams();pp.interactive = pp.constants.interactionLevel.full;this.print(pp);', 200);";
+
+        //            pdfStamper.FormFlattening = false;
+        //            pdfStamper.Close();
+        //            reader.Close();
+
+        //            //return file path  
+        //            FilePathReturn = @"TempFiles/" + FileName;
+
+        //        }
+
+        //        catch (Exception exp)
+        //        {
+        //            Log.Instance.Error(exp, "Report Not Working");
+
+        //        }
+
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+
+        //    return Json(FilePathReturn);
+        //}
 
 
 

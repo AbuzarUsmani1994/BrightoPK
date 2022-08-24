@@ -28,8 +28,17 @@ namespace FOS.Web.UI.Controllers.API
                         {
                             Retailers = SubCat.Where(s => s.IsActive).Select(d => new
                             {
-                                d.ID,
-                                d.ShopName
+                               d.ID,
+                                d.ShopName,
+                                d.NewOrOld,
+                                d.Quota,
+                                d.address,
+                                d.ShopType,
+                                d.OwnerName,
+                                d.Phone,
+                                d.Latitude,
+                                d.Longitude,
+                                d.AreaName
                             }).OrderBy(d => d.ShopName)
                         });
                     }

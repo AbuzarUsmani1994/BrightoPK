@@ -30,64 +30,15 @@
       </ConnectionProperties>
       <rd:DataSourceID>51f752c4-cece-49e6-94a9-ae522bacb9d9</rd:DataSourceID>
     </DataSource>
+    <DataSource Name="OrderForExcelDaily">
+      <ConnectionProperties>
+        <DataProvider>System.Data.DataSet</DataProvider>
+        <ConnectString>/* Local Connection */</ConnectString>
+      </ConnectionProperties>
+      <rd:DataSourceID>81d92031-b8b6-4d36-bbcb-c547256145e0</rd:DataSourceID>
+    </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet1">
-      <Query>
-        <DataSourceName>OrderInExcel</DataSourceName>
-        <CommandText>/* Local Query */</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ShopName">
-          <DataField>ShopName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ItemName">
-          <DataField>ItemName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Quantity">
-          <DataField>Quantity</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SortOrder">
-          <DataField>SortOrder</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Datee">
-          <DataField>Datee</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="LastVisitDate">
-          <DataField>LastVisitDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="DiscountPercentage">
-          <DataField>DiscountPercentage</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="DiscountedTotal">
-          <DataField>DiscountedTotal</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="OrderTotal">
-          <DataField>OrderTotal</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Total">
-          <DataField>Total</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-      <rd:DataSetInfo>
-        <rd:DataSetName>OrderInExcel</rd:DataSetName>
-        <rd:SchemaPath>D:\TSOFT\GPSALE\6-25-2019\FOS.Web.UI\OrderInExcel.xsd</rd:SchemaPath>
-        <rd:TableName>Sp_OrderSummeryReportInExcel2.5</rd:TableName>
-        <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
-        <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
-        <rd:TableAdapterName>Sp_OrderSummeryReportInExcel2_5TableAdapter</rd:TableAdapterName>
-      </rd:DataSetInfo>
-    </DataSet>
     <DataSet Name="DataSet2">
       <Query>
         <DataSourceName>FollowUpReasonsDSR</DataSourceName>
@@ -118,6 +69,70 @@
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
         <rd:TableAdapterName>Sp_FollowUpVisitsDailyRangeBTableAdapter</rd:TableAdapterName>
+      </rd:DataSetInfo>
+    </DataSet>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>OrderForExcelDaily</DataSourceName>
+        <CommandText>/* Local Query */</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ShopName">
+          <DataField>ShopName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ItemName">
+          <DataField>ItemName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Quantity">
+          <DataField>Quantity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SortOrder">
+          <DataField>SortOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Datee">
+          <DataField>Datee</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="LineTotal">
+          <DataField>LineTotal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="LastVisitDate">
+          <DataField>LastVisitDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="DiscountPercentage">
+          <DataField>DiscountPercentage</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DiscountedTotal">
+          <DataField>DiscountedTotal</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="OrderTotal">
+          <DataField>OrderTotal</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Total">
+          <DataField>Total</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+      <rd:DataSetInfo>
+        <rd:DataSetName>OrderForExcelDaily</rd:DataSetName>
+        <rd:SchemaPath>D:\Panda\Panda\Project\FOS.Web.UI\OrderForExcelDaily.xsd</rd:SchemaPath>
+        <rd:TableName>Sp_OrderSummeryReportInExcel2.5</rd:TableName>
+        <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
+        <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
+        <rd:TableAdapterName>Sp_OrderSummeryReportInExcel2_5TableAdapter</rd:TableAdapterName>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
@@ -197,9 +212,18 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>        Golden Pearl Cosmetics</Value>
+                    <Value xml:space="preserve">       </Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Format>HH:mm</Format>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>Panda Industries</Value>
+                    <Style>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>12pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <Format>HH:mm</Format>
                     </Style>
@@ -212,23 +236,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>        Daily Sales Report(</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontWeight>Bold</FontWeight>
-                      <Format>HH:mm</Format>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>=Parameters!RangeName.Value</Value>
-                    <Style>
-                      <FontFamily>Calibri</FontFamily>
-                      <FontWeight>Bold</FontWeight>
-                      <Format>HH:mm</Format>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>)</Value>
+                    <Value>        Daily Sales Report</Value>
                     <Style>
                       <FontFamily>Calibri</FontFamily>
                       <FontWeight>Bold</FontWeight>
@@ -526,7 +534,7 @@
                   <Width>0.31666in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.31666in</Width>
+                  <Width>0.36874in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -544,7 +552,7 @@
                                 <TextRun>
                                   <Value>=Fields!Quantity.Value</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -576,7 +584,7 @@
                                 <TextRun>
                                   <Value>=Fields!DiscountPercentage.Value</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -607,9 +615,9 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Total.Value</Value>
+                                  <Value>=Sum(Fields!LineTotal.Value)</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -706,14 +714,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox7">
+                        <Textbox Name="LineTotal">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Parameters!GrandTotal.Value</Value>
+                                  <Value>=Sum(Fields!LineTotal.Value)</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -724,7 +732,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <rd:DefaultName>LineTotal</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -736,6 +744,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -891,7 +900,7 @@
                               <TextRun>
                                 <Value>=RunningValue(Fields!Datee.Value,countdistinct,"DataSet1")</Value>
                                 <Style>
-                                  <FontSize>9pt</FontSize>
+                                  <FontSize>8pt</FontSize>
                                   <FontWeight>Bold</FontWeight>
                                 </Style>
                               </TextRun>
@@ -927,7 +936,7 @@
                                   <TextRun>
                                     <Value>=Fields!ShopName.Value</Value>
                                     <Style>
-                                      <FontSize>9pt</FontSize>
+                                      <FontSize>8pt</FontSize>
                                       <FontWeight>Bold</FontWeight>
                                     </Style>
                                   </TextRun>
@@ -963,7 +972,7 @@
                                       <TextRun>
                                         <Value>=Fields!Datee.Value</Value>
                                         <Style>
-                                          <FontSize>9pt</FontSize>
+                                          <FontSize>8pt</FontSize>
                                           <FontWeight>Bold</FontWeight>
                                         </Style>
                                       </TextRun>
@@ -999,7 +1008,7 @@
                                           <TextRun>
                                             <Value>=Fields!LastVisitDate.Value</Value>
                                             <Style>
-                                              <FontSize>9pt</FontSize>
+                                              <FontSize>8pt</FontSize>
                                               <FontWeight>Bold</FontWeight>
                                               <Format>d</Format>
                                             </Style>
@@ -1187,7 +1196,7 @@
             <DataSetName>DataSet1</DataSetName>
             <Top>1.15724in</Top>
             <Height>0.75in</Height>
-            <Width>3.61561in</Width>
+            <Width>3.66769in</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -1947,10 +1956,6 @@
       <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
-    <ReportParameter Name="RangeName">
-      <DataType>String</DataType>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
     <ReportParameter Name="DateTo">
       <DataType>String</DataType>
       <Prompt>ReportParameter1</Prompt>
@@ -2007,11 +2012,6 @@
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>SOName</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>RangeName</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>

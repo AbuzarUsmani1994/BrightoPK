@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d4a37a8cf060422ba4d16447284c293e" Name="Diagram1" ZoomLevel="85">
+      <Diagram DiagramId="d4a37a8cf060422ba4d16447284c293e" Name="Diagram1" ZoomLevel="67">
         <EntityTypeShape EntityType="FOS_WallCoatModel.Area" Width="1.5" PointX="5.25" PointY="47.375" />
         <EntityTypeShape EntityType="FOS_WallCoatModel.City" Width="1.5" PointX="3" PointY="40.75" />
         <EntityTypeShape EntityType="FOS_WallCoatModel.CityZone" Width="1.5" PointX="5.25" PointY="42" />
@@ -167,6 +167,27 @@
         <AssociationConnector Association="FOS_WallCoatModel.FK_DispatchInVan_Item" />
         <AssociationConnector Association="FOS_WallCoatModel.FK_DispatchInVan_Retailers" />
         <AssociationConnector Association="FOS_WallCoatModel.FK_DispatchInVan_SaleOfficers" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.DispatchInVanMaster" Width="1.5" PointX="15" PointY="54.75" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_DispatchInVanMaster_Dealers" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.TBL_RouteSelection" Width="1.5" PointX="19.375" PointY="11.75" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_CompititorBrand" Width="1.5" PointX="20.375" PointY="4.75" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.TBL_CurrentStock" Width="1.5" PointX="21" PointY="49" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_OurBrandRate" Width="1.5" PointX="11.875" PointY="62.375" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_TBL_CurrentStock_Item" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_OurBrandRate_Item" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_TBL_CurrentStock_Jobs" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_NoSaleReason" Width="1.5" PointX="19.375" PointY="14.75" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_VisittypesOfSO" Width="1.5" PointX="20.375" PointY="17.75" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.TBL_CompititorBrandsForDropDown" Width="1.5" PointX="20.375" PointY="20.75" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_ChecklistBeforeVisit" Width="1.5" PointX="25" PointY="40.625" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_RSMCheckList" Width="1.5" PointX="27.25" PointY="36.375" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.Tbl_RSMSummary" Width="1.5" PointX="25" PointY="35.75" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_Cities" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_Dealers" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_RSMSummary_SaleOfficers" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_ChecklistBeforeVisit" />
+        <AssociationConnector Association="FOS_WallCoatModel.FK_Tbl_RSMCheckList_Tbl_RSMSummary" />
+        <EntityTypeShape EntityType="FOS_WallCoatModel.SOType" Width="1.5" PointX="21.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

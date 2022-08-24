@@ -35,7 +35,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
 
@@ -186,7 +186,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             List<SaleOfficer> SaleOfficerObj;
 
             if (RHID == 0 || RHID == null)
@@ -442,7 +442,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,
@@ -687,7 +687,7 @@ namespace FOS.Web.UI.Controllers
         public JsonResult GetHeadsRelatedtorange(int RegionalHeadID, bool selectOption)
         {
             var userID = Convert.ToInt32(Session["UserID"]);
-            var result = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID, RegionalHeadID);
+            var result = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             return Json(result);
         }
 
@@ -1725,7 +1725,7 @@ namespace FOS.Web.UI.Controllers
             var ranges = FOS.Setup.ManageRegion.GetRangeType();
             var rangeid = ranges.FirstOrDefault();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
 
             regionalHeadData.Insert(0, new RegionalHeadData
             {
@@ -2045,7 +2045,7 @@ namespace FOS.Web.UI.Controllers
             var rangeid = ranges.FirstOrDefault();
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
-            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID,rangeid.ID);
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
             regionalHeadData.Insert(0, new RegionalHeadData
             {
                 ID = 0,

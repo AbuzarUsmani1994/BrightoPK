@@ -21,6 +21,8 @@ namespace FOS.Web.UI.Controllers.API
             JobsDetail jobDet = new JobsDetail();
             var JobObj = new Job();
             var RemObj = new TblReminder();
+
+            var Lastdata = db.JobsDetails.Where(x => x.RetailerID == rm.RetailerId).OrderByDescending(x => x.ID).FirstOrDefault();
             try
             {
                 Retailer ret = db.Retailers.Where(r => r.ID == rm.RetailerId).FirstOrDefault();
@@ -62,6 +64,17 @@ namespace FOS.Web.UI.Controllers.API
                         jobDet.Dispatchstatus = "Ordered";
                         jobDet.Status = true;
                         jobDet.ActivityDetails = "Offline";
+                        if (Lastdata != null)
+                        {
+                            jobDet.Lastvisitdate = Lastdata.JobDate;
+                            jobDet.LastvisitType = Lastdata.VisitPurpose;
+                        }
+                        else
+                        {
+                            jobDet.Lastvisitdate = DateTime.UtcNow.AddHours(5);
+                            jobDet.LastvisitType = rm.Type;
+
+                        }
                         // jobDet.ActivityType = rm.ActivityType;
                         jobDet.VisitPurpose = rm.Type;
                         if (rm.Picture1 == "" || rm.Picture1 == null)
@@ -131,6 +144,17 @@ namespace FOS.Web.UI.Controllers.API
                         jobDet.JobType = "Retailer Order";
                         jobDet.Status = true;
                         jobDet.FollowupReason = rm.Followupreason;
+                        if (Lastdata != null)
+                        {
+                            jobDet.Lastvisitdate = Lastdata.JobDate;
+                            jobDet.LastvisitType = Lastdata.VisitPurpose;
+                        }
+                        else
+                        {
+                            jobDet.Lastvisitdate = DateTime.UtcNow.AddHours(5);
+                            jobDet.LastvisitType = rm.Type;
+
+                        }
                         jobDet.VisitPurpose = rm.Type;
                         jobDet.PRemarks = rm.Remarks;
                         if (rm.Picture1 == "" || rm.Picture1 == null)

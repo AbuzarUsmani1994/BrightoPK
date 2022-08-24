@@ -94,20 +94,28 @@
                                 </div>
                             </div>
 
-                            <div class="control-group">
+                            @*<div class="control-group">
                                 <label class="control-label">Range  *</label>
                                 <div class="controls">
                                     @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Ranges, "ID", "Type"), new { @class = "", style = "220px" })
                                     @Html.ValidationMessageFor(model => model.RangeID)
                                     @Html.HiddenFor(model => model.RangeID)
                                 </div>
-                            </div>
+                            </div>*@
                             <div class="control-group">
                                 <label class="control-label">Designation  *</label>
                                 <div class="controls">
                                     @Html.DropDownListFor(model => model.DesignationID, new SelectList(Model.Designations, "ID", "Type"), new { @class = "", style = "220px" })
                                     @Html.ValidationMessageFor(model => model.DesignationID)
                                     @Html.HiddenFor(model => model.DesignationID)
+                                </div>
+                            </div>
+                               <div class="control-group">
+                                <label class="control-label">SO ROLE  *</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.SOTypeID, new SelectList(Model.SOTypes, "ID", "Type"), new { @class = "", style = "220px" })
+                                    @Html.ValidationMessageFor(model => model.SOTypeID)
+                                    @Html.HiddenFor(model => model.SOTypeID)
                                 </div>
                             </div>
                             <div class="control-group">
@@ -254,9 +262,9 @@
                                 <th style="width:15%">
                                     Designation
                                 </th>
-                                <th style="width:15%">
+                                @*<th style="width:15%">
                                     Range
-                                </th>
+                                </th>*@
                                 <th style="width:10%">Actions</th>
                             </tr>
                         </thead>
@@ -400,7 +408,7 @@
                 { "data": "leaveondate" },
                 { "data": "DesignationName" },
 
-                { "data": "RangeName" },
+                
             {
                 "sClass": "center-align-td",
                 "mData": null,

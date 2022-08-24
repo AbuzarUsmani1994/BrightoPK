@@ -1634,7 +1634,7 @@ namespace FOS.Setup
         }
 
         // Get All Retailer For Grid ...
-        public static List<RetailerData> GetRetailerForGrid(string From, string To,int RegionID, int CityID)
+        public static List<RetailerData> GetRetailerForGrid(int RegionID, int CityID)
         {
             List<RetailerData> RetailerData = new List<RetailerData>();
 
@@ -1646,46 +1646,11 @@ namespace FOS.Setup
                 DateTime dtToToday = dtFromToday.AddDays(1);
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    if (From == null && To == null)
-                    {
+                   
+                   
+                    
 
-                        RetailerData = dbContext.Retailers.OrderByDescending(r => r.ID).Where(u => u.Status == true && u.IsDeleted == false && u.RegionID == RegionID && u.CityID == CityID && u.CreatedDate>= dtFromToday && u.CreatedDate<= dtToToday)
-                            .Select(
-                                u => new RetailerData
-                                {
-                                    ID = u.ID,
-
-                                    RegionalHeadID = u.SaleOfficer.RegionalHeadID,
-                                    SaleOfficerID = u.SaleOfficerID,
-                                    SaleOfficerName = u.SaleOfficer.Name,
-                                    RetailerType = u.RetailerType,
-                                    CityID = u.CityID,
-                                    CItyName = u.City.Name,
-                                    AreaID = (int)u.AreaID,
-                                    AreaName = u.Area.Name,
-                                    Address = u.Address == null ? "" : u.Address,
-                                    Name = u.Name,
-                                    RetailerCode = u.RetailerCode,
-                                    CNIC = u.CNIC,
-                                    ContactPerson = u.ContactPerson,
-                                    ContactPersonCell = u.ContactCellNo,
-
-                                    ShopName = u.ShopName,
-                                    Phone1 = u.Phone1 == null ? "" : u.Phone1,
-                                    Phone2 = u.Phone2 == null ? "" : u.Phone2,
-                                    Location = u.Latitude + "," + u.Longitude,
-                                    LocationName = u.LocationName,
-                                    TypeOfShop = u.TypeOfShop,
-                                    ShopCategory = u.ShopCategory,
-                                    LocationMargin = u.LocationMargin,
-                                }).ToList();
-                    }
-                    else
-                    {
-                        DateTime FromDate = Convert.ToDateTime(From);
-                        DateTime ToDate = Convert.ToDateTime(To).AddDays(1);
-
-                        RetailerData = dbContext.Retailers.OrderByDescending(r => r.ID).Where(u => u.Status == true && u.IsDeleted == false && u.RegionID == RegionID && u.CityID == CityID && u.CreatedDate >= FromDate && u.CreatedDate <= ToDate)
+                        RetailerData = dbContext.Retailers.OrderByDescending(r => r.ID).Where(u => u.Status == true && u.IsDeleted == false && u.RegionID == RegionID && u.CityID == CityID)
                          .Select(
                              u => new RetailerData
                              {
@@ -1715,7 +1680,7 @@ namespace FOS.Setup
                                  ShopCategory = u.ShopCategory,
                                  LocationMargin = u.LocationMargin,
                              }).ToList();
-                    }
+                    
                 }
             }
             catch (Exception exp)

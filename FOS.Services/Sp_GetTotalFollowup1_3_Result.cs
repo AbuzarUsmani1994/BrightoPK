@@ -20,5 +20,6 @@ namespace FOS.DataLayer
         public string FollowUp { get; set; }
         public string FollowupReason { get; set; }
         public Nullable<System.DateTime> JobDate { get; set; }
+        public string Region { get; set; }
     }
 }

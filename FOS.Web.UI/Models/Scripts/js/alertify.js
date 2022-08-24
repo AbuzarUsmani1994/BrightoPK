@@ -45,7 +45,7 @@
             position: 'bottom-right'
         },
         glossary: {
-            title: 'Golden Peart Alert',
+            title: 'Panda Industries Alert',
             ok: 'OK',
             cancel: 'Cancel',
             acccpt: 'Accept',

@@ -16,7 +16,7 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int SOID)
+        public IHttpActionResult Get(int SOID,string Date)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
@@ -24,7 +24,7 @@ namespace FOS.Web.UI.Controllers.API
                 //var SOType= db.SaleOfficers.Where(x=>x.ID==SOID).Select(x=>x.so)
 
 
-                DateTime dtFromTodayUtc = DateTime.UtcNow.AddHours(5);
+                DateTime dtFromTodayUtc = Convert.ToDateTime(Date);
 
                 DateTime dtFromToday = dtFromTodayUtc.Date;
                 DateTime dtToToday = dtFromToday.AddDays(1);

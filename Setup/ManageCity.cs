@@ -188,8 +188,7 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    if (userID == 1)
-                    {
+                    
                         city = dbContext.Regions.Where(c => c.IsDeleted == false)
                                 .Select
                                 (
@@ -202,24 +201,8 @@ namespace FOS.Setup
                                     //ShortCode = u.ShortCode,
                                     //LastUpdate = u.LastUpdate
                                 }).OrderBy(x => x.Name).ToList();
-                    }
-                    else
-                    {
-                        var regions = dbContext.Users.Where(x => x.ID == userID).Select(x => x.RegionalheadRef).FirstOrDefault();
-                        if (regions != null)
-                        {
-                            var RegionIDs = dbContext.RegionalHeadRegions.Where(x => x.RegionHeadID == regions).Select(x => x.RegionID).ToList();
-                            foreach (var item in RegionIDs)
-                            {
-                                data = new RegionData();
-                                data.ID = item;
-                                data.Name= dbContext.Regions.Where(x => x.ID == item).Select(x => x.Name).FirstOrDefault();
-                                city.Add(data);
-
-
-                            }
-                        }
-                    }
+                   
+                    
                 }
             }
             catch (Exception)

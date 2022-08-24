@@ -25,7 +25,36 @@ namespace FOS.Web.UI.Controllers.API
             Retailer retailerObj = new Retailer();
             try
             {
-                var rangeid= db.SaleOfficers.Where(x=>x.ID==rm.SalesOfficerID).Select(x=>x.RangeID).FirstOrDefault();
+                var data = db.Retailers.Where(x => x.RegionID == rm.RegionID && x.CityID == rm.CityID && x.Phone1 == rm.CellNo1).FirstOrDefault();
+
+                if (data != null)
+                {
+                    return new Result<SuccessResponse>
+                    {
+                        Data = null,
+                        Message = "Phone Number Already exist",
+                        ResultType = ResultType.Failure,
+                        Exception = null,
+                        ValidationErrors = null
+                    };
+
+                }
+
+                var data2 = db.Retailers.Where(x => x.RegionID == rm.RegionID && x.CityID == rm.CityID && x.ShopName == rm.ShopName).FirstOrDefault();
+
+                if (data2 != null)
+                {
+                    return new Result<SuccessResponse>
+                    {
+                        Data = null,
+                        Message = "Shop Name Already exist in this Region",
+                        ResultType = ResultType.Failure,
+                        Exception = null,
+                        ValidationErrors = null
+                    };
+
+                }
+                //var rangeid= db.SaleOfficers.Where(x=>x.ID==rm.SalesOfficerID).Select(x=>x.RangeID).FirstOrDefault();
 
                 //ADD New Retailer 
                 retailerObj.ID = db.Retailers.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
@@ -33,23 +62,11 @@ namespace FOS.Web.UI.Controllers.API
                     retailerObj.Name = rm.OwnerName;
                     retailerObj.SaleOfficerID = rm.SalesOfficerID;
 
-                if (rangeid == 6)
-                {
+               
 
                     retailerObj.DealerID = rm.DistributorIDRangeA;
-                    retailerObj.RangeADealer = rm.DistributorIDRangeA;
-                }
-                else if (rangeid == 7)
-                {
-                    retailerObj.DealerID = rm.DistributorIDRangeA;
-                    retailerObj.RangeBDealer = rm.DistributorIDRangeA;
-                }
-                else
-                {
-                    retailerObj.DealerID = rm.DistributorIDRangeA;
-                    retailerObj.RangeCDealer = rm.DistributorIDRangeA;
-                }
-                    
+                   
+              
                     retailerObj.ShopName = rm.ShopName;
                     retailerObj.AreaID = rm.AreaID;
                     retailerObj.CityID = rm.CityID;
@@ -67,7 +84,7 @@ namespace FOS.Web.UI.Controllers.API
                     retailerObj.Email = rm.Email;
                     retailerObj.RetailerClass = rm.RetailerClass;
                     retailerObj.RetailerChannel = rm.RetailerChannel;
-                    retailerObj.RangeID = rangeid;
+                    retailerObj.RangeID = 6;
                     if (rm.Picture1 == "" || rm.Picture1 == null)
                     {
                         retailerObj.Picture1 = null;
@@ -84,7 +101,9 @@ namespace FOS.Web.UI.Controllers.API
                     retailerObj.RetailerType = "Retailer";
                     retailerObj.IsDeleted = false;
                     retailerObj.Address = rm.Address;
-
+                retailerObj.Shoptype = rm.ShopType;
+                retailerObj.Quota = rm.Quota;
+                retailerObj.NewOrOld = rm.OldorNew;
                     DateTime serverTime = DateTime.Now; // gives you current Time in server timeZone
                     DateTime utcTime = serverTime.ToUniversalTime(); // convert it to Utc using timezone setting of server computer
 
@@ -193,6 +212,9 @@ namespace FOS.Web.UI.Controllers.API
             }
             public int RetailerID { get; set; }
             public string ShopName { get; set; }
+            public string ShopType { get; set; }
+            public int Quota { get; set; }
+            public string OldorNew { get; set; }
             public string OwnerName { get; set; }
             public string CellNo1 { get; set; }
             public string CellNo2 { get; set; }

@@ -27,6 +27,7 @@ namespace FOS.DataLayer
             this.StockPositions = new HashSet<StockPosition>();
             this.SOAttendances = new HashSet<SOAttendance>();
             this.StockInvoices = new HashSet<StockInvoice>();
+            this.Tbl_RSMSummary = new HashSet<Tbl_RSMSummary>();
         }
     
         public int TID { get; set; }
@@ -61,5 +62,7 @@ namespace FOS.DataLayer
         public virtual ICollection<SOAttendance> SOAttendances { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StockInvoice> StockInvoices { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_RSMSummary> Tbl_RSMSummary { get; set; }
     }
 }
