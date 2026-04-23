@@ -15,13 +15,13 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int RegionID, int CityID,int RangeID)
+        public IHttpActionResult Get(int RegionID, int CityID, int SelectedSOID)
         {
             try
             {
                 if (RegionID > 0)
                 {
-                    var SubCat = ManageArea.GetRetailersForAPI(RegionID,CityID,RangeID);
+                    var SubCat = ManageArea.GetRetailersForAPI(RegionID,CityID,6, SelectedSOID);
                     if (SubCat != null && SubCat.Count > 0)
                     {
                         return Ok(new

@@ -29,14 +29,14 @@ namespace FOS.Web.UI.Controllers.API
                     retailerObj = db.Retailers.Where(u => u.ID == rm.ID).FirstOrDefault();
 
 
-                    var data = db.Retailers.Where(x => x.RegionID == rm.RegionID && x.CityID == rm.CityID && x.Phone1 == rm.CellNo1).FirstOrDefault();
+                   // var data = db.Retailers.Where(x => x.RegionID == rm.RegionID && x.CityID == rm.CityID && x.Phone1 == rm.CellNo1).FirstOrDefault();
 
                 retailerObj.Name = rm.OwnerName;
-                retailerObj.SaleOfficerID = rm.SalesOfficerID;
+               // retailerObj.SaleOfficerID = rm.SalesOfficerID;
 
 
 
-                retailerObj.DealerID = rm.DistributorIDRangeA;
+                retailerObj.DealerID = 1;
 
 
                 retailerObj.ShopName = rm.ShopName;
@@ -47,17 +47,22 @@ namespace FOS.Web.UI.Controllers.API
                 retailerObj.RegionID = rm.RegionID;
             
                 retailerObj.NewArea = rm.AreaName;
-              
-                retailerObj.LocationMargin = null;
+
+                retailerObj.CompititorIDS = rm.CompititorIDS;
                 retailerObj.Phone1 = rm.CellNo1;
                 retailerObj.Phone2 = rm.CellNo2;
                 retailerObj.Email = rm.Email;
                 retailerObj.RetailerClass = rm.RetailerClass;
-                retailerObj.RetailerChannel = rm.RetailerChannel;
+                retailerObj.RetailerChannel = 1;
                 retailerObj.RangeID = 6;
-              
-
-
+                retailerObj.BusinessTypeID = rm.BusinessTypeID;
+                retailerObj.BusinessStatusID = rm.BusinessStatusID;
+                retailerObj.BusinessStatusRemarks = rm.BusinessStatusRemarks;
+                retailerObj.SegmentTypeID = rm.SegmentTypeID;
+                retailerObj.CustomerType = rm.CustomerType;
+                retailerObj.Latitude = rm.Latitude;
+                retailerObj.Longitude = rm.Longitude;
+                retailerObj.Location = rm.Latitude + "," + rm.Longitude;
                 retailerObj.Remarks = rm.Remarks;
                 retailerObj.IsActive = true;
                 retailerObj.Status = true;
@@ -65,8 +70,8 @@ namespace FOS.Web.UI.Controllers.API
                 retailerObj.IsDeleted = false;
                 retailerObj.Address = rm.Address;
                 retailerObj.Shoptype = rm.ShopType;
-                retailerObj.Quota = rm.Quota;
-                retailerObj.NewOrOld = rm.OldorNew;
+                retailerObj.Quota = 1;
+                retailerObj.NewOrOld = "Old";
              
                 retailerObj.CreatedBy = rm.SalesOfficerID;
 
@@ -74,14 +79,7 @@ namespace FOS.Web.UI.Controllers.API
                 //END
 
                 // Add Token Detail ...
-                TokenDetail tokenDetail = new TokenDetail();
-                    tokenDetail.TokenName = rm.Token;
-                    tokenDetail.Action = "Add New Retailer";
-                    tokenDetail.ProcessedDateTime = DateTime.Now;
-                    db.TokenDetails.Add(tokenDetail);
-                    //END
-
-                    db.SaveChanges();
+                db.SaveChanges();
 
                     return new Result<SuccessResponse>
                     {
@@ -123,30 +121,43 @@ namespace FOS.Web.UI.Controllers.API
         {
             public int ID { get; set; }
             public string ShopName { get; set; }
+            public string ShopType { get; set; }
+            public int Quota { get; set; }
+            public int BusinessStatusID { get; set; }
+            public string BusinessStatusRemarks { get; set; }
+            public int BusinessTypeID { get; set; }
+            public int SegmentTypeID { get; set; }
+            public string CustomerType { get; set; }
+            public string OldorNew { get; set; }
             public string OwnerName { get; set; }
             public string CellNo1 { get; set; }
             public string CellNo2 { get; set; }
             public int SalesOfficerID { get; set; }
             public string Email { get; set; }
-            public string AreaName { get; set; }
             public int RegionID { get; set; }
             public int CityID { get; set; }
             public int ZoneID { get; set; }
             public int AreaID { get; set; }
+            public decimal Latitude { get; set; }
+            public decimal Longitude { get; set; }
+            public string LocationName { get; set; }
             public string Address { get; set; }
-            public string ShopType { get; set; }
-            public int Quota { get; set; }
-            public string OldorNew { get; set; }
-            public int DistributorIDRangeA { get; set; }
-            public int DistributorIDRangeB { get; set; }
-            public int DistributorIDRangeC { get; set; }
+
+            public string CompititorIDS { get; set; }
+            public string AreaName { get; set; }
             public string Token { get; set; }
             public int RetailerClass { get; set; }
             public int RetailerChannel { get; set; }
+            public int DistributorIDRangeA { get; set; }
+            public int DistributorIDRangeB { get; set; }
+            public int DistributorIDRangeC { get; set; }
             public string Picture1 { get; set; }
-         
+            //public string Picture2 { get; set; }
+            // public string Customercode { get; set; }
             public string Remarks { get; set; }
             public bool IsVerified { get; set; }
+
+           // public List<CompititorInfoModel> CompititorInformation { get; set; }
         }
 
         }

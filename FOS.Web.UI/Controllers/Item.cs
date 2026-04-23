@@ -134,7 +134,7 @@ namespace FOS.Web.UI.Controllers
             // int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
             //List<Region> RegionObj = FOS.Setup.ManageRegion.GetRegionList(RHID);
             // var objRegion = RegionObj.FirstOrDefault();
-            List<MainCategories> CityObj = FOS.Setup.ManageCity.GetMainCatList();
+            List<MainCategories> CityObj = FOS.Setup.ManageCity.GetProductMainCatList();
 
             //ViewData["CityObj"] = CityObj;
 
@@ -390,135 +390,235 @@ namespace FOS.Web.UI.Controllers
         #endregion Item
 
 
-        //#region SubCatA
+        #region SubCatA
 
-        //[CustomAuthorize]
-        //// View ...
-        //public ActionResult SubCategoryA()
+        [CustomAuthorize]
+        // View ...
+        public ActionResult SubCategoryA()
+        {
+            ////int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            List<MainCategories> CityObj = FOS.Setup.ManageCity.GetProductMainCatList();
+
+            var objRegion = CityObj.FirstOrDefault();
+            List<SubCategories> SubCategory = FOS.Setup.ManageCity.GetProdSubCatList(objRegion.ID);
+
+
+            var objArea = new SubCategoryA();
+            objArea.Regions = CityObj;
+            objArea.SubCategory = SubCategory;
+
+            return View(objArea);
+
+
+
+
+            // return View(objSubCat);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddUpdateSubCategoryA([Bind(Exclude = "TID")] SubCategoryA newData)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+                if (newData != null)
+                {
+                   
+
+                    if (boolFlag)
+                    {
+                        int Response = ManageArea.AddUpdateSubCatA(newData);
+                        if (Response == 1)
+                        {
+                            return Content("1");
+                        }
+                        else if (Response == 2)
+                        {
+                            return Content("2");
+                        }
+                        else
+                        {
+                            return Content("0");
+                        }
+                    }
+                    else
+                    {
+                        IList<ValidationFailure> failures = results.Errors;
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                        foreach (ValidationFailure failer in results.Errors)
+                        {
+                            sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                            Response.StatusCode = 422;
+                            return Json(new { errors = sb.ToString() });
+                        }
+                    }
+                }
+
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+        //Get All Region Method...
+        public JsonResult SubCategoryADataHandler(DTParameters param, Int32 CityID, Int32 SubCat)
+        {
+            try
+            {
+                var dtsource = new List<SubCategoryA>();
+
+                dtsource = ManageArea.GetSubCatAForGrid(CityID, SubCat);
+
+                List<String> columnSearch = new List<string>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<SubCategoryA> data = ManageArea.GetResult3(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
+                int count = ManageArea.Count3(param.Search.Value, dtsource, columnSearch);
+                DTResult<SubCategoryA> result = new DTResult<SubCategoryA>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        //public JsonResult GetCityListByRegionID(int RegionID)
         //{
-        //    ////int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
-        //    List<MainCategories> CityObj = FOS.Setup.ManageCity.GetMainCatList();
-
-        //    var objRegion = CityObj.FirstOrDefault();
-        //    List<SubCategories> SubCategory = FOS.Setup.ManageCity.GetSubCatList(objRegion.ID);
-
-
-        //    var objArea = new SubCategoryA();
-        //    objArea.Regions = CityObj;
-        //    objArea.SubCategory = SubCategory;
-
-        //    return View(objArea);
-
-
-
-
-        //    // return View(objSubCat);
+        //    var result = FOS.Setup.ManageCity.GetCityListByRegionID(RegionID);
+        //    return Json(result);
         //}
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult AddUpdateSubCategoryA([Bind(Exclude = "TID")] SubCategoryA newData)
-        //{
-        //    Boolean boolFlag = true;
-        //    ValidationResult results = new ValidationResult();
-        //    try
-        //    {
-        //        if (newData != null)
-        //        {
-        //            if (newData.SubCategoryAID == 0)
-        //            {
-        //                SubCategoryAValidator validator = new SubCategoryAValidator();
-        //                results = validator.Validate(newData);
-        //                boolFlag = results.IsValid;
-        //            }
+        //Delete Region...
+        public int DeleteSubCategoryA(int areaID)
+        {
+            return FOS.Setup.ManageArea.DeleteSubCatA(areaID);
+        }
 
-        //            if (boolFlag)
-        //            {
-        //                int Response = ManageArea.AddUpdateSubCatA(newData);
-        //                if (Response == 1)
-        //                {
-        //                    return Content("1");
-        //                }
-        //                else if (Response == 2)
-        //                {
-        //                    return Content("2");
-        //                }
-        //                else
-        //                {
-        //                    return Content("0");
-        //                }
-        //            }
-        //            else
-        //            {
-        //                IList<ValidationFailure> failures = results.Errors;
-        //                StringBuilder sb = new StringBuilder();
-        //                sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
-        //                foreach (ValidationFailure failer in results.Errors)
-        //                {
-        //                    sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
-        //                    Response.StatusCode = 422;
-        //                    return Json(new { errors = sb.ToString() });
-        //                }
-        //            }
-        //        }
-
-        //        return Content("0");
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        return Content("Exception : " + exp.Message);
-        //    }
-        //}
-
-        ////Get All Region Method...
-        //public JsonResult SubCategoryADataHandler(DTParameters param, Int32 CityID, Int32 SubCat)
-        //{
-        //    try
-        //    {
-        //        var dtsource = new List<SubCategoryA>();
-
-        //        dtsource = ManageArea.GetSubCatAForGrid(CityID, SubCat);
-
-        //        List<String> columnSearch = new List<string>();
-
-        //        foreach (var col in param.Columns)
-        //        {
-        //            columnSearch.Add(col.Search.Value);
-        //        }
-
-        //        List<SubCategoryA> data = ManageArea.GetResult3(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
-        //        int count = ManageArea.Count3(param.Search.Value, dtsource, columnSearch);
-        //        DTResult<SubCategoryA> result = new DTResult<SubCategoryA>
-        //        {
-        //            draw = param.Draw,
-        //            data = data,
-        //            recordsFiltered = count,
-        //            recordsTotal = count
-        //        };
-        //        return Json(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { error = ex.Message });
-        //    }
-        //}
-
-        ////public JsonResult GetCityListByRegionID(int RegionID)
-        ////{
-        ////    var result = FOS.Setup.ManageCity.GetCityListByRegionID(RegionID);
-        ////    return Json(result);
-        ////}
-
-        ////Delete Region...
-        //public int DeleteSubCategoryA(int areaID)
-        //{
-        //    return FOS.Setup.ManageArea.DeleteSubCatA(areaID);
-        //}
-
-        //#endregion SubCatA
+        #endregion SubCatA
 
 
 
+        #region Productcategory
+
+        public ActionResult ProductCategory()
+        {
+            // Load Region Data For City Records ...
+            var objCity = new MainCategories();
+
+            // objCity.Regions = FOS.Setup.ManageRegion.GetMainCategory();
+
+            return View();
+        }
+        public ActionResult AddUpdateProductCategory([Bind(Exclude = "TID")] MainCategories newCity)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+               
+                    if (newCity != null)
+                    {
+                        
+
+                        if (boolFlag)
+                        {
+                            int Response = ManageCity.AddUpdateProductCategory(newCity);
+                            if (Response == 1)
+                            {
+                                return Content("1");
+                            }
+                            else if (Response == 2)
+                            {
+                                return Content("2");
+                            }
+                            else
+                            {
+                                return Content("0");
+                            }
+                        }
+                        else
+                        {
+                            IList<ValidationFailure> failures = results.Errors;
+                            StringBuilder sb = new StringBuilder();
+                            sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                            foreach (ValidationFailure failer in results.Errors)
+                            {
+                                sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                                Response.StatusCode = 422;
+                                return Json(new { errors = sb.ToString() });
+                            }
+                        }
+                    }
+               
+
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+        public JsonResult ProductCategoryDataHandler(DTParameters param)
+        {
+            try
+            {
+                var dtsource = new List<MainCategories>();
+
+                dtsource = ManageCity.GetProductCategoryForGrid();
+
+                List<String> columnSearch = new List<string>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<MainCategories> data = ManageCity.GetResult1(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
+                int count = ManageCity.Count1(param.Search.Value, dtsource, columnSearch);
+                DTResult<MainCategories> result = new DTResult<MainCategories>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        public JsonResult GetEditProductCategory(int CityID)
+        {
+            var Response = ManageCity.GetEditProductCategory(CityID);
+            return Json(Response, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public int DeleteProductCategory(int cityID)
+        {
+            return FOS.Setup.ManageCity.DeleteMAinCategory(cityID);
+        }
+        #endregion
 
 
 

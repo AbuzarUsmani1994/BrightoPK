@@ -84,21 +84,30 @@
                         </div>
 
                         @*<div class="control-group" style="margin-bottom: 14px;">
-                            <label class="control-label">Sales Officer *</label>
-                            <div class="controls">
-                                @Html.DropDownListFor(model => model.SaleOfficerID, new SelectList(Model.SaleOfficer, "ID", "Name"), new { @class = "" })
-                                @Html.ValidationMessageFor(model => model.SaleOfficerID)
-                                @Html.HiddenFor(model => model.ID)
-                                @Html.HiddenFor(model => model.SelectedRetailers)
+            <label class="control-label">Sales Officer *</label>
+            <div class="controls">
+                @Html.DropDownListFor(model => model.SaleOfficerID, new SelectList(Model.SaleOfficer, "ID", "Name"), new { @class = "" })
+                @Html.ValidationMessageFor(model => model.SaleOfficerID)
+                @Html.HiddenFor(model => model.ID)
+                @Html.HiddenFor(model => model.SelectedRetailers)
 
-                            </div>
-                        </div>*@
+            </div>
+        </div>*@
                         <div class="control-group" style="margin-bottom: 14px;">
                             <label class="control-label">Cities *</label>
                             <div class="controls">
                                 @Html.DropDownListFor(model => model.CityID, new SelectList(Model.Cities, "ID", "Name"), new { @class = "" })
                                 @Html.ValidationMessageFor(model => model.CityID)
                                 @Html.HiddenFor(model => model.CityID)
+                            </div>
+                        </div>
+
+                        <div class="control-group" style="margin-bottom: 14px;">
+                            <label class="control-label">Segment *</label>
+                            <div class="controls">
+                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Regions, "ID", "MainCategoryName"), new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.RangeID)
+                                @Html.HiddenFor(model => model.RangeID)
                             </div>
                         </div>
 
@@ -746,7 +755,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
         //else {
-        window.open("@Url.Action("RetailerInformation", "Reports")" + "?TID=" + $("#RegionalHeadID").val()  + "&RangeID=" + $("#MainCategoryID").val()+"&cityid=" + $("#CityID").val()+ "&sdate=" + $sdate+"&edate=" + $edate);
+        window.open("@Url.Action("RetailerInformation", "Reports")" + "?TID=" + $("#RegionalHeadID").val() + "&RangeID=" + $("#RangeID").val()+"&cityid=" + $("#CityID").val()+ "&sdate=" + $sdate+"&edate=" + $edate);
         //}
     });
 

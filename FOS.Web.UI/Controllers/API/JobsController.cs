@@ -1728,6 +1728,26 @@ namespace FOS.Web.UI.Controllers.API
         public string message { get; set; }
     }
 
+    public class VisitsInfo
+    {
+       
+        public DateTime VisitDate { get; set; }
+        public int TradeVisits { get; set; }
+        public int HousingVisits { get; set; }
+        public int CorporateVisits { get; set; }
+        public int AllPurposeVisits { get; set; }
+    }
+
+    public class RetailerCounts
+    {
+        
+        public DateTime VisitDate { get; set; }
+        public int TradeCounts{ get; set; }
+        public int HousingCounts { get; set; }
+        public int CorporateCounts { get; set; }
+        public int AllPurposeCounts { get; set; }
+    }
+
     public class SpReturn
     {
         public int id { get; set; }

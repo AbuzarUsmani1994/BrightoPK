@@ -85,7 +85,7 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    if (UserID == 1)
+                    if (UserID == 1 || UserID== 1120|| UserID==1121)
                     {
                         regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false)
                                 .ToList().Select(
@@ -106,9 +106,30 @@ namespace FOS.Setup
                             Name = "All"
                         });
                     }
-                  
+                   else if (UserID == 1119)
+                    {
+                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.IsDeleted == false)
+                                .ToList().Select(
+                                    u => new RegionalHeadData
+                                    {
+                                        ID = u.ID,
+                                        Type = (int)u.Type,
+                                        TypeName = u.RegionalHeadsType.Type,
+                                        Name = u.Name,
+                                        Phone1 = u.Phone1 == null ? "" : u.Phone1,
+                                        Phone2 = u.Phone2 == null ? "" : u.Phone2,
+                                        LastUpdate = u.LastUpdate
+                                    }).ToList();
 
-        
+                        regionalHeadData.Insert(0, new RegionalHeadData
+                        {
+                            ID = 0,
+                            Name = "All"
+                        });
+                    }
+
+
+
 
                     else
                     {
@@ -232,10 +253,16 @@ namespace FOS.Setup
 
                                         LastUpdate = u.LastUpdate
                                     }).ToList();
+
+                        regionalHeadData.Insert(0, new RegionalHeadData
+                        {
+                            ID = 0,
+                            Name = "All"
+                        });
                     }
 
                  
-                    else if(userID == 1028 || userID == 1023 || userID==1026||userID==1087|| userID==1072||userID==1035 || userID == 1041 || userID == 1040)
+                    else if(userID == 1104 || userID == 1105 || userID== 1106 || userID== 1107 || userID== 1095 || userID==1035 || userID == 1041 || userID == 1040)
                     {
                         var regionalheadids = dbContext.RSMPortalUsers.Where(x => x.UserID == userID).Select(x => x.RegionID).Distinct().ToList();
 
@@ -247,7 +274,11 @@ namespace FOS.Setup
                             comlist.Name = dbContext.Regions.Where(x => x.ID == items).Select(x => x.Name).FirstOrDefault();
                             regionalHeadData.Add(comlist);
 
+
+
                         }
+
+                      
 
                     }
 

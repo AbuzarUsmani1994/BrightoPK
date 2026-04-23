@@ -221,7 +221,7 @@ namespace FOS.Setup
             return lastMonth;
         }
 
-        public static List<int> SOPresenttoday()
+        public static List<int?> SOPresenttoday()
         {
             
             FOSDataModel dbContext = new FOSDataModel();
@@ -231,10 +231,11 @@ namespace FOS.Setup
             DateTime dtToToday = dtFromToday.AddDays(1);
 
 
-            List<int> lastMonth = (from lm in dbContext.AccessLogs
+            List<int?> lastMonth = (from lm in dbContext.SOAttendances
 
-                                   where lm.LoginDate >= dtFromToday && lm.LoginDate <= dtToToday
-                                   select lm.SaleOfficerID).ToList();
+                                   where lm.CreatedAt >= dtFromToday && lm.CreatedAt <= dtToToday
+                                   && lm.Type== "Market start"
+                                   select lm.SOID).Distinct().ToList();
 
 
 

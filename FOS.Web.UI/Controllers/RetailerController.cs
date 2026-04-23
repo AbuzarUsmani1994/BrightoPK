@@ -89,54 +89,6 @@ namespace FOS.Web.UI.Controllers
                         boolFlag = results.IsValid;
                     }
 
-                    if (newRetailer.Phone1 != null)
-                    {
-                        if (FOS.Web.UI.Common.NumberCheck.CheckRetailerNumber1Exist(newRetailer.ID, newRetailer.Phone1 == null ? "" : newRetailer.Phone1) == 1)
-                        {
-                            return Content("2");
-                        }
-                    }
-
-                    if (newRetailer.Phone2 != null)
-                    {
-                        if (FOS.Web.UI.Common.NumberCheck.CheckRetailerNumber2Exist(newRetailer.ID, newRetailer.Phone2 == null ? "" : newRetailer.Phone2) == 1)
-                        {
-                            return Content("2");
-                        }
-                    }
-
-                    if (newRetailer.Phone1 != null && newRetailer.Phone2 != null)
-                    {
-                        if (FOS.Web.UI.Common.NumberCheck.CheckRetailerNumberExist(newRetailer.ID, newRetailer.Phone1 == null ? "" : newRetailer.Phone1, newRetailer.Phone2 == null ? "" : newRetailer.Phone2) == 1)
-                        {
-                            return Content("2");
-                        }
-                    }
-
-                    if (FOS.Web.UI.Common.RetailerChecks.CheckCNICExist(newRetailer.CNIC, newRetailer.ID) == 1)
-                    {
-                        return Content("3");
-                    }
-                    else
-                    {
-                    }
-
-                    if (FOS.Web.UI.Common.RetailerChecks.CheckAccountNoExist(newRetailer.AccountNo, newRetailer.ID) == 1)
-                    {
-                        return Content("4");
-                    }
-                    else
-                    {
-                    }
-
-                    if (FOS.Web.UI.Common.RetailerChecks.CheckCardNoExist(newRetailer.CardNumber, newRetailer.ID) == 1)
-                    {
-                        return Content("5");
-                    }
-                    else
-                    {
-                    }
-
                     if (boolFlag)
                     {
                         try {
@@ -189,6 +141,189 @@ namespace FOS.Web.UI.Controllers
             catch (Exception exp)
             {
                 return Content("Exception : " + exp.Message);
+            }
+        }
+
+
+
+        // Add Or Update Retailer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NewUpdateFannanRetailer([Bind(Exclude = "TID,SaleOfficers,Dealers")] RetailerData newRetailer)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+                if (newRetailer != null)
+                {
+                    
+
+                    if (boolFlag)
+                    {
+                        
+
+                        int Res = ManageRetailer.AddUpdateFannanRetailer(newRetailer);
+
+                        if (Res == 1)
+                        {
+                            return Content("1");
+                        }
+                        else if (Res == 3)
+                        {
+                            return Content("3");
+                        }
+                        else if (Res == 4)
+                        {
+                            return Content("4");
+                        }
+                        else if (Res == 5)
+                        {
+                            return Content("5");
+                        }
+                        else
+                        {
+                            return Content("0");
+                        }
+                    }
+                    else
+                    {
+                        IList<ValidationFailure> failures = results.Errors;
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                        foreach (ValidationFailure failer in results.Errors)
+                        {
+                            sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                            Response.StatusCode = 422;
+                            return Json(new { errors = sb.ToString() });
+                        }
+                    }
+
+                }
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+
+        // Model class for dropdown data
+        public class CustomerDropdownData
+        {
+            public int ID { get; set; }
+            public string ShopName { get; set; }
+            public string Name { get; set; }
+            public string Phone1 { get; set; }
+            public string Address { get; set; }
+        }
+
+        public class SaleOfficerDropdownData
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+        }
+
+        // Action to get existing customers for dropdown
+        public JsonResult GetExistingCustomers()
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    var customers = dbContext.Tbl_FannanCustomer
+                        .Where(u => u.IsActive == true )
+                        .OrderBy(u => u.SiteName)
+                        .Select(u => new CustomerDropdownData
+                        {
+                            ID = u.ID,
+                            ShopName = u.SiteName ?? "",
+                            Name = u.ContactPerson ?? "",
+                            Phone1 = u.Phone1 ?? "",
+                            Address = u.Address ?? ""
+                        })
+                        .ToList();
+
+                    return Json(customers, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return Json(new List<CustomerDropdownData>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // Action to get sale officers for dropdown
+        public JsonResult GetSaleOfficers()
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    var officers = dbContext.SaleOfficers
+                        .Where(u => u.IsActive == true && u.RegionalHeadID == 22)
+                        .OrderBy(u => u.Name)
+                        .Select(u => new SaleOfficerDropdownData
+                        {
+                            ID = u.ID,
+                            Name = u.Name
+                        })
+                        .ToList();
+
+                    return Json(officers, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return Json(new List<SaleOfficerDropdownData>(), JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        // Action to assign sale officer to customer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AssignSaleOfficer(int CustomerId, int SaleOfficerId)
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    
+
+                    // Check if assignment already exists
+                    var existingAssignment = dbContext.Tbl_FannanCustomerAssign
+                        .FirstOrDefault(u => u.CustomerID == CustomerId
+                            && u.SOID == SaleOfficerId
+                            && u.IsActive == true);
+
+                    if (existingAssignment != null)
+                    {
+                        return Json("2"); // Assignment already exists
+                    }
+
+                    // Create new assignment
+                    var assignment = new Tbl_FannanCustomerAssign
+                    {
+                        CustomerID = CustomerId,
+                        SOID = SaleOfficerId,
+                        IsActive = true,
+                        CreatedOn = DateTime.Now
+                    };
+
+                    dbContext.Tbl_FannanCustomerAssign.Add(assignment);
+                    dbContext.SaveChanges();
+
+                    return Json("1"); // Success
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log exception
+                return Json("0"); // Failed
             }
         }
 
@@ -250,7 +385,7 @@ namespace FOS.Web.UI.Controllers
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    DealerData = dbContext.Dealers.Where(u => u.RegionalHeadID == id && u.IsDeleted == false)
+                    DealerData = dbContext.Dealers.Where(u => u.RegionID == id && u.IsDeleted == false)
                             .Select(
                                 u => new DealerData
                                 {
@@ -488,6 +623,11 @@ namespace FOS.Web.UI.Controllers
             return ManageRetailer.DeleteOrder(OrderID);
         }
 
+        public int DeleteKPI(int OrderID)
+        {
+            return ManageRetailer.DeleteKPI(OrderID);
+        }
+
         public int DeleteDistributor(int retailerID)
         {
             return ManageRetailer.DeleteDistributor(retailerID);
@@ -500,13 +640,27 @@ namespace FOS.Web.UI.Controllers
         [CustomAuthorize]
         // View ...
         public ActionResult RetailerMapView()
+
         {
-             ViewData["RegionalHead"] = FOS.Setup.ManageRegionalHead.GetRegionalHeadList();
-            
-             ViewData["SaleOfficer"] = FOS.Setup.ManageSaleOffice.GetSaleOfficerList(true);
-             ViewData["Region"] = FOS.Setup.ManageRegion.GetRegionForGrid();
-             ViewData["City"] = FOS.Setup.ManageCity.GetCityList();
-             ViewData["Zone"] = FOS.Setup.ManageZone.GetZoneList();
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionaList(userID);
+            if (userID == 1)
+            {
+                regionalHeadData.Insert(0, new RegionalHeadData
+                {
+                    ID = 0,
+                    Name = "All"
+                });
+            }
+            int regId = 0;
+            ViewData["RegionalHead"] = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+            regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            ViewData["SaleOfficer"] = FOS.Setup.ManageRegion.GetAllSOListRelatedtoregionalHeadID(regId, true);
+            ViewData["Region"] = regionalHeadData;
+             ViewData["City"] = ManageCity.GetCityListByRegionIDD(regionalHeadData.FirstOrDefault().ID);
+            ViewData["Zone"] = FOS.Setup.ManageZone.GetZoneList();
           
             return View();
         }
@@ -651,12 +805,54 @@ namespace FOS.Web.UI.Controllers
             var objSaleOff = SaleOfficerObj.FirstOrDefault();
 
             List<DealerData> DealerObj = ManageDealer.GetAllDealersListRelatedToRegionalHead(regId);
+            List<RegionData> RegionsObj = FOS.Setup.ManageRegion.GetRegionForGrid();
+            //var Regionid = RegionsObj.FirstOrDefault();
 
             var objRetailer = new RetailerData();
             objRetailer.RegionalHead = regionalHeadData;
             objRetailer.SaleOfficers = SaleOfficerObj;
             objRetailer.Dealers = DealerObj;
-            objRetailer.Cities = FOS.Setup.ManageCity.GetCityList();
+            objRetailer.Regions = RegionsObj;
+
+            objRetailer.Cities = FOS.Setup.ManageCity.GetCityListByRegionID(RegionsObj.FirstOrDefault().RegionID);
+            objRetailer.Areas = FOS.Setup.ManageArea.GetAreaList();
+            objRetailer.Banks = ManageRetailer.GetBanks();
+
+            return View(objRetailer);
+        }
+
+
+        public ActionResult NewFanaanCustomer()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            List<MainCategories> Ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            var rangeid = Ranges.FirstOrDefault();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+            int regId = 0;
+            if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
+            {
+                regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            }
+            else
+            {
+                regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            }
+
+            List<SaleOfficerData> SaleOfficerObj = ManageSaleOffice.GetSaleOfficerListByRegionalHeadID(regId);
+            var objSaleOff = SaleOfficerObj.FirstOrDefault();
+
+            List<DealerData> DealerObj = ManageDealer.GetAllDealersListRelatedToRegionalHead(regId);
+            List<RegionData> RegionsObj = FOS.Setup.ManageRegion.GetRegionForGrid();
+            //var Regionid = RegionsObj.FirstOrDefault();
+
+            var objRetailer = new RetailerData();
+            objRetailer.RegionalHead = regionalHeadData;
+            objRetailer.SaleOfficers = SaleOfficerObj;
+            objRetailer.Dealers = DealerObj;
+            objRetailer.Regions = RegionsObj;
+
+            objRetailer.Cities = FOS.Setup.ManageCity.GetCityListByRegionID(RegionsObj.FirstOrDefault().RegionID);
             objRetailer.Areas = FOS.Setup.ManageArea.GetAreaList();
             objRetailer.Banks = ManageRetailer.GetBanks();
 

@@ -707,6 +707,61 @@ namespace FOS.Setup
         }
 
 
+
+        public static List<CityData> GetAttendanceListByRegionID(int intRegionID)
+        {
+            List<CityData> city = new List<CityData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    city = dbContext.SaleOfficers.Where(c => c.RegionalHeadID == intRegionID && c.IsDeleted == false).OrderBy(c => c.Name)
+                            .Select(
+                                u => new CityData
+                                {
+                                    ID = u.ID,
+                                    Name = u.Name,
+                                  
+                                    LastUpdate = u.LastUpdate
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return city;
+        }
+
+        public static List<CityData> GettrainingListByRegionID(int intRegionID)
+        {
+            List<CityData> city = new List<CityData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    city = dbContext.SaleOfficers.Where(c => c.RegionalHeadID == intRegionID && c.IsDeleted == false).OrderBy(c => c.Name)
+                            .Select(
+                                u => new CityData
+                                {
+                                    ID = u.ID,
+                                    Name = u.Name,
+
+                                    LastUpdate = u.LastUpdate
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return city;
+        }
+
         public static List<SaleOfficerData> GetSOListByRegionID(int intRegionID)
         {
             List<SaleOfficerData> city = new List<SaleOfficerData>();
@@ -716,9 +771,9 @@ namespace FOS.Setup
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
 
-                    var regionalheadid = dbContext.RegionalHeadRegions.Where(x => x.RegionID == intRegionID).Select(x => x.RegionHeadID).ToList();
+                   // var regionalheadid = dbContext.RegionalHeadRegions.Where(x => x.RegionID == intRegionID).Select(x => x.RegionHeadID).ToList();
 
-                    city = dbContext.SaleOfficers.Where(c => regionalheadid.Contains(((int)c.RegionalHeadID)))
+                    city = dbContext.SaleOfficers.Where(c => c.RegionalHeadID==intRegionID && c.IsActive==true)
                            .Select(
                                u => new SaleOfficerData
                                {
@@ -769,6 +824,37 @@ namespace FOS.Setup
             });
             return city;
         }
+
+        public static List<SubCategories> GetProdSubCatList(int intRegionID)
+        {
+            List<SubCategories> city = new List<SubCategories>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    city = dbContext.Tbl_ProductSubCategory.Where(c => c.fkProductCategoryID == intRegionID && c.IsActive == true).OrderBy(c => c.Name)
+                            .Select(
+                                u => new SubCategories
+                                {
+                                    ID = u.ID,
+                                    SubName = u.Name
+
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            city.Insert(0, new SubCategories
+            {
+                ID = 0,
+                SubName = "All"
+            });
+            return city;
+        }
+
 
 
         public static List<Items> GetItemsList(int intRegionID,int subCatID)
@@ -963,6 +1049,73 @@ namespace FOS.Setup
         }
 
 
+        public static int AddKPIS(CityData obj)
+        {
+            int Res = 0;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    using (FOSDataModel dbContext = new FOSDataModel())
+                    {
+                        
+                            try
+                            {
+                                // Check if there's an existing active record for this RegionID
+                                var existingRecord = dbContext.Tbl_KPITargetsRegionWise
+                                                            .FirstOrDefault(x => x.RegionID == obj.RegionID && x.IsActive==true);
+
+                                if (existingRecord != null)
+                                {
+                                    // Deactivate the existing record
+                                    existingRecord.IsActive = false;
+                                   // existingRecord.ModifiedOn = DateTime.Now; // Track modification date if needed
+                                }
+
+                                // Create and add the new record
+                                var KpiObj = new Tbl_KPITargetsRegionWise
+                                {
+                                    RegionID = obj.RegionID,
+                                    ACTDTarget = obj.ACTDTarget,
+                                    CoatingTarget = obj.CoatingTarget,
+                                    IsActive = true,
+                                    CreatedOn = DateTime.UtcNow.AddHours(5),
+                                    TotalTarget = obj.TotalTarget,
+                                    ReadyMixTarget = obj.ReadyMixTarget
+                                };
+
+                                dbContext.Tbl_KPITargetsRegionWise.Add(KpiObj);
+                                dbContext.SaveChanges();
+
+                                Res = 1;
+                                scope.Complete();
+                            }
+                            catch (Exception ex)
+                            {
+                                // Handle exception (log it, etc.)
+                                Res = 0;
+                                // scope will be disposed without Complete() being called (auto-rollback)
+                            }
+                        
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add City Failed");
+                Res = 0;
+                if (exp.InnerException.InnerException.Message.Contains("Short Code City"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 2;
+                    return Res;
+                }
+                return Res;
+            }
+            return Res;
+        }
+
         // Delete City ...
         public static int DeleteCity(int CityID)
         {
@@ -1044,6 +1197,38 @@ namespace FOS.Setup
             return cityData;
         }
 
+        public static List<CityData> GetKPIForGrid(int intRegionID)
+        {
+            List<CityData> cityData = new List<CityData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    cityData = dbContext.Tbl_KPITargetsRegionWise.Where(u => u.RegionID == intRegionID && u.IsActive == true)
+                            .ToList().Select(
+                                u => new CityData
+                                {
+                                    ID = u.ID,
+                                    RegionID = 1,
+                                    Name = "Name",
+                                    RegionName = dbContext.Regions.Where(x=>x.ID== intRegionID).Select(x=>x.Name).FirstOrDefault(),
+                                    TotalTarget = u.TotalTarget,
+                                    ACTDTarget = u.ACTDTarget,
+                                    CoatingTarget = u.CoatingTarget,
+                                    ReadyMixTarget = u.ReadyMixTarget,
+                                     LastUpdate = u.CreatedOn
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Load City Grid Failed");
+                throw;
+            }
+
+            return cityData;
+        }
 
         public static List<MainCategories> GetMainCategoryForGrid()
         {
@@ -1071,6 +1256,34 @@ namespace FOS.Setup
 
             return cityData;
         }
+
+        public static List<MainCategories> GetProductCategoryForGrid()
+        {
+            List<MainCategories> cityData = new List<MainCategories>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    cityData = dbContext.Tbl_ProuctCategory.Where(u => u.IsActive == true)
+                            .ToList().Select(
+                                u => new MainCategories
+                                {
+                                    ID = u.ID,
+                                    MainCategoryName = u.Name
+
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Load MainCategory Grid Failed");
+                throw;
+            }
+
+            return cityData;
+        }
+
 
         public static int AddUpdateMainCategory(MainCategories obj)
         {
@@ -1133,6 +1346,63 @@ namespace FOS.Setup
             return Res;
         }
 
+
+        public static int AddUpdateProductCategory(MainCategories obj)
+        {
+            int Res = 0;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    using (FOSDataModel dbContext = new FOSDataModel())
+                    {
+                        Tbl_ProuctCategory CityObj = new Tbl_ProuctCategory();
+
+                        if (obj.ID == 0)
+                        {
+                            //CityObj.MainCategID = dbContext.MainCategories.OrderByDescending(u => u.MainCategID).Select(u => u.MainCategID).FirstOrDefault() + 1;
+                            CityObj.Name = obj.MainCategoryName;
+                            CityObj.IsActive = true;
+                      
+                            CityObj.CreatedOn = DateTime.Now;
+                          
+
+                            dbContext.Tbl_ProuctCategory.Add(CityObj);
+                        }
+                        else
+                        {
+                            CityObj = dbContext.Tbl_ProuctCategory.Where(u => u.ID == obj.ID).FirstOrDefault();
+                            CityObj.Name = obj.MainCategoryName;
+                            CityObj.IsActive = true;
+                            
+                            CityObj.CreatedOn = DateTime.Now;
+                          
+
+                        }
+
+                        dbContext.SaveChanges();
+                        Res = 1;
+                        scope.Complete();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add MainCategory Failed");
+                Res = 0;
+                if (exp.InnerException.InnerException.Message.Contains("Short Code City"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 2;
+                    return Res;
+                }
+                return Res;
+            }
+            return Res;
+        }
+
+
         public static MainCategories GetEditMAinCategory(int CityID)
         {
             try
@@ -1152,6 +1422,27 @@ namespace FOS.Setup
                 throw;
             }
         }
+
+        public static MainCategories GetEditProductCategory(int CityID)
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    return dbContext.Tbl_ProuctCategory.Where(i => i.ID == CityID && i.IsActive == true).Select(i => new MainCategories
+                    {
+                        ID = i.ID,
+                        MainCategoryName = i.Name,
+
+                    }).First();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         public static int DeleteMAinCategory(int CityID)
         {
@@ -1173,6 +1464,28 @@ namespace FOS.Setup
             }
             return Resp;
         }
+
+        public static int DeleteProductCategory(int CityID)
+        {
+            int Resp = 0;
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    Tbl_ProuctCategory obj = dbContext.Tbl_ProuctCategory.Where(u => u.ID == CityID).FirstOrDefault();
+                    dbContext.Tbl_ProuctCategory.Remove(obj);
+                    dbContext.SaveChanges();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Delete MainCategory Failed");
+                Resp = 1;
+            }
+            return Resp;
+        }
+
 
 
         public static List<CityData> GetResult(string search, string sortOrder, int start, int length, List<CityData> dtResult, List<string> columnFilters)
@@ -1253,11 +1566,38 @@ namespace FOS.Setup
             
         }
 
+        public static List<MainCategories> GetProductMainCatList()
+        {
+            List<MainCategories> city = new List<MainCategories>();
 
-     
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    city = dbContext.Tbl_ProuctCategory.Where(c => c.IsActive == true).OrderBy(c => c.Name)
+                            .Select(
+                                u => new MainCategories
+                                {
+                                    ID = u.ID,
+                                    MainCategoryName = u.Name
 
-  
-        
+                                }).ToList();
+
+                    return city;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+
+        }
+
+
+
+
+
 
 
     }

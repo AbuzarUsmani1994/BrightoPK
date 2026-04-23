@@ -17,7 +17,7 @@
         <h3 class="page-title"></h3>
         <ul class="breadcrumb">
             <li>
-                <a href="#">Shop Visit Summary</a>
+                <a href="#">Visit Detail</a>
             </li>
         </ul>
     </div>
@@ -36,7 +36,7 @@
             <!-- BEGIN SAMPLE FORMPORTLET-->
             <div class="widget green" style="min-height: 100px;">
                 <div class="widget-title">
-                    <h4>Shop Visit Summary</h4>
+                    <h4>Visit Detail Report</h4>
                     <span class="tools">
                         @*<a href="javascript:;" class="icon-chevron-down"></a>*@
                         @*<a href="javascript:;" class="icon-remove"></a>*@
@@ -66,7 +66,7 @@
                             </div>
                         </div>
 
-                       
+
 
                         <div class="control-group">
                             <label class="control-label">Select Head *</label>
@@ -91,7 +91,14 @@
                             </div>
                         </div>
 
-
+                        <div class="control-group" style="margin-bottom: 14px;">
+                            <label class="control-label">Segment *</label>
+                            <div class="controls">
+                                @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Regions, "ID", "MainCategoryName"), new { @class = "" })
+                                @Html.ValidationMessageFor(model => model.RangeID)
+                                @Html.HiddenFor(model => model.RangeID)
+                            </div>
+                        </div>
 
 
                         <div class="control-group" style="border-top: 1px solid #e5e5e5;">
@@ -373,6 +380,29 @@
 
         });
     }
+    function LoadSORetailers(areaId) {
+        
+
+            $.ajax({
+                type: "POST",
+                data: { soId: $("#SaleOfficerID").val(), cityId: $("#CityID").val(), areaId: areaId },
+                url: "@Url.Action("GetRetailersBySOIDAndCity", "Reports")",
+                dataType: 'json',
+                success: function (json) {
+
+                    var $el = $("#RetailerID");
+                    $el.empty(); // remove old options
+                    $.each(json, function (value, key) {
+
+                        $el.append($("<option></option>")
+                                .attr("value", key.ID).text(key.Name));
+                    });
+                    //$("#RetailerID").trigger("change");
+                }
+
+            });
+        }
+    
 
 
     $(document).ready(function () {
@@ -408,12 +438,83 @@
             LoadWeeklyRetailers($(this).val());
         });
 
-        $('#CityID').change(function () {
-            var $el = $("#external-events");
-            $el.empty(); // remove old options
-            LoadWeeklyRetailers($('input[type=radio][name=RetailerType]').val());
+        //$('#CityID').change(function () {
+        //    var $el = $("#external-events");
+        //    $el.empty(); // remove old options
+        //    LoadWeeklyRetailers($('input[type=radio][name=RetailerType]').val());
 
+        //});
+         $("#SaleOfficerID").change(function () {
+            //LoadRetailerAccordingToSalesOfficer();
+            LoadSOCities($(this).val());
+            //LoadRetailerAccordingToSalesOfficer();
+            //var $el = $("#external-events");
+            //$el.empty(); // remove old options
+
+            //$("#RetailerTypeDiv").hide();
         });
+        function LoadSOCities(SOID) {
+            try {
+                $.ajax({
+                    type: "POST",
+                    data: { SOID: SOID },
+                    url: "@Url.Action("GetSOCities", "Job")",
+                    success: function (json) {
+                        var $el = $("#CityID");
+                        $el.empty(); // remove old options
+                        $.each(json, function (value, key) {
+                            $el.append($("<option></option>")
+                                    .val(key.ID).text(key.Name));
+                        });
+
+                        if ($('#CityID').val() != null) {
+                            $("#external-events").empty();
+                        }
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+         $("#CityID").change(function () {
+             LoadAreas($(this).val());
+             LoadSORetailers($(this).val());
+        });
+        $("#AreaID").change(function () {
+            LoadSORetailers($(this).val());
+        });
+
+       function LoadAreas(CityID)
+        {
+            try {
+                $.ajax({
+                    type: "POST",
+                    data: { ID: CityID},
+                    url: "@Url.Action("GetAllAreaListByCityID", "Reports")",
+                    success: function (json) {
+                        
+                        var $el = $("#AreaID");
+                        $el.empty();
+                        $.each(json, function (value, key) {
+                            $el.append($("<option></option>")
+                                .val(key.ID).text(key.Name));
+                        });
+
+                        if ($('#AreaID').val() != null) {
+                            $("#external-events").empty();
+                        }
+                        
+                    }
+
+                });
+
+            }
+            catch (e) {
+                alert(e);
+            }
+        }
+
         $('input[type=radio][name=VisitType]').change(function () {
             if ($(this).val() == "Shop") {
                 var $el = $("#external-events");
@@ -584,7 +685,7 @@
 
             //$("#RetailerTypeDiv").hide();
         });
-
+        
         //$("#SaleOfficerID").change(function () {
 
         //    debugger;
@@ -622,31 +723,7 @@
                 alert(e);
             }
         }
-
-        function LoadSOCities(SOID) {
-            try {
-                $.ajax({
-                    type: "POST",
-                    data: { SOID: SOID },
-                    url: "@Url.Action("GetSOCities", "Job")",
-                    success: function (json) {
-                        var $el = $("#CityID");
-                        $el.empty(); // remove old options
-                        $.each(json, function (value, key) {
-                            $el.append($("<option></option>")
-                                    .val(key.ID).text(key.Name));
-                        });
-
-                        if ($('#CityID').val() != null) {
-                            $("#external-events").empty();
-                        }
-                    }
-                });
-            } catch (e) {
-                alert(e);
-            }
-        }
-
+       
 
         function LoadDealers() {
             try {
@@ -712,7 +789,7 @@
                 window.open("@Url.Action("CityMonthWiseIntakeReport", "Retailer")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $("#TID").val() + "&Shoptypeid=" + $("#Shoptypeid").val() + "&message=" + message + "", "_top");
             }*@
                 //else {
-                window.open("@Url.Action("RetailerOrders", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val());
+                window.open("@Url.Action("RetailerOrders", "Reports")" + "?StartingDate=" + $("#StartingDate1").val() + "&EndingDate=" + $("#StartingDate2").val() + "&TID=" + $TID + "&fosid=" + $("#SaleOfficerID").val() + "&segment=" + $("#RangeID").val());
                 //}
             }
         });

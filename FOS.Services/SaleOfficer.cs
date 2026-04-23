@@ -34,6 +34,7 @@ namespace FOS.DataLayer
             this.SOAttendances = new HashSet<SOAttendance>();
             this.DispatchInVans = new HashSet<DispatchInVan>();
             this.Tbl_RSMSummary = new HashSet<Tbl_RSMSummary>();
+            this.Tbl_TradeVisitsFinal = new HashSet<Tbl_TradeVisitsFinal>();
         }
     
         public int TID { get; set; }
@@ -57,6 +58,11 @@ namespace FOS.DataLayer
         public Nullable<System.DateTime> JoiningDate { get; set; }
         public string SOType { get; set; }
         public Nullable<int> SORoleID { get; set; }
+        public string ECode { get; set; }
+        public string DeviceID { get; set; }
+        public Nullable<int> SegmentID { get; set; }
+        public Nullable<int> PrimaryCityID { get; set; }
+        public Nullable<int> SecondaryCityID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccessLog> AccessLogs { get; set; }
@@ -94,5 +100,7 @@ namespace FOS.DataLayer
         public virtual ICollection<DispatchInVan> DispatchInVans { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tbl_RSMSummary> Tbl_RSMSummary { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_TradeVisitsFinal> Tbl_TradeVisitsFinal { get; set; }
     }
 }

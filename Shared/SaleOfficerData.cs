@@ -28,6 +28,8 @@ namespace FOS.Shared
         [DisplayName("Password *")]
         public string Password { get; set; }
 
+        public string ECode { get; set; }
+
         [Required(ErrorMessage = "Confirm Password is required")]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
@@ -55,6 +57,9 @@ namespace FOS.Shared
         public string Createdate { get; set; }
         public string leaveondate { get; set; }
         public int? CityID { get; set; }
+        public int? PrimaryCityID { get; set; }
+        public int? SecondaryCityID { get; set; }
+        public int? SegmentTypeID { get; set; }
         public DateTime? CreatedAT { get; set; }
         public System.DateTime LastUpdate { get; set; }
         public DateTime? Leaveon { get; set; }
@@ -66,6 +71,7 @@ namespace FOS.Shared
         public IEnumerable<RegionalHeadTypeData> Ranges { get; set; }
         public IEnumerable<RegionalHeadTypeData> Designations { get; set; }
         public IEnumerable<RegionalHeadTypeData> SOTypes { get; set; }
+        public IEnumerable<RegionalHeadTypeData> SegmentTypes { get; set; }
         public IEnumerable<RegionalHeadTypeData> SORegion { get; set; }
         public IEnumerable<CityData> Cities { get; set; }
 
@@ -82,6 +88,45 @@ namespace FOS.Shared
 
         [DisplayName("City Name")]
         public String CityName { get; set; }
+    }
+
+    public class SaleOfficerTargets
+    {
+      
+        public int ID { get; set; }
+
+        public int SOID { get; set; }
+
+        public int? RegionalHeadID { get; set; }
+        public int VisitTargetTrade { get; set; }
+        public int? VisitTargetHousing { get; set; }
+        public int? VisitTargetCorporate { get; set; }
+
+        public int NewCustomerTrade { get; set; }
+        public int? NewCustomerHousing { get; set; }
+        public int? NewCustomerCorporate { get; set; }
+
+        public int SaleTrade { get; set; }
+        public int? SaleHousing { get; set; }
+        public int? SaleCorporate { get; set; }
+
+        public int RecoveriesTrade { get; set; }
+        public int? RecoveriesHousing { get; set; }
+        public int? RecoveriesCorporate { get; set; }
+
+
+
+      
+        public string Createdate { get; set; }
+        public string leaveondate { get; set; }
+        
+        public DateTime? CreatedAT { get; set; }
+        public System.DateTime LastUpdate { get; set; }
+        public DateTime? Leaveon { get; set; }
+        public int CreatedBy { get; set; }
+
+        public List<RegionalHeadData> RegionalHead { get; set; }
+
     }
 
 }

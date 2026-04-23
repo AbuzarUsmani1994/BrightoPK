@@ -32,7 +32,8 @@ namespace FOS.Shared
 
         [DisplayName("Region Name *")]
         public string RegionName { get; set; }
-
+        public int Type { get; set; }
+   
         [Required(ErrorMessage = "* Required")]
 
 
@@ -61,8 +62,11 @@ namespace FOS.Shared
         public List<CityData> Cities { get; set; }
         public List<MainCategories> Range { get; set; }
         public List<SaleOfficerData> Salesofficer { get; set; }
+        public IEnumerable<RegionalHeadTypeData> RegionalHeadTypeData { get; set; }
+        public List<RegionalHeadData> RegionalHead { get; set; }
         public List<SaleOfficerData> Salesofficer1 { get; set; }
         public List<SaleOfficerData> Salesofficer2 { get; set; }
+        public List<SaleOfficer> Salesofficerdata { get; set; }
     }
 
     public class AreaGraphData

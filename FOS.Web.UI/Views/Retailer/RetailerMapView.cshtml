@@ -38,100 +38,33 @@
     <div class="row-fluid">
         <div class="span12">
 
+
+
+            @*<div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
+          <label class="control-label">Distributor</label>
+            <div class="controls" style="margin-left:0px">
+
+                <select class="form-control chosen-select" id="dealer" style="width: 190px;">
+                    <option value="0">Select Any</option>
+                            @{
+                                foreach (FOS.Shared.DealerData obj in ViewBag.Dealers)
+                                {
+                                    <option value="@obj.ID">@obj.Name</option>
+                                }
+                            }
+               </select>
+
+            </div>
+        </div>*@
+
             <div class="control-group" style="margin-bottom:0px;float:left">
-                                  <label class="control-label">Regional Head</label>
-                                    <div class="controls" style="margin-left:0px">
-
-                                        <select class="form-control chosen-select" id="regionalHead" style="width: 190px;">
-                                             <option value="0">Select Any</option>
-                                                    @{
-                                                        foreach (FOS.Shared.RegionalHeadData obj in ViewBag.RegionalHead)
-                                                        {
-                                                            <option value="@obj.ID">@obj.Name</option>
-                                                        }
-                                                    }
-                                       </select>
-
-                                    </div>
-                                </div>
-    
-             @*<div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
-                                  <label class="control-label">Distributor</label>
-                                    <div class="controls" style="margin-left:0px">
-
-                                        <select class="form-control chosen-select" id="dealer" style="width: 190px;">
-                                            <option value="0">Select Any</option>
-                                                    @{
-                                                        foreach (FOS.Shared.DealerData obj in ViewBag.Dealers)
-                                                        {
-                                                            <option value="@obj.ID">@obj.Name</option>
-                                                        }
-                                                    }
-                                       </select>
-
-                                    </div>
-                                </div>*@
-
-                        <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
-                                  <label class="control-label">Sales Officer</label>
-                                    <div class="controls" style="margin-left:0px">
-                                       
-                                        <select class="form-control chosen-select" id="saleOfficer" style="width: 190px;">
-                                            <option value="0">Select Any</option>
-                                                    @{
-                                                        foreach (FOS.Shared.SaleOfficerData obj in ViewBag.SaleOfficer)
-                                                        {
-                                                            <option value="@obj.ID">@obj.Name</option>
-                                                        }
-                                                    }
-                                       </select>
-
-                                    </div>
-                                </div>
-
-            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px; display:none;">
-                                  <label class="control-label">Region</label>
-                                    <div class="controls" style="margin-left:0px">
-                                        
-
-                                        <select class="form-control chosen-select" id="region" style="width: 190px;">
-                                            <option value="0">Select Any</option>
-                                                    @{
-                                                        foreach (FOS.Shared.RegionData obj in ViewBag.Region)
-                                                        {
-                                                            <option value="@obj.RegionID">@obj.Name</option>
-                                                        }
-                                                    }
-                                       </select>
-
-                                    </div>
-                                </div>
-
-            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
-                                  <label class="control-label">City</label>
-                                    <div class="controls" style="margin-left:0px">
-                                        
-                                        <select class="form-control chosen-select" id="city" style="width: 190px;">
-                                            <option value="0">Select Any</option>
-                                                    @{
-                                                        foreach (FOS.Shared.CityData obj in ViewBag.City)
-                                                        {
-                                                            <option value="@obj.ID">@obj.Name</option>
-                                                        }
-                                                    }
-                                       </select>
-
-                                    </div>
-                                </div>
-
-            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
-                <label class="control-label">Zone</label>
+                <label class="control-label">Regional Head</label>
                 <div class="controls" style="margin-left:0px">
 
-                    <select class="form-control chosen-select" id="zone" style="width: 190px;">
+                    <select class="form-control chosen-select" id="regionalHead" style="width: 190px;">
                         <option value="0">Select Any</option>
                         @{
-                            foreach (FOS.Shared.ZoneData obj in ViewBag.Zone)
+                            foreach (FOS.Shared.RegionalHeadData obj in ViewBag.RegionalHead)
                             {
                                 <option value="@obj.ID">@obj.Name</option>
                             }
@@ -141,43 +74,79 @@
                 </div>
             </div>
 
-            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px;margin-top:28px;">
-                <table style="padding-left:10px;font-size:small;" border="0">
-                    <tr>
-                        <td style="color:#ce0019;font-weight:600;">Total Retailers: </td>
-                        <td><span id="totalRet">&nbsp;&nbsp;</span></td>
-                        @*</tr>
-                    <tr>*@
-                        <td style="color:#ce0019;font-weight:600;padding-left:25px">Tagged Retailers: </td>
-                        <td><span id="tagRet">&nbsp;&nbsp;</span></td>
-                        <td><span id="tagRetExp" style="display:none;"><a href="javascript:exportRpt(1);">Export</a></span></td>
-                        @*</tr>
-                    <tr>*@
-                        <td style="color:#ce0019;font-weight:600;padding-left:25px">Untagged Retailers: </td>
-                        <td><span id="untagRet">&nbsp;&nbsp;</span></td>
-                        <td><span id="untagRetExp" style="display:none;"><a href="javascript:exportRpt(2);">Export</a></span></td>
-                    </tr>
-                </table>
+            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
+                <label class="control-label">Sales Officer</label>
+                <div class="controls" style="margin-left:0px">
 
+                    <select class="form-control chosen-select" id="saleOfficer" style="width: 190px;">
+                        <option value="0">Select Any</option>
+                        @{
+                            foreach (FOS.DataLayer.SaleOfficer obj in ViewBag.SaleOfficer)
+                            {
+                                <option value="@obj.ID">@obj.Name</option>
+                            }
+                        }
+                    </select>
+
+                </div>
             </div>
 
-            @*<div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
-                <table style="padding-left:10px" border="1">
-                    <tr>
-                        <td>Total Retailers: </td>
-                        <td><span id="totalRet">&nbsp;&nbsp;</span></td>
-                    </tr>
-                    <tr>
-                        <td>Tagged Retailers: </td>
-                        <td><span id="tagRet">&nbsp;&nbsp;</span></td>
-                    </tr>
-                    <tr>
-                        <td>Untagged Retailers: </td>
-                        <td><span id="untagRet">&nbsp;&nbsp;</span></td>
-                    </tr>
-                </table>
+            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px;">
+                <label class="control-label">Region</label>
+                <div class="controls" style="margin-left:0px">
 
-            </div>*@
+
+                    <select class="form-control chosen-select" id="region" style="width: 190px;">
+                        <option value="0">Select Any</option>
+                        @{
+                            foreach (FOS.Shared.RegionalHeadData obj in ViewBag.Region)
+                            {
+                                <option value="@obj.ID">@obj.Name</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
+                <label class="control-label">City</label>
+                <div class="controls" style="margin-left:0px">
+
+                    <select class="form-control chosen-select" id="city" style="width: 190px;">
+                        <option value="0">Select Any</option>
+                        @{
+                            foreach (FOS.Shared.CityData obj in ViewBag.City)
+                            {
+                                <option value="@obj.ID">@obj.Name</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+
+
+
+
+            @*<div class="control-group" style="margin-bottom:0px;float:left;margin-left:12px">
+            <table style="padding-left:10px" border="1">
+                <tr>
+                    <td>Total Retailers: </td>
+                    <td><span id="totalRet">&nbsp;&nbsp;</span></td>
+                </tr>
+                <tr>
+                    <td>Tagged Retailers: </td>
+                    <td><span id="tagRet">&nbsp;&nbsp;</span></td>
+                </tr>
+                <tr>
+                    <td>Untagged Retailers: </td>
+                    <td><span id="untagRet">&nbsp;&nbsp;</span></td>
+                </tr>
+            </table>
+
+        </div>*@
 
         </div>
     </div>

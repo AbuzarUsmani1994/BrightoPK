@@ -31,13 +31,7 @@
 <div class="container" style="margin-top:2px;">
     <div class="row">
         <form class="form-inline">
-            <label class="control-label">Range *</label>
-
-            @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Range, "ID", "MainCategoryName"), new { @class = "" })
-            @Html.ValidationMessageFor(model => model.RangeID)
-
-
-
+          
 
             <label class="control-label">Select Head *</label>
 
@@ -50,7 +44,7 @@
             @Html.ValidationMessageFor(model => model.ZoneID)
 
             <button type="submit" id="btnNew" class="btn btn-primary">
-                <i class="icon-ok icon-white" style="padding-right: 8px"></i><span id="create">Export Report</span>
+                <i class="icon-ok icon-white" style="padding-right: 8px"></i><span id="create">Submit</span>
             </button>
 
         </form>
@@ -159,7 +153,41 @@
             <h3 style="font-size: 18px;width: 100%;font-weight: 700;float: left;margin: 0px;">Reports For MIS</h3>
         </div>
 
-        <div class="span12" style="box-shadow: 0px 0px 7px grey;background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);margin-left:0px;color: #4c91cb;border: 1px solid #9C27B0;padding: 15px;">
+        <div class="span12" style="        box-shadow: 0px 0px 7px grey;
+        background-image: linear-gradient(to bottom, #ffffff, #f3f3f3);
+        margin-left: 0px;
+        color: #4c91cb;
+        border: 1px solid #9C27B0;
+        padding: 15px;
+        overflow-y: scroll;
+        height: 300px;">
+            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
+                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
+                <a href="~/Reports/RetailerSummery" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Retailers Information Summary </a>
+            </div>
+
+            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
+                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
+                <a href="~/Reports/PresentSOReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Present SO/Attendance Report</a>
+            </div>
+
+            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
+                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
+                <a href="~/Reports/PresentSOReportSummary" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">SO/Attendance Report Summary</a>
+            </div>
+
+            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
+                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
+                <a href="~/Reports/PresentSOReportDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">SO/Attendance Report Detail</a>
+            </div>
+
+
+
+            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
+                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
+                <a href="~/Reports/SSSaleSummary" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Team Visit Summary Report</a>
+            </div>
+
 
 
             <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
@@ -168,78 +196,28 @@
             </div>
 
             <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-
-                <a href="~/Reports/DealerInfo" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Distributor Information Report </a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
                 @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
                 <a href="~/Reports/SaleOfficerDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">SaleOfficer Information Report </a>
             </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/ShopVisitSummeryOneLine" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Distributor Order Detail Report </a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/RetailerOrdersDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Retailer Order Detail Report </a>
-            </div>
 
             <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
                 @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/StockTakingDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Stock Taking Detail Report </a>
+                <a href="~/Reports/RetailerOrdersDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Market Visit Detail Report </a>
             </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/PresentSOReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Today Present SO Report</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
 
-                <a href="~/Reports/DailyPerformanceKPI" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Daily Performance KPI</a>
-            </div>
+
+
+           
 
             <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
                 @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
                 <a href="~/Reports/OrderSummaryReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Daily Sales Report</a>
             </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/OrderSummaryReportForDistributor" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Daily Sales Report For Distributor</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/GetTotalFollowupReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FollowUp Order Reports</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/ShopsNotVisitedBySORpt" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Shops Not Visited By SO</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/ItemsNotSoldBySoRpt" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Items Not Sold By SO</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/GetTotalFollowupReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FollowUp Orders</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/BrandWiseReport" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Brand Wise Report</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/Attandance" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Attendance Report</a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/RetailerAvgSale" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Retailers Average Sale </a>
-            </div>
-            <div class="span12" style="cursor: -webkit-grab;padding: 5px;margin-left: 0px;border-bottom: 1px solid gainsboro;">
-                @*<a data-toggle="modal" data-target="#ChooseDates1" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">FOS Wise Order Intake/Delivered Report</a>*@
-                <a href="~/Reports/LowItemsDetail" target="_blank" data-toggle="modal" id="FOSWiseOrderIntakeDeliveredReport" style="font-size: 13px;width: 100%;float: left;margin: 0px;">Slow Moving Items Report</a>
-            </div>
+
+         
+
         </div>
     </div>
-
 </div>
 
 

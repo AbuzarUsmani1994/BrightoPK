@@ -41,6 +41,8 @@ namespace FOS.Shared
         [DisplayName("Sales Officer Name *")]
         public string SaleOfficerName { get; set; }
 
+        public Nullable<int> SaleOfficerToID { get; set; }
+
         public string RetailerType { get; set; }
         public string RT { get; set; }
 
@@ -59,6 +61,8 @@ namespace FOS.Shared
         [DisplayName("Retailer Name *")]
         public string RetailerName { get; set; }
         public int DealerID { get; set; }
+        public int SegmentID { get; set; }
+        public int SORoleID { get; set; }
         public int ZoneID { get; set; }
         public string DealerName { get; set; }
         public string ShopName { get; set; }
@@ -116,6 +120,8 @@ namespace FOS.Shared
 
         public Nullable<System.DateTime> StartingDate { get; set; }
         public List<MainCategories> Range { get; set; }
+        public IEnumerable<RegionalHeadTypeData> SORegion { get; set; }
+        public IEnumerable<RegionalHeadData> SORegions { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> LastUpdated { get; set; }
        
@@ -126,12 +132,17 @@ namespace FOS.Shared
         public virtual List<RegionalHeadData> RegionData { get; set; }
         public virtual List<RegionalHeadData> ZoneData { get; set; }
         public virtual List<SaleOfficer> SaleOfficer { get; set; }
+        public virtual List<Tbl_Segmenttype> BusinessSegments { get; set; }
+        public virtual List<SOType> Roles { get; set; }
+
+        public virtual List<Tbl_FocusArea> focusArea { get; set; }
         public virtual List<SaleOfficerData> SaleOfficers { get; set; }
         public virtual List<sp_GetSOListInDSRFinal_Result> SaleOfficerA { get; set; }
         public virtual List<DealerData> Dealer { get; set; }
         public virtual List<RetailerData> Retailers { get; set; }
         public virtual List<CityData> Cities { get; set; }
         public virtual List<VisitPlanData> VisitPlan { get; set; }
+        public virtual List<AreaData> Areas { get; set; }
 
         // Painter 
         public string City { get; set; }
@@ -146,6 +157,9 @@ namespace FOS.Shared
         public int ID { get; set; }
         public int? RegionID { get; set; }
         public string RegionName { get; set; }
+        public string LatestStatus { get; set; }
+        public decimal? TotalLiters { get; set; }
+        public decimal? TotalSale { get; set; }
         public string JobTitle { get; set; }
         public int JobID { get; set; }
         public Nullable<int> RetailerID { get; set; }
@@ -162,6 +176,12 @@ namespace FOS.Shared
        
         public Nullable<int> SaleOfficerID { get; set; }
         public string SaleOfficerName { get; set; }
+        public string SegmentName { get; set; }
+        public string TradePartyName { get; set; }
+        public string OwnerName { get; set; }
+        public string OwnerMob { get; set; }
+        public string CustomerStatus { get; set; }
+        public string Picture { get; set; }
         public string Dboyname { get; set; }
         public Nullable<int> DealerID { get; set; }
         public string DealerName { get; set; }
@@ -226,16 +246,23 @@ namespace FOS.Shared
         public Nullable<bool> Status { get; set; }
         public string StatusChecker { get; set; }
         public DateTime? AssignDate { get; set; }
+        public DateTime? ClaimDate { get; set; }
         public DateTime? VisitedDate { get; set; }
 
         public DateTime? Dispatchdate { get; set; }
         public DateTime? VisitDate { get; set; }
+        public string ClaimDateFormatted { get; set; }
+
+        public DateTime? CallDate { get; set; }
+        public string CallDateFormatted { get; set; }
         public string VisitDateFormatted { get; set; }
         public string InvoicedateFormatted { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string CompletedDateFormatted { get; set; }
         public string RetailerAddress { get; set; }
         public string PainterAddress { get; set; }
+        public string CallerName { get; set; }  // Make sure this exists with get; set;
+        public string CallStatus { get; set; }  // Make sure this exists with get; set;
 
 
         public List<DealerData> Dealers { get; set; }

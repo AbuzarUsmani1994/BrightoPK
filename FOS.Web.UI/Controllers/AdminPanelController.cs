@@ -91,6 +91,17 @@ namespace FOS.Web.UI.Controllers
             {
                 pageUrl = string.IsNullOrEmpty(returnUrl) ? string.Format("{0}/Home/Home", Settings.AppPath) : returnUrl;
             }
+
+            else if (userId == 1119 && Type == "Managers")
+            {
+                pageUrl = string.IsNullOrEmpty(returnUrl) ? string.Format("{0}/Home/Claim", Settings.AppPath) : returnUrl;
+            }
+
+            else if (userId == 1120 || userId==1121 && Type == "Managers")
+            {
+                pageUrl = string.IsNullOrEmpty(returnUrl) ? string.Format("{0}/Home/AgentDashboard", Settings.AppPath) : returnUrl;
+            }
+
             else if(userId != 1 && Type == "Managers")
             {
                 
@@ -491,16 +502,18 @@ namespace FOS.Web.UI.Controllers
         {
             var userID = Convert.ToInt32(Session["UserID"]);
             int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
-            List<RegionData> RegionObj = ManageRegion.GetRegionDataList(userID);
+            List<RegionData> RegionObj = ManageRegion.GetHeadListForDSR();
             var objRegion = RegionObj.FirstOrDefault();
-            var objregionalhead = db.RegionalHeadRegions.Where(x => x.RegionID == objRegion.ID).FirstOrDefault();
+           // var objregionalhead = db.RegionalHeadRegions.Where(x => x.RegionID == objRegion.ID).FirstOrDefault();
 
-            List<SaleOfficerData> SaleOfficerObj = ManageSaleOffice.GetSaleOfficerListByRegionalHeadID(objregionalhead.RegionHeadID);
+            List<SaleOfficerData> SaleOfficerObj = ManageSaleOffice.GetSaleOfficerListByRegionalHeadID(objRegion.ID);
             var objSaleOff = SaleOfficerObj.FirstOrDefault();
 
             var objArea = new AreaData();
             objArea.Regions = RegionObj;
             objArea.Salesofficer = SaleOfficerObj;
+            objArea.RegionalHeadTypeData = FOS.Setup.ManageRegion.GetRegionalHeadsType();
+            objArea.RegionalHead = FOS.Setup.ManageRegionalHead.GetRegionalHeadList();
             //objArea.Salesofficer1 = SaleOfficerObj;
             //objArea.Salesofficer2 = SaleOfficerObj;
             return View(objArea);
@@ -514,12 +527,6 @@ namespace FOS.Web.UI.Controllers
             {
                 if (newData != null)
                 {
-                    if (newData.ID == 0)
-                    {
-                        RoleAccessValidator validator = new RoleAccessValidator();
-                        results = validator.Validate(newData);
-                        boolFlag = results.IsValid;
-                    }
 
                     if (boolFlag)
                     {

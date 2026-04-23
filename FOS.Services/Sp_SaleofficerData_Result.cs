@@ -20,6 +20,8 @@ namespace FOS.DataLayer
         public string Phone2 { get; set; }
         public System.DateTime DateofJoin { get; set; }
         public string MainCategDesc { get; set; }
+        public string UserName { get; set; }
+        public string Pass { get; set; }
         public string Active { get; set; }
         public Nullable<System.DateTime> LeaveON { get; set; }
     }

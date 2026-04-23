@@ -17,7 +17,7 @@
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="#">SubCategory</a>
+                    <a href="#">Product SubCategory</a>
                 </li>
             </ul>
             <!-- END PAGE TITLE & BREADCRUMB-->
@@ -34,7 +34,7 @@
                 <!-- BEGIN SAMPLE FORMPORTLET-->
                 <div class="widget green" style="">
                     <div class="widget-title">
-                        <h4>Manage SubCategory</h4>
+                        <h4>Manage Product SubCategory</h4>
                         <span class="tools">
                             @*<a href="javascript:;" class="icon-chevron-down"></a>*@
                             @*<a href="javascript:;" class="icon-remove"></a>*@
@@ -48,7 +48,7 @@
 
                         <!-- Select City -->
                         <div class="control-group">
-                            <label class="control-label">Select MainCategory *</label>
+                            <label class="control-label">Select Product Category *</label>
                             <div class="controls">
                                 @Html.DropDownListFor(model => model.MainCategoryID, new SelectList(Model.mainCat, "ID", "MainCategoryName"), new { @class = "" })
                                
@@ -57,7 +57,7 @@
 
                         <!-- Area Name -->
                         <div class="control-group">
-                            <label class="control-label">SubCategory Name *</label>
+                            <label class="control-label">Product SubCategory Name *</label>
                             <div class="controls">
                                 @Html.EditorFor(model => model.SubName)
                                 @Html.ValidationMessageFor(model => model.SubName)
@@ -369,17 +369,17 @@
 
         function OnSuccess(response) {
             if (response == "1") {
-                alertify.success("Area Saved Successfully");
+                alertify.success("Product Subcategory Saved Successfully");
                 $('#create').text('Create');
                 var dt = $('#datatab').DataTable();
                 dt.ajax.reload();
                 ClearForm();
             }
             else if (response == "0") {
-                alertify.error("Unable To Save Area.");
+                alertify.error("Unable To Save Product Subcategory.");
             }
             else if (response == "2") {
-                alertify.error("Area Code Already Exist");
+                alertify.error("Product Subcategory Already Exist");
             }
             else {
                 alertify.error(response);

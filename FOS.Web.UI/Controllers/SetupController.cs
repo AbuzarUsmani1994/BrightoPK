@@ -22,6 +22,8 @@ using System.Drawing.Printing;
 using System.Drawing;
 using System.Drawing.Imaging;
 using FoS.Web.UI.Report;
+using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
+using System.Web.Http.Results;
 
 namespace FOS.Web.UI.Controllers
 {
@@ -495,6 +497,415 @@ namespace FOS.Web.UI.Controllers
         #endregion AREA
 
 
+        #region KPIS
+
+        [CustomAuthorize]
+        //View Work...
+        public ActionResult KPI()
+        {
+            // Load Region Data For City Records ...
+            var objCity = new CityData();
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            int THID = FOS.Web.UI.Controllers.AdminPanelController.GetTHIDRelatedToUser();
+            if (THID > 0)
+            {
+
+                objCity.Regions = FOS.Setup.ManageRegion.GetRegionList(THID);
+            }
+            else
+            {
+                objCity.Regions = FOS.Setup.ManageRegion.GetRegionList(RHID);
+            }
+
+
+
+            return View(objCity);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddUpdateKPIS([Bind(Exclude = "TID")] CityData newCity)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+               
+                    if (newCity != null)
+                    {
+                      
+
+                        if (boolFlag)
+                        {
+                            int Response = ManageCity.AddKPIS(newCity);
+                            if (Response == 1)
+                            {
+                                return Content("1");
+                            }
+                            else if (Response == 2)
+                            {
+                                return Content("2");
+                            }
+                            else
+                            {
+                                return Content("0");
+                            }
+                        }
+                        else
+                        {
+                            IList<ValidationFailure> failures = results.Errors;
+                            StringBuilder sb = new StringBuilder();
+                            sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                            foreach (ValidationFailure failer in results.Errors)
+                            {
+                                sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                                Response.StatusCode = 422;
+                                return Json(new { errors = sb.ToString() });
+                            }
+                        }
+                    }
+             
+
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+        //Get All Region Method...
+        public JsonResult KPIDataHandler(DTParameters param, Int32 RegionID)
+        {
+            try
+            {
+                var dtsource = new List<CityData>();
+
+                dtsource = ManageCity.GetKPIForGrid(RegionID);
+
+                List<String> columnSearch = new List<string>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<CityData> data = ManageCity.GetResult(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
+
+                foreach (var itm in data)
+                {
+                    if (itm.LastUpdate.HasValue)
+                    {
+
+                        itm.FormattedDate = Convert.ToDateTime(itm.LastUpdate).ToString("dd-MM-yyyy");
+                        
+                    }
+
+
+                }
+
+                int count = ManageCity.Count(param.Search.Value, dtsource, columnSearch);
+                DTResult<CityData> result = new DTResult<CityData>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        //Delete Region Method...
+        //public int DeleteCity(int cityID)
+        //{
+        //    return FOS.Setup.ManageCity.DeleteCity(cityID);
+        //}
+
+        //// Get One City For Edit
+        //public JsonResult GetEditCity(int CityID)
+        //{
+        //    var Response = ManageCity.GetEditCity(CityID);
+        //    return Json(Response, JsonRequestBehavior.AllowGet);
+        //}
+
+        #endregion KPIS
+
+
+        #region AttendanceAndPunc
+
+        [CustomAuthorize]
+        // View ...
+        public ActionResult AttendanceAndPunctuality()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            // List<RegionData> RegionObj = ManageRegion.GetRegionDataList(userID);
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+            var objRegion = regionalHeadData.FirstOrDefault();
+            List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(objRegion.ID, true);
+
+
+
+            var objArea = new AreaData();
+            objArea.RegionalHead = regionalHeadData;
+            objArea.Salesofficerdata = SaleOfficerObj;
+
+            return View(objArea);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddAttendanceAndPunctuality([Bind(Exclude = "TID")] AreaData newData)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+                if (newData != null)
+                {
+                    if (newData.ID == 0)
+                    {
+                        AreaValidator validator = new AreaValidator();
+                        results = validator.Validate(newData);
+                        boolFlag = results.IsValid;
+                    }
+
+                    if (boolFlag)
+                    {
+                        int Response = ManageArea.AddUpdateAttendance(newData);
+                        if (Response == 1)
+                        {
+                            return Content("1");
+                        }
+                        else if (Response == 2)
+                        {
+                            return Content("2");
+                        }
+                        else
+                        {
+                            return Content("0");
+                        }
+                    }
+                    else
+                    {
+                        IList<ValidationFailure> failures = results.Errors;
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                        foreach (ValidationFailure failer in results.Errors)
+                        {
+                            sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                            Response.StatusCode = 422;
+                            return Json(new { errors = sb.ToString() });
+                        }
+                    }
+                }
+
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+        //Get All Region Method...
+        public JsonResult AttendanceAndPunctualityDataHandler(DTParameters param, Int32 CityID)
+        {
+            try
+            {
+                var dtsource = new List<AreaData>();
+
+                dtsource = ManageArea.GetAttendanceForGrid(CityID);
+
+                List<String> columnSearch = new List<string>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<AreaData> data = ManageArea.GetResult(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
+                int count = ManageArea.Count(param.Search.Value, dtsource, columnSearch);
+                DTResult<AreaData> result = new DTResult<AreaData>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        public JsonResult GetAttendanceListByID(int RegionID)
+        {
+            var result = FOS.Setup.ManageCity.GetAttendanceListByRegionID(RegionID);
+            return Json(result);
+        }
+
+
+        //public JsonResult GetSOListByRegionID(int RegionID)
+        //{
+        //    var result = FOS.Setup.ManageCity.GetSOListByRegionID(RegionID);
+        //    return Json(result);
+        //}
+
+
+        ////Delete Region...
+        //public int DeleteArea(int areaID)
+        //{
+        //    return FOS.Setup.ManageArea.DeleteArea(areaID);
+        //}
+
+        #endregion AttendanceAndPunc
+
+
+        #region Training
+
+        [CustomAuthorize]
+        // View ...
+        public ActionResult Training()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            // List<RegionData> RegionObj = ManageRegion.GetRegionDataList(userID);
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+            var objRegion = regionalHeadData.FirstOrDefault();
+            List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(objRegion.ID, true);
+
+
+
+            var objArea = new AreaData();
+            objArea.RegionalHead = regionalHeadData;
+            objArea.Salesofficerdata = SaleOfficerObj;
+
+            return View(objArea);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddTraining([Bind(Exclude = "TID")] AreaData newData)
+        {
+            Boolean boolFlag = true;
+            ValidationResult results = new ValidationResult();
+            try
+            {
+                if (newData != null)
+                {
+                    if (newData.ID == 0)
+                    {
+                        AreaValidator validator = new AreaValidator();
+                        results = validator.Validate(newData);
+                        boolFlag = results.IsValid;
+                    }
+
+                    if (boolFlag)
+                    {
+                        int Response = ManageArea.AddUpdateTraining(newData);
+                        if (Response == 1)
+                        {
+                            return Content("1");
+                        }
+                        else if (Response == 2)
+                        {
+                            return Content("2");
+                        }
+                        else
+                        {
+                            return Content("0");
+                        }
+                    }
+                    else
+                    {
+                        IList<ValidationFailure> failures = results.Errors;
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(String.Format("{0}:{1}", "*** Error ***", "<br/>"));
+                        foreach (ValidationFailure failer in results.Errors)
+                        {
+                            sb.AppendLine(String.Format("{0}:{1}{2}", failer.PropertyName, failer.ErrorMessage, "<br/>"));
+                            Response.StatusCode = 422;
+                            return Json(new { errors = sb.ToString() });
+                        }
+                    }
+                }
+
+                return Content("0");
+            }
+            catch (Exception exp)
+            {
+                return Content("Exception : " + exp.Message);
+            }
+        }
+
+        //Get All Region Method...
+        public JsonResult AddTrainingDataHandler(DTParameters param, Int32 CityID)
+        {
+            try
+            {
+                var dtsource = new List<AreaData>();
+
+                dtsource = ManageArea.GetTrainingForGrid(CityID);
+
+                List<String> columnSearch = new List<string>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<AreaData> data = ManageArea.GetResult(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch);
+                int count = ManageArea.Count(param.Search.Value, dtsource, columnSearch);
+                DTResult<AreaData> result = new DTResult<AreaData>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+        public JsonResult GetTrainingListByID(int RegionID)
+        {
+            var result = FOS.Setup.ManageCity.GettrainingListByRegionID(RegionID);
+            return Json(result);
+        }
+
+
+        //public JsonResult GetSOListByRegionID(int RegionID)
+        //{
+        //    var result = FOS.Setup.ManageCity.GetSOListByRegionID(RegionID);
+        //    return Json(result);
+        //}
+
+
+        ////Delete Region...
+        //public int DeleteArea(int areaID)
+        //{
+        //    return FOS.Setup.ManageArea.DeleteArea(areaID);
+        //}
+
+        #endregion AttendanceAndPunc
+
+
+
+
 
         //#region CITY
 
@@ -754,6 +1165,66 @@ namespace FOS.Web.UI.Controllers
             catch (Exception ex)
             {
                 return Json(new { error = ex.Message });
+            }
+        }
+
+
+        public void AccessDataHandler1( Int32 HeadID)
+        {
+            try
+            {
+                var dtsource = new List<Tbl_AccessModel>();
+
+                dtsource = ManageArea.GetAccessForGrid(HeadID);
+
+                List<String> columnSearch = new List<string>();
+
+
+                // Example data
+                StringWriter sw = new StringWriter();
+
+                sw.WriteLine("\"SrNO \",\"Head Name\",\"SaleOfficer Name\",\"Reported To\",\"Reported For\"");
+
+                Response.ClearContent();
+                Response.AddHeader("content-disposition", "attachment;filename=ReportingheirarchyRpt" + DateTime.Now + ".csv");
+                Response.ContentType = "application/octet-stream";
+
+                int srNo = 1;
+
+                foreach (var retailer in dtsource)
+                {
+                    sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"",
+
+                        srNo,
+                     retailer.RegionName,
+                      retailer.SaleOfficerName,
+                    retailer.ReportedToName,
+                      retailer.ReportedForName,
+
+                    srNo++
+
+
+                    ));
+                }
+
+
+
+
+
+                Response.Write(sw.ToString());
+                Response.End();
+
+
+
+         
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

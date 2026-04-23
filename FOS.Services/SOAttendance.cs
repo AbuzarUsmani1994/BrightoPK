@@ -27,6 +27,9 @@ namespace FOS.DataLayer
         public Nullable<decimal> MarketCloseLat { get; set; }
         public Nullable<decimal> MarketCloseLong { get; set; }
         public string MarketCloseLatlong { get; set; }
+        public Nullable<int> SelectedSOID { get; set; }
+        public Nullable<int> RetailerID { get; set; }
+        public Nullable<int> SegmentTypeID { get; set; }
     
         public virtual City City { get; set; }
         public virtual Region Region { get; set; }

@@ -2594,78 +2594,38 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    if (From == null && To == null)
-                    {
-
-                        doneJobData = (from jd in dbContext.JobsDetails
-                                       join
-                                       r in dbContext.Retailers on jd.RetailerID equals r.ID
-                                       where (jd.JobType == "Retailer Order" && jd.Status==true && jd.VisitPurpose== "Ordering" && jd.JobDate >= dtFromToday && jd.JobDate <= dtToToday && jd.RegionalHeadID == ZoneID && jd.SalesOficerID == SOID)
-                                       select new JobsDetailData
-                                       //u => new JobsDetailData
-                                       {
-                                           ID = jd.ID,
-                                           JobID = jd.JobID,
-                                           //First Column
-                                           SaleOfficerID = (int)jd.Job.SaleOfficerID,
-                                           SaleOfficerName = jd.Job.SaleOfficer.Name,
-                                           DealerID = (jd.Job.JobsDetails.Select(j => j.DealerID).FirstOrDefault() == null) ? 0 : jd.Job.JobsDetails.Select(j => j.DealerID).FirstOrDefault(),
-                                           DealerName = (jd.Job.JobsDetails.Select(j => j.Dealer.Name).FirstOrDefault() == null) ? "-" : jd.Job.JobsDetails.Select(j => j.Dealer.Name).FirstOrDefault(),
-                                           RetailerName = (jd.Retailer.Name == null) ? "-" : jd.Retailer.Name,
-                                           ShopName = (jd.Retailer.ShopName == null) ? "-" : jd.Retailer.ShopName,
-                                           DealerPhone = (jd.Retailer.Phone1 == null) ? "-" : jd.Retailer.Phone1,
-                                           RegionID = r.RegionID,
-                                           RegionName = dbContext.Regions.Where(p => p.ID == r.RegionID).Select(p => p.Name).FirstOrDefault(),
-                                           RetailerAddress = jd.Retailer.Address,
-                                           VisitPlanName = jd.VisitPurpose,
-                                           AssignDate = jd.JobDate,
-                                           VisitedDate = jd.DateComplete,
-
-                                           VisitDate = jd.DateComplete == null ? null : jd.DateComplete,
-                                           VisitType = jd.Job.VisitType,
-                                           RetailerType = jd.ActivityType,
-
-
-                                           StatusChecker = jd.ActivityDetails,
-                                       }).ToList();
-                    }
-                    else
-                    {
+                    
                         DateTime FromDate = Convert.ToDateTime(From);
                         DateTime ToDate = Convert.ToDateTime(To).AddDays(1);
-                        doneJobData = (from jd in dbContext.JobsDetails
+                        doneJobData = (from jd in dbContext.Tbl_SalesClaimMaster
                                        join
-                                       r in dbContext.Retailers on jd.RetailerID equals r.ID
-                                       where (jd.JobType == "Retailer Order" && jd.Status == true && jd.VisitPurpose == "Ordering" && jd.JobDate >= FromDate && jd.JobDate <= ToDate && jd.RegionalHeadID == ZoneID && jd.SalesOficerID == SOID)
+                                       r in dbContext.Retailers on jd.CustomerID equals r.ID
+                                       where ( jd.IsActive == true && jd.CreatedOn >= FromDate && jd.CreatedOn <= ToDate  && jd.SOID == SOID)
                                        select new JobsDetailData
                                        //u => new JobsDetailData
                                        {
                                            ID = jd.ID,
-                                           JobID = jd.JobID,
+                                          JobID=jd.ID,
                                            //First Column
-                                           SaleOfficerID = (int)jd.Job.SaleOfficerID,
-                                           SaleOfficerName = jd.Job.SaleOfficer.Name,
-                                           DealerID = (jd.Job.JobsDetails.Select(j => j.DealerID).FirstOrDefault() == null) ? 0 : jd.Job.JobsDetails.Select(j => j.DealerID).FirstOrDefault(),
-                                           DealerName = (jd.Job.JobsDetails.Select(j => j.Dealer.Name).FirstOrDefault() == null) ? "-" : jd.Job.JobsDetails.Select(j => j.Dealer.Name).FirstOrDefault(),
-                                           RetailerName = (jd.Retailer.Name == null) ? "-" : jd.Retailer.Name,
-                                           ShopName = (jd.Retailer.ShopName == null) ? "-" : jd.Retailer.ShopName,
-                                           DealerPhone = (jd.Retailer.Phone1 == null) ? "-" : jd.Retailer.Phone1,
+                                           SaleOfficerID = (int)jd.SOID,
+                                           SaleOfficerName = dbContext.SaleOfficers.Where(p => p.ID == jd.SOID).Select(p => p.Name).FirstOrDefault(),
+                                           //SegmentName = dbContext.Tbl_Segmenttype.Where(p => p.ID == jd.SegmentID).Select(p => p.Name).FirstOrDefault(),
+                                           TradePartyName = dbContext.Retailers.Where(p => p.ID == jd.TradePartyID).Select(p => p.ShopName).FirstOrDefault(),
+                                           Picture=jd.Picture,
+                                           RetailerName = r.ShopName,
+                                           ShopName = r.ShopName,
+                                       LatestStatus=jd.ClaimManagerLatestStatus,
                                            RegionID = r.RegionID,
                                            RegionName = dbContext.Regions.Where(p => p.ID == r.RegionID).Select(p => p.Name).FirstOrDefault(),
-                                           RetailerAddress = jd.Retailer.Address,
-                                           VisitPlanName = jd.VisitPurpose,
-                                           AssignDate = jd.JobDate,
-                                           VisitedDate = jd.DateComplete,
+                                           RetailerAddress = r.Address,
+                                           TotalSale=jd.SaleValue,
+                                           ClaimDate=jd.DateSelected,
+                                           AssignDate = jd.CreatedOn,
+                                           TotalLiters=jd.TotalLiters
 
-                                           VisitDate = jd.DateComplete == null ? null : jd.DateComplete,
-                                           VisitType = jd.Job.VisitType,
-                                           RetailerType = jd.ActivityType,
-
-
-                                           StatusChecker = jd.ActivityDetails,
+                                           
                                        }).ToList();
 
-                    }
 
                 }
 
@@ -2682,9 +2642,238 @@ namespace FOS.Setup
         }
 
 
-        public static List<JobsDetailData> GetResult12(string search, string sortOrder, int start, int length, List<JobsDetailData> dtResult, List<string> columnFilters/* string saleofficer, string StartingDate1,string StartingDate2*/)
+        public static List<JobsDetailData> GetKPISDetailForGrid(string From, string To, int ZoneID, int SOID)
         {
-            return FilterResult12(search, dtResult, columnFilters/*saleofficer,StartingDate1,StartingDate2*/).SortBy(sortOrder).Skip(start).Take(length).ToList();
+
+            List<JobsDetailData> doneJobData = new List<JobsDetailData>();
+            DateTime dtFromTodayUtc = DateTime.UtcNow.AddHours(5);
+
+            DateTime dtFromToday = dtFromTodayUtc.Date;
+            DateTime dtToToday = dtFromToday.AddDays(1);
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+
+                    DateTime FromDate = Convert.ToDateTime(From);
+                    DateTime ToDate = Convert.ToDateTime(To).AddDays(1);
+                    doneJobData = (from jd in dbContext.Tbl_MasterKPIS
+                                   join
+                                   r in dbContext.SaleOfficers on jd.SOID equals r.ID
+                                   join
+                                   head in dbContext.RegionalHeads on jd.HeadID equals head.ID
+                                   join
+                                   seg in dbContext.Tbl_Segmenttype on jd.BusinessSegmentID equals seg.ID
+                                   join
+                                   role in dbContext.SOTypes on jd.RoleID equals role.ID
+                                   where ( jd.DateFrom >= FromDate && jd.DateTo <= ToDate && jd.SOID == SOID && jd.IsActive==true)
+                                   select new JobsDetailData
+                                   //u => new JobsDetailData
+                                   {
+                                       ID = jd.ID,
+                                       JobID = jd.ID,
+                                       //First Column
+                                       SaleOfficerID = (int)jd.SOID,
+                                       SaleOfficerName = dbContext.SaleOfficers.Where(p => p.ID == jd.SOID).Select(p => p.Name).FirstOrDefault(),
+                                       SegmentName = dbContext.Tbl_Segmenttype.Where(p => p.ID == jd.BusinessSegmentID).Select(p => p.Name).FirstOrDefault(),
+                                       RegionalHeadName = dbContext.RegionalHeads.Where(p => p.ID == jd.HeadID).Select(p => p.Name).FirstOrDefault(),
+                                      
+                                       RetailerName = dbContext.SOTypes.Where(p => p.ID == jd.RoleID).Select(p => p.Name).FirstOrDefault(),
+                                       
+                                      
+
+
+                                   }).ToList();
+
+
+                }
+
+
+
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Get Jobs List Failed");
+                throw;
+            }
+
+            return doneJobData;
+        }
+
+
+        public static List<JobsDetailData> GetAgentCallingDetailForGrid(string From, string To, int ZoneID, int SOID)
+        {
+            List<JobsDetailData> doneJobData = new List<JobsDetailData>();
+            DateTime dtFromTodayUtc = DateTime.UtcNow.AddHours(5);
+            DateTime dtFromToday = dtFromTodayUtc.Date;
+            DateTime dtToToday = dtFromToday.AddDays(1);
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    DateTime FromDate = Convert.ToDateTime(From);
+                    DateTime ToDate = Convert.ToDateTime(To).AddDays(1);
+
+                    if (SOID == 1)
+
+                    {
+
+                        doneJobData = (from r in dbContext.Retailers
+                                       join s in dbContext.SaleOfficers on r.SaleOfficerID equals s.ID
+                                       let allVisitIds = dbContext.Tbl_HousingVisits
+                                           .Where(p => p.CustomerID == r.ID)
+                                           .Select(p => p.ID)
+                                           .ToList()
+                                       let latestCall = dbContext.Tbl_SaveCall
+                                           .Where(sc => allVisitIds.Contains((int)sc.VisitID))
+                                           .OrderByDescending(sc => sc.CreatedOn)
+                                           .FirstOrDefault()
+                                       let latestVisit = dbContext.Tbl_HousingVisits
+                                           .Where(p => p.CustomerID == r.ID)
+                                           .OrderByDescending(p => p.ID)
+                                           .FirstOrDefault()
+                                       where (r.IsActive == true &&
+                                              r.LastUpdate >= FromDate &&
+                                              r.LastUpdate <= ToDate &&
+                                              s.RegionalHeadID == ZoneID &&
+                                              r.BusinessStatusID != 2
+
+                                              )
+                                       select new JobsDetailData
+                                       {
+                                           ID = r.ID,
+                                           JobID = latestVisit != null ? latestVisit.ID : 0,
+                                           SaleOfficerID = (int)r.SaleOfficerID,
+                                           SaleOfficerName = s.Name,
+                                           OwnerName = r.Name,
+                                           OwnerMob = r.Phone1,
+                                           RetailerName = r.ShopName,
+                                           ShopName = r.ShopName,
+                                           CustomerStatus = r.Status == true ? "Active" : "InActive",
+                                           RegionID = r.RegionID,
+                                           RegionName = dbContext.Regions
+                                                       .Where(p => p.ID == r.RegionID)
+                                                       .Select(p => p.Name)
+                                                       .FirstOrDefault(),
+                                           RetailerAddress = r.Address,
+                                           ClaimDate = r.LastUpdate,
+                                           AssignDate = latestVisit != null ? latestVisit.NextVisitDate : null,
+                                           CallDate = latestCall != null ? latestCall.CreatedOn : null,
+                                           CallerName = latestCall != null ? latestCall.CallerName : null,
+                                           CallStatus = latestCall != null ? latestCall.NatureOfCall : null
+                                       })
+                                       .Where(x => x.JobID != 0)
+                                       .ToList();
+
+                    }
+                    else if (SOID == 3)
+                    {
+                        var query = from r in dbContext.Retailers
+                                    join s in dbContext.SaleOfficers on r.SaleOfficerID equals s.ID
+                                    where r.IsActive == true &&
+                                          s.RegionalHeadID == ZoneID &&
+                                          r.BusinessStatusID == 2
+                                    select new { r, s };
+
+                         doneJobData = (from q in query
+                                           from hv in dbContext.Tbl_HousingVisits
+                                               .Where(v => v.CustomerID == q.r.ID &&
+                                                           v.CreatedAt >= FromDate &&
+                                                           v.CreatedAt <= ToDate)
+                                               .OrderByDescending(v => v.CreatedAt)
+                                               .Take(1)
+                                               .DefaultIfEmpty()
+                                           where hv != null
+                                           select new JobsDetailData
+                                           {
+                                               ID = q.r.ID,
+                                               JobID = hv.ID,
+                                               SaleOfficerID = (int)q.r.SaleOfficerID,
+                                               SaleOfficerName = q.s.Name,
+                                               OwnerName = q.r.Name,
+                                               OwnerMob = q.r.Phone1,
+                                               RetailerName = q.r.ShopName,
+                                               ShopName = q.r.ShopName,
+                                               CustomerStatus = "Lost",
+                                               RegionID = q.r.RegionID,
+                                               RegionName = dbContext.Regions
+                                                           .Where(p => p.ID == q.r.RegionID)
+                                                           .Select(p => p.Name)
+                                                           .FirstOrDefault(),
+                                               RetailerAddress = q.r.Address,
+                                               ClaimDate = q.r.LastUpdate,
+                                               AssignDate = hv.NextVisitDate,
+                                               CallDate = dbContext.Tbl_SaveCall
+                                                           .Where(sc => sc.VisitID == hv.ID)
+                                                           .Select(sc => sc.CreatedOn)
+                                                           .FirstOrDefault(),
+                                               CallerName = dbContext.Tbl_SaveCall
+                                                           .Where(sc => sc.VisitID == hv.ID)
+                                                           .Select(sc => sc.CallerName)
+                                                           .FirstOrDefault(),
+                                               CallStatus = dbContext.Tbl_SaveCall
+                                                           .Where(sc => sc.VisitID == hv.ID)
+                                                           .Select(sc => sc.NatureOfCall)
+                                                           .FirstOrDefault()
+                                           }).ToList();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Get Jobs List Failed");
+                throw;
+            }
+
+            return doneJobData;
+        }
+
+
+
+        public static List<JobsDetailData> GetResult12(string search, string sortOrder, int start, int length,
+        List<JobsDetailData> dtResult, List<string> columnFilters)
+        {
+            IQueryable<JobsDetailData> query = FilterResult12(search, dtResult, columnFilters);
+
+            // Apply sorting
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                switch (sortOrder)
+                {
+                    case "SaleOfficerName":
+                        query = query.OrderBy(p => p.SaleOfficerName);
+                        break;
+                    case "SaleOfficerName_desc":
+                        query = query.OrderByDescending(p => p.SaleOfficerName);
+                        break;
+                    case "OwnerName":
+                        query = query.OrderBy(p => p.OwnerName);
+                        break;
+                    case "OwnerName_desc":
+                        query = query.OrderByDescending(p => p.OwnerName);
+                        break;
+                    case "RetailerName":
+                        query = query.OrderBy(p => p.RetailerName);
+                        break;
+                    case "RetailerName_desc":
+                        query = query.OrderByDescending(p => p.RetailerName);
+                        break;
+                    case "CallStatus":
+                        query = query.OrderBy(p => p.CallStatus);
+                        break;
+                    case "CallStatus_desc":
+                        query = query.OrderByDescending(p => p.CallStatus);
+                        break;
+                    default:
+                        query = query.OrderBy(p => p.ID); // Default sort
+                        break;
+                }
+            }
+
+            // Apply pagination
+            return query.Skip(start).Take(length).ToList();
         }
 
 
@@ -2693,27 +2882,81 @@ namespace FOS.Setup
             return FilterResult12(search, dtResult, columnFilters/*saleofficer, StartingDate1, StartingDate2*/).Count();
         }
 
-
-        private static IQueryable<JobsDetailData> FilterResult12(string search, List<JobsDetailData> dtResult, List<string> columnFilters /*string saleofficer,string StartingDate1, string StartingDate2*/)
+        private static IQueryable<JobsDetailData> FilterResult12(string search, List<JobsDetailData> dtResult, List<string> columnFilters)
         {
             IQueryable<JobsDetailData> results = dtResult.AsQueryable();
 
-            // DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate1) ? DateTime.Now.ToString() : StartingDate1);
-            //DateTime end = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate2) ? DateTime.Now.ToString() : StartingDate2);
+            // Apply global search if provided
+            if (!string.IsNullOrEmpty(search))
+            {
+                string searchLower = search.ToLower();
+                results = results.Where(p =>
+                    (p.SaleOfficerName != null && p.SaleOfficerName.ToLower().Contains(searchLower)) ||
+                    (p.OwnerName != null && p.OwnerName.ToLower().Contains(searchLower)) ||
+                    (p.OwnerMob != null && p.OwnerMob.ToLower().Contains(searchLower)) || // Added OwnerMob search
+                    (p.RetailerName != null && p.RetailerName.ToLower().Contains(searchLower)) ||
+                    (p.ShopName != null && p.ShopName.ToLower().Contains(searchLower)) ||
+                    (p.CustomerStatus != null && p.CustomerStatus.ToLower().Contains(searchLower)) ||
+                    (p.RegionName != null && p.RegionName.ToLower().Contains(searchLower)) ||
+                    (p.CallerName != null && p.CallerName.ToLower().Contains(searchLower)) ||
+                    (p.CallStatus != null && p.CallStatus.ToLower().Contains(searchLower)) ||
+                    (p.VisitDateFormatted != null && p.VisitDateFormatted.ToLower().Contains(searchLower)) ||
+                    (p.ClaimDateFormatted != null && p.ClaimDateFormatted.ToLower().Contains(searchLower)) ||
+                    (p.CallDateFormatted != null && p.CallDateFormatted.ToLower().Contains(searchLower))
+                );
+            }
 
-            results = results.Where(p => (search == null || (p.DealerName != "All" && p.DealerName.ToLower().Contains(search.ToLower())
-              /*p.VisitedDate>=start && p.VisitedDate<=end)*/)
-                && (columnFilters[2] == null || (p.SaleOfficerName != null && p.SaleOfficerName.ToLower().Contains(columnFilters[2].ToLower())))
-                && (columnFilters[3] == null || (p.RetailerName != null && p.RetailerName.ToLower().Contains(columnFilters[3].ToLower())))
-                && (columnFilters[4] == null || (p.VisitPlanName != null && p.VisitPlanName.ToLower().Contains(columnFilters[4].ToLower())))
-                && (columnFilters[5] == null || (p.VisitedDate.ToString() != null && p.VisitedDate.ToString().ToLower().Contains(columnFilters[5].ToLower())))
-                && (columnFilters[6] == null || (p.StatusChecker != null && p.StatusChecker.ToLower().Contains(columnFilters[6].ToLower())))
-                ));
+            // Apply column-specific filters
+            // Assuming columnFilters index mapping:
+            // Index 0: ID (if any)
+            // Index 1: JobID (if any)  
+            // Index 2: SaleOfficerName
+            // Index 3: OwnerName/CustomerName
+            // Index 4: RetailerName/ShopName
+            // Index 5: ClaimDate/VisitDate
+            // Index 6: CallStatus
 
-            return results;
+            if (columnFilters.Count > 2 && !string.IsNullOrEmpty(columnFilters[2]))
+            {
+                string filterValue = columnFilters[2].ToLower();
+                results = results.Where(p => p.SaleOfficerName != null &&
+                                             p.SaleOfficerName.ToLower().Contains(filterValue));
+            }
+
+            if (columnFilters.Count > 3 && !string.IsNullOrEmpty(columnFilters[3]))
+            {
+                string filterValue = columnFilters[3].ToLower();
+                results = results.Where(p => (p.OwnerName != null && p.OwnerName.ToLower().Contains(filterValue)) ||
+                                             (p.RetailerName != null && p.RetailerName.ToLower().Contains(filterValue)));
+            }
+
+            if (columnFilters.Count > 4 && !string.IsNullOrEmpty(columnFilters[4]))
+            {
+                string filterValue = columnFilters[4].ToLower();
+                results = results.Where(p => p.RetailerName != null && p.RetailerName.ToLower().Contains(filterValue));
+            }
+
+            if (columnFilters.Count > 5 && !string.IsNullOrEmpty(columnFilters[5]))
+            {
+                string filterValue = columnFilters[5].ToLower();
+                results = results.Where(p => (p.ClaimDateFormatted != null && p.ClaimDateFormatted.ToLower().Contains(filterValue)) ||
+                                             (p.VisitDateFormatted != null && p.VisitDateFormatted.ToLower().Contains(filterValue)) ||
+                                             (p.CallDateFormatted != null && p.CallDateFormatted.ToLower().Contains(filterValue)));
+            }
+
+            if (columnFilters.Count > 6 && !string.IsNullOrEmpty(columnFilters[6]))
+            {
+                string filterValue = columnFilters[6].ToLower();
+                results = results.Where(p => p.CallStatus != null && p.CallStatus.ToLower().Contains(filterValue));
+            }
+            // Add column-specific filter for OwnerMob if you have a column for it
+            if (columnFilters.Count > 7 && !string.IsNullOrEmpty(columnFilters[7]))
+            {
+                string filterValue = columnFilters[7].ToLower();
+                results = results.Where(p => p.OwnerMob != null && p.OwnerMob.ToLower().Contains(filterValue));
+            }
+                return results;
         }
-
-
 
 
 

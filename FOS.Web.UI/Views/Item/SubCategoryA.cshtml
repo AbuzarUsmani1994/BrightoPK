@@ -17,7 +17,7 @@
                 <span class="divider">/</span>
             </li>
             <li>
-                <a href="#">Manage SubCategoryA</a>
+                <a href="#">Product Detail</a>
             </li>
         </ul>
         <!-- END PAGE TITLE & BREADCRUMB-->
@@ -34,7 +34,7 @@
             <!-- BEGIN SAMPLE FORMPORTLET-->
             <div class="widget green" style="">
                 <div class="widget-title">
-                    <h4>Manage SubCategoryA</h4>
+                    <h4>Manage Product Detail</h4>
                     <span class="tools">
                         @*<a href="javascript:;" class="icon-chevron-down"></a>*@
                         @*<a href="javascript:;" class="icon-remove"></a>*@
@@ -45,16 +45,16 @@
                     <!-- BEGIN FORM-->
                     <!-- Select Region -->
                     <div class="control-group">
-                        <label class="control-label">Main Category *</label>
+                        <label class="control-label">Product Category *</label>
                         <div class="controls">
                             @Html.DropDownListFor(model => model.MainCategoryID, new SelectList(Model.Regions, "ID", "MainCategoryName"), new { @class = "" })
-                         
+
                         </div>
                     </div>
 
-                    
+
                     <div class="control-group">
-                        <label class="control-label">Sub Category *</label>
+                        <label class="control-label">Product Sub Category *</label>
                         <div class="controls">
                             @Html.DropDownListFor(model => model.ID, new SelectList(Model.SubCategory, "ID", "SubName"), new { @class = "" })
                             @Html.ValidationMessageFor(model => model.ID)
@@ -62,11 +62,11 @@
                     </div>
 
                     <!-- Area Name -->
-                    
+
 
 
                     <div class="control-group">
-                        <label class="control-label">SubCategoryA Name *</label>
+                        <label class="control-label">Product Detail Name *</label>
                         <div class="controls">
                             @Html.EditorFor(model => model.SubCategoryAName)
                             @Html.ValidationMessageFor(model => model.SubCategoryAName)
@@ -74,9 +74,16 @@
                         </div>
                     </div>
 
-                    <!-- Short Code -->
-                 
+                    <div class="control-group">
+                        <label class="control-label">Sales Incentive Per Liter *</label>
+                        <div class="controls">
+                            @Html.EditorFor(model => model.LiterPrice)
+                            @Html.ValidationMessageFor(model => model.LiterPrice)
+                           
+                        </div>
+                    </div>
 
+                    <!-- Short Code -->
                     <!-- Buttons -->
                     <div class="control-group" style="border-top: 1px solid #e5e5e5;">
                         <div class="form-actions" style="padding-left:238px">
@@ -131,17 +138,19 @@
                                 </th>
                                 <th style="width: 10% !important">Sr #</th>
                                 <th style="width:40% !important">
-                                    SubCategoryA Name
+                                    Product Detail Name
                                 </th>
 
                                 <th style="width:40% !important">
-                                   MainCategory 
+                                    Product Category
                                 </th>
                                 <th style="width:40% !important">
-                                    SubCategory
+                                    Product SubCategory
+                                </th>
+                                <th style="width:40% !important">
+                                   Per Liter Incentive
                                 </th>
 
-                               
                                 <th style="width:10% !important">Actions</th>
                             </tr>
                         </thead>
@@ -198,7 +207,7 @@
                         $('#create').text('Update');
                         $("#SubCategoryAName").val($(this).attr("data-name"));
                         $("#SubCategoryAID").val($(this).attr("data-id"));
-                        //$("#ItemPrice").val($(this).attr("data-shortcode"));
+                        $("#LiterPrice").val($(this).attr("data-shortcode"));
                         //$("#ItemCode").val($(this).attr("data-ItemId"));
                         $('html, body').animate({
                             scrollTop: $("#main-content").offset().top
@@ -258,14 +267,15 @@
                { "data": "SubCategoryAID", "bVisible": false },
                { "data": "SubCategoryAName" },
                { "data": "MainCatName" },
-               { "data": "SubCatName" },
+                    { "data": "SubCatName" },
+                    { "data": "LiterPrice" },
                {
                    "sClass": "center-align-td",
                    "mData": null,
                    "bSortable": false,
                    "mRender": function (data, type, row) {
                        //alert('<button class="btn btn-success edit" data-id=' + row.SubCategoryAID + '  data-name=' + '"' + row.SubCategoryAName + '"' + 'data-ItemId=' + row.ItemCode + ' data-cityid=' + row.CityID + ' data-shortcode=' + row.price + '>' + '<i class=icon-pencil></i>' + '</button>&nbsp;<button class="btn btn-info delete" data-id=' + row.ItemId + '>' + '<i class=icon-trash></i>' + '</button>');
-                       return '<button class="btn btn-success edit" data-id=' + row.SubCategoryAID + '  data-name=' + '"' + row.SubCategoryAName + '"' + 'data-ItemId=' + row.ItemCode + ' data-cityid=' + row.CityID + ' data-shortcode=' + row.price + '>' + '<i class=icon-pencil></i>' + '</button>&nbsp;<button class="btn btn-info delete" data-id=' + row.SubCategoryAID + '>' + '<i class=icon-trash></i>' + '</button>';
+                       return '<button class="btn btn-success edit" data-id=' + row.SubCategoryAID + '  data-name=' + '"' + row.SubCategoryAName + '"' + 'data-ItemId=' + row.ItemCode + ' data-cityid=' + row.CityID + ' data-shortcode=' + row.LiterPrice + '>' + '<i class=icon-pencil></i>' + '</button>&nbsp;<button class="btn btn-info delete" data-id=' + row.SubCategoryAID + '>' + '<i class=icon-trash></i>' + '</button>';
                    }
                }
                 ],
@@ -378,6 +388,8 @@
             $('#ItemCode').val('');
             $('#SubCategoryAName').val('');
             $('#price').val(0);
+            $('#LiterPrice').val('');
+            
             $('#create').text('Create');
         }
 

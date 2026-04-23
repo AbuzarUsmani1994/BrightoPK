@@ -15,7 +15,9 @@ namespace FOS.DataLayer
     {
         public string Region { get; set; }
         public string City { get; set; }
-        public Nullable<int> RetailersCount { get; set; }
-        public Nullable<int> DealersCount { get; set; }
+        public Nullable<int> TradeParties { get; set; }
+        public Nullable<int> HousingParties { get; set; }
+        public Nullable<int> CorporateParties { get; set; }
+        public Nullable<int> AllPurposeParties { get; set; }
     }
 }

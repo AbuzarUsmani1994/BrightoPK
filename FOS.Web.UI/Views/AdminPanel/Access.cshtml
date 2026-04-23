@@ -45,16 +45,24 @@
 
                     <!-- BEGIN FORM-->
                     <!-- Select Region -->
-                    <div class="control-group">
-                        <label class="control-label">Select Region *</label>
+
+                    <div class="control-group" id="Types" name="Types">
+                        <label class="control-label">Head Type *</label>
                         <div class="controls">
-                            @Html.DropDownListFor(model => model.RegionID, new SelectList(Model.Regions, "ID", "Name"), new { @class = "" })
-                            @Html.ValidationMessageFor(model => model.RegionID)
+                            @Html.DropDownListFor(model => model.Type, new SelectList(Model.RegionalHeadTypeData, "ID", "Type"), new { @class = "", style = "220px" })
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Select Head *</label>
+                        <div class="controls">
+                            @Html.DropDownListFor(model => model.RegionalHeadID, new SelectList(Model.RegionalHead, "ID", "Name"), new { @class = "" })
+                            @Html.ValidationMessageFor(model => model.RegionalHeadID)
+                           
                         </div>
                     </div>
 
                     <!-- Select City -->
-                    <div class="control-group">
+                    <div class="control-group" id="SO1">
                         <label class="control-label">Select Salesofficer *</label>
                         <div class="controls">
                             @Html.DropDownListFor(model => model.SOID, new SelectList(Model.Salesofficer, "ID", "Name"), new { @class = "" })
@@ -62,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="control-group">
+                    <div class="control-group" id="SO2">
                         <label class="control-label">Reported UP *</label>
                         <div class="controls">
                             @Html.DropDownListFor(model => model.SOID1, new SelectList(Model.Salesofficer, "ID", "Name"), new { @class = "" })
@@ -70,7 +78,7 @@
                         </div>
                     </div>
 
-                    <div class="control-group">
+                    <div class="control-group" id="SO3">
                         <label class="control-label">Reported Down *</label>
                         <div class="controls">
                             @Html.DropDownListFor(model => model.SOID2, new SelectList(Model.Salesofficer, "ID", "Name"), new { @class = "" })
@@ -104,6 +112,7 @@
         <div class="widget green">
             <div class="widget-title">
                 <h4>View Detail</h4>
+                <button id="btnExportExcel" class="btn btn-primary">Export to Excel</button>
                 <span class="tools">
                     @*<a href="javascript:;" class="icon-chevron-down"></a>*@
                     @*<a href="javascript:;" class="icon-remove"></a>*@
@@ -135,7 +144,7 @@
                                 <th style="width: 10% !important">Sr #</th>
 
                                 <th style="width:40% !important">
-                                    RegionName
+                                    Regional Head Name
                                 </th>
 
                                 <th style="width:40% !important">
@@ -182,7 +191,7 @@
                 "url": '@Url.Action("AccessDataHandler", "setup")',
                 "contentType": 'application/json; charset=utf-8',
                 'data': function (data) {
-                    data.CityID = $('#RegionID').val();
+                    data.CityID = $('#RegionalHeadID').val();
                     return data = JSON.stringify(data);
 
                 },
@@ -280,7 +289,7 @@
 
         function LoadCities() {
             try {
-                var regionID = $("#RegionID").val();
+                var regionID = $("#RegionalHeadID").val();
 
                 $.ajax({
                     type: "POST",
@@ -316,7 +325,7 @@
         }
     function LoadCities1() {
         try {
-            var regionID = $("#RegionID").val();
+            var regionID = $("#RegionalHeadID").val();
 
             $.ajax({
                 type: "POST",
@@ -350,9 +359,36 @@
     }
 
     }
+
+    $("#Type").change(function () {
+        LoadRegionalHead();
+    });
+     function LoadRegionalHead() {
+
+            var RegionalHeadType = $("#Type").val();
+
+            $.ajax({
+                type: "POST",
+                data: { RegionalHeadType: RegionalHeadType },
+                url: "@Url.Action("GetRegionalHeadAccordingToTypeNew", "SaleOfficer")",
+                dataType: 'json',
+                success: function (json) {
+
+                    var $el = $("#RegionalHeadID");
+                    $el.empty(); // remove old options
+                    $.each(json, function (value, key) {
+
+                        $el.append($("<option></option>")
+                                .attr("value", key.ID).text(key.Name));
+                    });
+                    $("#RegionalHeadID").trigger("change");
+                }
+
+            });
+        }
     function LoadCities2() {
         try {
-            var regionID = $("#RegionID").val();
+            var regionID = $("#RegionalHeadID").val();
 
             $.ajax({
                 type: "POST",
@@ -371,7 +407,7 @@
 
                 if ($('#SOID2').val() != null) {
                     $('#datatab').dataTable().fnDestroy();
-                    GenerateDetailGrid();
+                   GenerateDetailGrid();
                 }
                 else {
                     $('#datatab').dataTable().empty();
@@ -389,6 +425,21 @@
 
         $(document).ready(function () {
 
+
+            $("#Type").change(function () {
+                debugger;
+                if ($("#Type").val() == '2') {
+
+                    $('#SO2').hide();
+                    $('#SO3').hide();
+
+                } else {
+                    $('#SO1').show();
+                    $('#SO2').show();
+                    $('#SO3').show();
+                }
+
+            });
             $("#liSetup,#liArea").addClass("active");
 
             var WriteCheck = "0";
@@ -400,14 +451,16 @@
         else {
         }
 
-        $("#RegionID").change(function () {
+        $("#RegionalHeadID").change(function () {
             $('#Name').val('');
             $('#ShortCode').val('');
             LoadCities();
             LoadCities1();
             LoadCities2();
         });
-
+            $('#btnExportExcel').on('click', function () {
+                window.open("@Url.Action("AccessDataHandler1", "setup")" + "?HeadID=" + $("#RegionalHeadID").val());
+            });
 
 
 
@@ -431,7 +484,7 @@
         $("#btnRefresh").click(function () {
             ClearForm();
         });
-        GenerateDetailGrid();
+       GenerateDetailGrid();
 
         $("#ShortCode").bind('keyup', function (e) {
             if (e.which >= 97 && e.which <= 122) {

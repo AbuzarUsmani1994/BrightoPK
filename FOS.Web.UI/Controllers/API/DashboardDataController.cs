@@ -16,7 +16,7 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int SOID)
+        public IHttpActionResult Get(int SOID, int TypeID)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
@@ -33,7 +33,7 @@ namespace FOS.Web.UI.Controllers.API
                     var last = month.AddDays(-1);
                    // var rangeid = db.SaleOfficers.Where(x => x.ID == SOID).Select(x => x.RangeID).FirstOrDefault();
 
-                    var result = dbContext.sp_GetDashboardData(startDate, endDate, SOID, first, last, 6).ToList();
+                    var result = dbContext.sp_GetDashboardData(startDate, endDate, SOID, first, last, 6,TypeID).ToList();
 
                     if (result != null && result.Count > 0)
                     {

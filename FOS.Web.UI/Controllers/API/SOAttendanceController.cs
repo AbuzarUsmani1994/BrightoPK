@@ -48,6 +48,11 @@ namespace FOS.Web.UI.Controllers.API
 
                 }
                 JobObj.DealerID = rm.DistributorID;
+                JobObj.SelectedSOID = rm.SelectedSOID;
+                JobObj.SegmentTypeID = rm.SegmentType;
+
+                JobObj.RetailerID = rm.RetailerID;
+                
                 JobObj.CreatedAt = DateTime.UtcNow.AddHours(5);
                 db.SOAttendances.Add(JobObj);
                 db.SaveChanges();
@@ -85,7 +90,10 @@ namespace FOS.Web.UI.Controllers.API
         {
        
             public int SOID { get; set; }
+            public int SelectedSOID { get; set; }
+            public int RetailerID { get; set; }
             public int RegionID { get; set; }
+            public int SegmentType { get; set; }
             public int CityID { get; set; }
             public decimal Latitude { get; set; }
             public decimal Longitude { get; set; }

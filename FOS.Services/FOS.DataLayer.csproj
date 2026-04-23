@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FOS.DataLayer</RootNamespace>
     <AssemblyName>FOS.DataLayer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -45,11 +45,47 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,6 +103,12 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="AreasRelatedtoCities_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessStatu.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BusinessType.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="CalView_All_Result.cs">
@@ -140,6 +182,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FOSDataModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="GetClaimApprovals_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetDailyAttendanceSummary_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetHousingVisitsByNatureOfWork_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetHousingVisitsByScopeOfWork_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="GetSalesOfficerJobAreas_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
@@ -250,7 +304,16 @@
     <Compile Include="SOType.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="spGetEmployeeAttendanceTimings_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="spGetSaleOfficer_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetSalesOfficerAttendanceDetail_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="spGetSalesOfficerAttendanceSummary_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="spGetSalesOfficerWithLoginDate_Result.cs">
@@ -263,6 +326,9 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_AbsentSOBarGraph_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_AllRegionWiseData_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_AttandaceReport_Result.cs">
@@ -328,6 +394,12 @@
     <Compile Include="Sp_GetAllDataForExportofSO_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_GetCallData_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetChemicalRetailerForEditForBrighto_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetCurrentdateRetailersList1_1_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
@@ -388,6 +460,12 @@
     <Compile Include="sp_getDistributorWiseOrdersCount_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="sp_GetGraphData_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_GetHousingVisitsByConstructionStage_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetItemsRelatedToJobID_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
@@ -442,6 +520,9 @@
     <Compile Include="Sp_GetRetailerForEditFinal_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_GetRetailerForEditForBrighto_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_GetRetailerForEdit_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
@@ -452,6 +533,12 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetRetailersRelatedtoRegion_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_GetSOClaimsApprovalStatus_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_GetSOClaimsDetailApproval_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_GetSOListAccordingToDistributor_Result.cs">
@@ -485,6 +572,12 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_getSoWiseOrdersCount_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_GetSSSalesSummary_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_GetSSVisitSummary_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_GetStockDetailRelatedToJobIDFinal_Result.cs">
@@ -542,6 +635,12 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_MarketInformation_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_MyCoorporatelastVisit_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_MyHousinglastVisit_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_MyLastThreeVisits_Result.cs">
@@ -625,10 +724,37 @@
     <Compile Include="Sp_MyVisits_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_OrderForPDFAllPurposeVisitBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFAllPurposeVisits_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFCorporateVisitsBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFCorporateVisits_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFHousingVisitsBackend_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFHousingVisits_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFHousingVisits_Result1.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_OrderForPDFinMMCTest_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_OrderForPDFinMMC_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFTradeVisitBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_OrderForPDFTradeVisit_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_OrdersCurrentMonthQuantityWiseManagersDashboard_Result.cs">
@@ -742,6 +868,9 @@
     <Compile Include="Sp_OurCompititorForPDFinMMC_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_PaymentsInformation_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_PresentSOBarGraph1_1_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
@@ -791,6 +920,12 @@
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Sp_SalesOfficerAllOrders_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_SegmentWiseOnlineOflline_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ShopProductivity_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="sp_ShopsNotVisitedBySo1_21_Result.cs">
@@ -934,6 +1069,9 @@
     <Compile Include="Sp_Top30Itemsthismonth_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Sp_TotalVisitsForAll_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Sp_Total_RetailerInformation1_1_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
@@ -1018,7 +1156,43 @@
     <Compile Include="Tbl_Access.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_AffiliatesBusinessTypes.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_AffiliatesClassification.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_AffiliatesExpertise.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_AllPurposeVisits.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_BrightoChemicalProducts.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_BusinessAffiliates.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_BusinessAffiliatesVisits.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tbl_ChecklistBeforeVisit.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ChemCustomerInfo.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ChemSaleDetail.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ChemSaleMaster.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ClaimDetail.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ClaimsApproval.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_CompititorBrand.cs">
@@ -1027,19 +1201,94 @@
     <Compile Include="TBL_CompititorBrandsForDropDown.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_CompititorList.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ConstructionStage.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_CorporateVisits.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="TBL_CurrentStock.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_DetailCoverage.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_DetailKPI.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_FannanCustomer.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_FannanCustomerAssign.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_FannanSODirection.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_FocusArea.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_FollowupReasons.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_HousingSiteVerification.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_HousingTradeCustomers.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_HousingVerificationOffTakeFrom.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_HousingVisits.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_Industry.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_KPITargetsRegionWise.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_MasterCoverage.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_MasterKPIS.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tbl_MasterStock.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_NatureOfClient.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_NatureOfWork.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_NoSaleReason.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_OurBrandRate.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TBL_Payments.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_PlotSize.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ProductDetail.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ProductSubCategory.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ProuctCategory.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_PurposeOfVisit.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_RetailerClass.cs">
@@ -1057,16 +1306,43 @@
     <Compile Include="Tbl_RSMSummary.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_SalesClaimMaster.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_SaveCall.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tbl_SchoolException.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_ScopeOfWork.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_Segmenttype.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_SharedCards.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_SMSLogs.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_SOAttendanceandPunctuality.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tbl_SOREGIONS.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Tbl_SOTraining.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="tbl_StockDetail.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_Targets.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tbl_TradeVisitsFinal.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Tbl_VisittypesOfSO.cs">
@@ -1081,7 +1357,73 @@
     <Compile Include="TokenDetail.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="TradeVisit.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="User.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_ApplicationCategorywisegraph_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimApprovalReportForBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimBrandWiseReport_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryByClaimId_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportCategoryWiseForApp_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportForApp_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportForBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportSOWise_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportTraderWiseForApp_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReportTraderWiseForBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimSummaryReport_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetClaimVsKPIReportSOWise_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetCoverageReportForBackEnd_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetCoverageReportForPDF_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetDSRForChemicalBackend_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_GetDSRForChemical_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_IncentiveCategorywisegraph_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_ProductTypeCategorywisegraph_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_RegionSaleswisegraph_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_TopProductsByRegion_Result.cs">
+      <DependentUpon>FOSDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="usp_TopSalesOfficersGraph_Result.cs">
       <DependentUpon>FOSDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="vActiveJob.cs">

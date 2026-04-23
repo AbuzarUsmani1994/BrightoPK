@@ -94,14 +94,48 @@
                                 </div>
                             </div>
 
-                            @*<div class="control-group">
-                                <label class="control-label">Range  *</label>
+                            <div class="control-group">
+                                <label class="control-label">SO Code *</label>
                                 <div class="controls">
-                                    @Html.DropDownListFor(model => model.RangeID, new SelectList(Model.Ranges, "ID", "Type"), new { @class = "", style = "220px" })
-                                    @Html.ValidationMessageFor(model => model.RangeID)
-                                    @Html.HiddenFor(model => model.RangeID)
+                                    @Html.EditorFor(model => model.ECode)
+                                    @Html.ValidationMessageFor(model => model.ECode)
+
                                 </div>
-                            </div>*@
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">RegionID  *</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.RegionID, new SelectList(Model.SORegion, "ID", "Type"), new { @class = "", style = "220px" })
+                                    @Html.ValidationMessageFor(model => model.RegionID)
+                                    @Html.HiddenFor(model => model.RegionID)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Primary City  *</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.PrimaryCityID, new SelectList(Model.Cities, "ID", "Name"), new { @class = "", style = "220px" })
+                                    @Html.ValidationMessageFor(model => model.PrimaryCityID)
+                                    @Html.HiddenFor(model => model.PrimaryCityID)
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Secondary City  *</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.SecondaryCityID, new SelectList(Model.Cities, "ID", "Name"), new { @class = "", style = "220px" })
+                                    @Html.ValidationMessageFor(model => model.SecondaryCityID)
+                                    @Html.HiddenFor(model => model.SecondaryCityID)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Segment Type *</label>
+                                <div class="controls">
+                                    @Html.DropDownListFor(model => model.SegmentTypeID, new SelectList(Model.SegmentTypes, "ID", "Type"), new { @class = "", style = "220px" })
+                                    @Html.ValidationMessageFor(model => model.SegmentTypeID)
+                                    @Html.HiddenFor(model => model.SegmentTypeID)
+                                </div>
+                            </div>
                             <div class="control-group">
                                 <label class="control-label">Designation  *</label>
                                 <div class="controls">
@@ -110,7 +144,7 @@
                                     @Html.HiddenFor(model => model.DesignationID)
                                 </div>
                             </div>
-                               <div class="control-group">
+                            <div class="control-group">
                                 <label class="control-label">SO ROLE  *</label>
                                 <div class="controls">
                                     @Html.DropDownListFor(model => model.SOTypeID, new SelectList(Model.SOTypes, "ID", "Type"), new { @class = "", style = "220px" })
@@ -124,9 +158,9 @@
                                     @Html.CheckBoxFor(model => model.IsActive, new { @style = "width: 18px; height: 18px", @id = "cbIsActive" }) <span style="margin-left: 7px; font-weight: bold; color: blue;border-bottom: 3px solid;">Is Active</span>
                                 </div>
                             </div>
-                           
 
-                          
+
+
 
                         </div>
 
@@ -231,41 +265,40 @@
                                     @Html.DisplayNameFor(model => model.RegionalHeadID)
                                 </th>
                                 <th style-="8%">Sr #</th>
-                                <th style="width:15%">
+                                <th style="width:8%">
                                     Name
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:10%">
                                     Regional Head
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:8%">
                                     Zone
                                 </th>
-                                <th style="width:12%">
+                                <th style="width:10%">
                                     User Name
                                 </th>
-
-                                <th style="width:15%">
+                                <th style="width:10%">
                                     Phone 1
                                 </th>
-                                <th style="width:15%">
-                                    Phone 2
+                                <th style="width:8%">
+                                    E Code
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:6%">
                                     IsActive
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:10%">
                                     Joining Date
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:10%">
                                     Leaving Date
                                 </th>
-                                <th style="width:15%">
+                                <th style="width:10%">
                                     Designation
                                 </th>
                                 @*<th style="width:15%">
-                                    Range
-                                </th>*@
-                                <th style="width:10%">Actions</th>
+                    Range
+                </th>*@
+                                <th style="width:15%">Actions</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -333,6 +366,7 @@
                         $('#create').text('Update');
 
                         $("#Name").val($(this).attr("data-name"));
+                        $("#ECode").val($(this).attr("data-ecode"));
                         $("#UserName").val($(this).attr("data-username"));
                         $("#Password").val($(this).attr("data-password"));
                         $("#RegionalHeadID").val($(this).attr("data-regionalheadid"));
@@ -382,6 +416,18 @@
 
                     });
                 }
+
+                // Reset IMEI button click handler
+                $(".reset-imei").on("click", function () {
+                    var saleOfficerID = $(this).attr("data-id");
+                    var saleOfficerName = $(this).attr("data-name");
+
+                    alertify.confirm("Are you sure you want to reset IMEI/DeviceID for Sales Officer: " + saleOfficerName + "?", function (e) {
+                        if (e) {
+                            ResetIMEI(saleOfficerID);
+                        }
+                    });
+                });
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex) {
                 $("td:first", nRow).html(iDisplayIndex + 1);
@@ -401,20 +447,23 @@
            { "data": "RegionName" },
            { "data": "UserName" },
            { "data": "Phone1" },
-                { "data": "Phone2" },
-               
+                { "data": "ECode" },
+
                 { "data": "IsActiveYes" },
                 { "data": "Createdate" },
                 { "data": "leaveondate" },
                 { "data": "DesignationName" },
 
-                
+
             {
                 "sClass": "center-align-td",
                 "mData": null,
                 "bSortable": false,
                 "mRender": function (data, type, row) {
-                    return '<button class="btn btn-success edit" data-id=' + row.ID + '  data-name=' + '"' + row.Name + '"' + '  data-username=' + '"' + row.UserName + '"' + ' data-password=' + '"' + row.Password + '"' + '  data-regionalheadid=' + row.RegionalHeadID + ' data-phone1="' + row.Phone1 + '" data-phone2="' + row.Phone2 + '">' + '<i class=icon-pencil></i>' + '</button>&nbsp;<button class="btn btn-info delete" data-id=' + row.ID + '>' + '<i class=icon-trash></i>' + '</button>';
+                    // Adding Reset IMEI button to the actions column
+                    return '<button class="btn btn-success edit" data-id=' + row.ID + '  data-name=' + '"' + row.Name + '"' + '  data-username=' + '"' + row.UserName + '"' + ' data-password=' + '"' + row.Password + '"' + '  data-regionalheadid=' + row.RegionalHeadID + ' data-phone1="' + row.Phone1 + '" data-phone2="' + row.Phone2 + '" data-ecode="' + row.ECode + '">' + '<i class=icon-pencil></i>' + '</button>&nbsp;' +
+                           '<button class="btn btn-info delete" data-id=' + row.ID + '>' + '<i class=icon-trash></i>' + '</button>&nbsp;' +
+                           '<button class="btn btn-warning reset-imei" data-id=' + row.ID + ' data-name="' + row.Name + '">' + '<i class=icon-refresh></i> Reset IMEI</button>';
                 }
             }
             ],
@@ -424,6 +473,65 @@
 
     }
 
+    // Function to reset IMEI/DeviceID for a Sales Officer
+    function ResetIMEI(saleOfficerID) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ResetSaleOfficerDeviceID", "SaleOfficer")", // You need to create this action in the controller
+            data: { saleOfficerID: saleOfficerID },
+            success: function (response) {
+                if (response.success) {
+                    alertify.success(response.message);
+                    // Refresh the DataTable to show updated status (optional, if you want to show DeviceID column)
+                    var dt = $('#datatab').DataTable();
+                    dt.ajax.reload();
+                } else {
+                    alertify.error(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alertify.error("An error occurred while resetting IMEI. Please try again.");
+                console.error("Error: " + error);
+            }
+        });
+    }
+
+      function LoadCities() {
+      try {
+          var regionID = $("#RegionID").val();
+
+          $.ajax({
+              type: "POST",
+              data: { RegionID: regionID },
+              url: "@Url.Action("GetCityListByRegionID", "Setup")",
+              dataType: 'json',
+              success: function (json) {
+
+                  var $el = $("#PrimaryCityID");
+                  $el.empty(); // remove old options
+                  $.each(json, function (value, key) {
+
+                      $el.append($("<option></option>")
+                              .val(key.ID).text(key.Name));
+                  });
+                  var $el1 = $("#SecondaryCityID");
+                  $el1.empty(); // remove old options
+                  $.each(json, function (value, key) {
+
+                      $el1.append($("<option></option>")
+                          .val(key.ID).text(key.Name));
+                  });
+
+
+              }
+
+          });
+      } catch (e) {
+          alert(e);
+          $('#datatab').dataTable().fnDestroy();
+      }
+
+  }
 
         function LoadRegionalHead() {
 
@@ -486,7 +594,11 @@
                 $("#btnNew").attr("disabled", true);
                 }
                 else {
-                }
+            }
+            $("#RegionID").change(function () {
+
+                LoadCities();
+            });
 
                 LoadRegionalHead();
                 $("#Type").change(function () {

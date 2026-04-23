@@ -15,24 +15,27 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int SOID, int RangeID)
+        public IHttpActionResult Get(int SOID, int RangeID,string DateFrom,string DateTo)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
             {
-                DateTime dtFromTodayUtc = DateTime.UtcNow.AddHours(5);
+                DateTime dtFromTodayUtc = Convert.ToDateTime(DateFrom);
 
 
                 DateTime dtFromToday = dtFromTodayUtc.Date;
-                DateTime todate = dtFromToday.AddDays(1);
-                DateTime fromdate = todate.AddDays(-10);
+                var todatedumm= Convert.ToDateTime(DateTo);
+
+                DateTime dtFromTodate = todatedumm.Date;
+                DateTime todate = dtFromTodate.AddDays(1);
+               // DateTime fromdate = todate.AddDays(-10);
 
                 if (SOID > 0)
                 {
                     object[] param = { SOID };
 
 
-                        var result = dbContext.sp_GetDistributorListInDSR(SOID, fromdate, todate).ToList();
+                        var result = dbContext.sp_GetDistributorListInDSR(SOID, dtFromToday, todate).ToList();
 
                         if (result != null && result.Count > 0)
                         {

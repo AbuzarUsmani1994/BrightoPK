@@ -16,10 +16,15 @@ namespace FOS.DataLayer
         public Nullable<int> ID { get; set; }
         public string RegionName { get; set; }
         public string SaleOfficerName { get; set; }
+        public string Region { get; set; }
+        public string CityName { get; set; }
+        public Nullable<int> CityID { get; set; }
+        public Nullable<System.DateTime> DateofOrders { get; set; }
         public Nullable<int> TotalVisits { get; set; }
         public Nullable<int> ProductiveOrders { get; set; }
         public Nullable<int> NonProductive { get; set; }
-        public Nullable<int> TotalLines { get; set; }
         public Nullable<int> Productiveperage { get; set; }
+        public Nullable<System.DateTime> MarketStart { get; set; }
+        public Nullable<System.DateTime> MarketClose { get; set; }
     }
 }

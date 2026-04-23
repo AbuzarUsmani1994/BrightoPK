@@ -69,47 +69,88 @@ namespace FOS.Setup
         }
         public static int AddUpdateAccess(AreaData obj)
         {
+            FOSDataModel dbContext = new FOSDataModel();
             int Res = 0;
 
             try
             {
-                using (TransactionScope scope = new TransactionScope())
-                {
-                    using (FOSDataModel dbContext = new FOSDataModel())
-                    {
+
+              
+                  
                         Tbl_Access AreaObj = new Tbl_Access();
-
-                        if (obj.ID == 0)
+                        if (obj.Type != 2)
                         {
-                            AreaObj.ID = dbContext.Tbl_Access.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
-                            AreaObj.SaleOfficerID = obj.SOID;
-                            AreaObj.RegionID = obj.RegionID;
-                            AreaObj.RepotedUP = obj.SOID1;
-                            AreaObj.ReportedDown = obj.SOID2;
-                            AreaObj.Status = true;
-                            AreaObj.CreatedOn = DateTime.Now;
-                            //  AreaObj.LastUpdate = DateTime.Now;
-                            AreaObj.IsDeleted = false;
 
-                            dbContext.Tbl_Access.Add(AreaObj);
+
+                            if (obj.ID == 0)
+                            {
+                               // AreaObj.ID = dbContext.Tbl_Access.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
+                                AreaObj.SaleOfficerID = obj.SOID;
+                                AreaObj.RegionID = obj.RegionalHeadID;
+                                AreaObj.RepotedUP = obj.SOID1;
+                                AreaObj.ReportedDown = obj.SOID2;
+                                AreaObj.Status = true;
+                                AreaObj.CreatedOn = DateTime.Now;
+                                //  AreaObj.LastUpdate = DateTime.Now;
+                                AreaObj.IsDeleted = false;
+
+                                dbContext.Tbl_Access.Add(AreaObj);
+                            }
+                            else
+                            {
+                                AreaObj = dbContext.Tbl_Access.Where(u => u.ID == obj.ID).FirstOrDefault();
+                                AreaObj.SaleOfficerID = obj.SOID;
+                                //AreaObj.RegionID = obj.RegionID;
+                                AreaObj.RepotedUP = obj.RepotedTo;
+                                AreaObj.ReportedDown = obj.ReportedFor;
+                                AreaObj.Status = true;
+                                AreaObj.CreatedOn = DateTime.Now;
+
+                                AreaObj.IsDeleted = false;
+                            }
                         }
                         else
                         {
-                            AreaObj = dbContext.Tbl_Access.Where(u => u.ID == obj.ID).FirstOrDefault();
-                            AreaObj.SaleOfficerID = obj.SOID;
-                            AreaObj.RegionID = obj.RegionID;
-                            AreaObj.RepotedUP = obj.RepotedTo;
-                            AreaObj.ReportedDown = obj.ReportedFor;
-                            AreaObj.Status = true;
-                            AreaObj.CreatedOn = DateTime.Now;
+                  //  var HeadType = dbContext.SaleOfficers.Where(x => x.RegionalHeadID == obj.RegionalHeadID && x.SORoleID == 2).Select(x => x.ID).FirstOrDefault();
 
-                            AreaObj.IsDeleted = false;
+
+                    var obj1 = dbContext.Tbl_Access.Where(u => u.RepotedUP == obj.SOID).ToList();
+
+                            foreach (var item in obj1)
+                            {
+                                dbContext.Tbl_Access.Remove(item);
+                                dbContext.SaveChanges();
+                            }
+
+
+                  
+                    
+
+                              var sodata = dbContext.SaleOfficers.Where(x => x.IsActive==true && x.IsDeleted==false).ToList();
+                                foreach (var item in sodata)
+                                 {
+                        Tbl_Access AreaObj1 = new Tbl_Access();
+                        // AreaObj.ID = dbContext.Tbl_Access.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
+                        AreaObj1.SaleOfficerID = item.ID;
+                                    AreaObj1.RegionID = obj.RegionalHeadID;
+                                    AreaObj1.RepotedUP = obj.SOID;
+                                    AreaObj1.ReportedDown = item.ID;
+                                    AreaObj1.Status = true;
+                                    AreaObj1.CreatedOn = DateTime.Now;
+                                    //  AreaObj.LastUpdate = DateTime.Now;
+                                    AreaObj1.IsDeleted = false;
+
+                                    dbContext.Tbl_Access.Add(AreaObj1);
+                                    dbContext.SaveChanges();
+                                }
+                               
+                           
                         }
                         dbContext.SaveChanges();
                         Res = 1;
-                        scope.Complete();
-                    }
-                }
+                        
+                  
+              
             }
             catch (Exception exp)
             {
@@ -267,6 +308,36 @@ namespace FOS.Setup
             }
         }
 
+        public static List<AreaData> GetAllAreaListByCityID(int CityID)
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    //var CITY = dbContext.Cities.Where(s => s.ID == CityID).FirstOrDefault();
+
+                    List<AreaData> ChooseAreas = dbContext.Areas.AsEnumerable().Where(a => a.CityID == CityID).Select(a => new AreaData
+                    {
+                        ID = a.ID,
+                        Name = a.Name,
+                        IsActive = a.IsActive
+                    }).ToList();
+
+                    ChooseAreas.Insert(0, new AreaData
+                    {
+                        ID = 0,
+                        Name = "All"
+                    });
+
+                    return ChooseAreas.ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public static List<SubCategories> GetSubCatForAPI(int CityID)
         {
             try
@@ -307,6 +378,32 @@ namespace FOS.Setup
                         ID = a.ID,
                         Name = a.Name,
                         IsActive = a.IsActive
+
+                    }).ToList();
+
+
+
+                    return ChooseAreas.ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public static List<CityData> GetBusinessTypesForAPI(int CityID)
+        {
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    //var CITY = dbContext.Cities.Where(s => s.ID == CityID).FirstOrDefault();
+
+                    List<CityData> ChooseAreas = dbContext.BusinessTypes.Where(a => a.SegmentID == CityID).Select(a => new CityData
+                    {
+                        ID = a.ID,
+                        Name = a.Name,
+                        IsActive = (bool)a.IsActive
 
                     }).ToList();
 
@@ -563,7 +660,7 @@ namespace FOS.Setup
 
 
 
-        public static List<CityData> GetRetailersForAPI(int RegionID, int CityID,int RangeID)
+        public static List<CityData> GetRetailersForAPI(int RegionID, int CityID,int RangeID, int SOID)
         {
             try
             {
@@ -571,7 +668,7 @@ namespace FOS.Setup
                 {
                     //var CITY = dbContext.Cities.Where(s => s.ID == CityID).FirstOrDefault();
 
-                    List<CityData> ChooseAreas = dbContext.Retailers.Where(a => a.RegionID == RegionID && a.CityID==CityID && a.Status==true && a.RangeID == RangeID).Select(a => new CityData
+                    List<CityData> ChooseAreas = dbContext.Retailers.Where(a => a.RegionID == RegionID && a.CityID==CityID && a.Status==true && a.RangeID == RangeID && a.SaleOfficerID==SOID).Select(a => new CityData
                     {
                         ID = a.ID,
                         ShopName = a.ID + "/" +" "+a.ShopName,
@@ -828,6 +925,111 @@ namespace FOS.Setup
             return Res;
         }
 
+        public static int AddUpdateAttendance(AreaData obj)
+        {
+            int Res = 0;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    using (FOSDataModel dbContext = new FOSDataModel())
+                    {
+                        Tbl_SOAttendanceandPunctuality AreaObj = new Tbl_SOAttendanceandPunctuality();
+
+                        if (obj.ID == 0)
+                        {
+                            AreaObj.ID = dbContext.Tbl_SOAttendanceandPunctuality.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
+                            AreaObj.AttendanceandPunctuality = Convert.ToDecimal(obj.Name);
+                            AreaObj.HeadID = obj.RegionID;
+                            AreaObj.SOID = obj.CityID;
+                           
+                            AreaObj.IsActive = true;
+                            AreaObj.CreatedOn = DateTime.Now;
+                           
+
+                            dbContext.Tbl_SOAttendanceandPunctuality.Add(AreaObj);
+                        }
+                        else
+                        {
+                            AreaObj = dbContext.Tbl_SOAttendanceandPunctuality.Where(u => u.ID == obj.ID).FirstOrDefault();
+                            AreaObj.AttendanceandPunctuality = Convert.ToDecimal(obj.Name);
+                            AreaObj.HeadID = obj.RegionID;
+                            AreaObj.SOID = obj.CityID;
+                        }
+                        dbContext.SaveChanges();
+                        Res = 1;
+                        scope.Complete();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add Area Failed");
+                Res = 0;
+                if (exp.InnerException.InnerException.Message.Contains("Short Code Area"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 2;
+                    return Res;
+                }
+                return Res;
+            }
+            return Res;
+        }
+
+        public static int AddUpdateTraining(AreaData obj)
+        {
+            int Res = 0;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    using (FOSDataModel dbContext = new FOSDataModel())
+                    {
+                        Tbl_SOTraining AreaObj = new Tbl_SOTraining();
+
+                        if (obj.ID == 0)
+                        {
+                            AreaObj.ID = dbContext.Tbl_SOTraining.OrderByDescending(u => u.ID).Select(u => u.ID).FirstOrDefault() + 1;
+                            AreaObj.Training = Convert.ToDecimal(obj.Name);
+                            AreaObj.HeadID = obj.RegionID;
+                            AreaObj.SOID = obj.CityID;
+
+                            AreaObj.IsActive = true;
+                            AreaObj.CreatedOn = DateTime.Now;
+
+
+                            dbContext.Tbl_SOTraining.Add(AreaObj);
+                        }
+                        else
+                        {
+                            AreaObj = dbContext.Tbl_SOTraining.Where(u => u.ID == obj.ID).FirstOrDefault();
+                            AreaObj.Training = Convert.ToDecimal(obj.Name);
+                            AreaObj.HeadID = obj.RegionID;
+                            AreaObj.SOID = obj.CityID;
+                        }
+                        dbContext.SaveChanges();
+                        Res = 1;
+                        scope.Complete();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add Area Failed");
+                Res = 0;
+                if (exp.InnerException.InnerException.Message.Contains("Short Code Area"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 2;
+                    return Res;
+                }
+                return Res;
+            }
+            return Res;
+        }
 
         // Delete Area...
         public static int DeleteArea(int AreaID)
@@ -885,6 +1087,66 @@ namespace FOS.Setup
             return areaData;
         }
 
+        public static List<AreaData> GetAttendanceForGrid(int intCityID)
+        {
+            List<AreaData> areaData = new List<AreaData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    areaData = dbContext.Tbl_SOAttendanceandPunctuality.Where(u => u.SOID == intCityID && u.IsActive == true)
+                            .ToList().Select(
+                                u => new AreaData
+                                {
+                                    ID = u.ID,
+                                    
+                                    Name = u.AttendanceandPunctuality.ToString(),
+                                    RegionName = dbContext.RegionalHeads.Where(x=>x.ID==u.HeadID).Select(x=>x.Name).FirstOrDefault(),
+                                    CityName = dbContext.SaleOfficers.Where(x => x.ID == u.SOID).Select(x => x.Name).FirstOrDefault(),
+
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Load Area Grid Failed");
+                throw;
+            }
+
+            return areaData;
+        }
+
+        public static List<AreaData> GetTrainingForGrid(int intCityID)
+        {
+            List<AreaData> areaData = new List<AreaData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    areaData = dbContext.Tbl_SOTraining.Where(u => u.SOID == intCityID && u.IsActive == true)
+                            .ToList().Select(
+                                u => new AreaData
+                                {
+                                    ID = u.ID,
+
+                                    Name = u.Training.ToString(),
+                                    RegionName = dbContext.RegionalHeads.Where(x => x.ID == u.HeadID).Select(x => x.Name).FirstOrDefault(),
+                                    CityName = dbContext.SaleOfficers.Where(x => x.ID == u.SOID).Select(x => x.Name).FirstOrDefault(),
+
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Load Area Grid Failed");
+                throw;
+            }
+
+            return areaData;
+        }
+
 
         public static List<Tbl_AccessModel> GetAccessForGrid(int intCityID)
         {
@@ -900,7 +1162,7 @@ namespace FOS.Setup
                                 {
                                   ID = u.ID,
                                   RegionID = u.RegionID,
-                                  RegionName= u.Region.Name,
+                                  RegionName= dbContext.RegionalHeads.Where(x=>x.ID==u.RegionID).Select(x=>x.Name).FirstOrDefault(),
                                   SaleOfficerID=u.SaleOfficerID,
                                   RepotedTo=u.RepotedUP,
                                   ReportedToName=dbContext.SaleOfficers.Where(x=>x.ID==u.RepotedUP).Select(x=>x.Name).FirstOrDefault(),
@@ -928,12 +1190,12 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    areaData = dbContext.SubCategories.Where(u => u.MainCategID == intCityID && u.IsDeleted == false)
+                    areaData = dbContext.Tbl_ProductSubCategory.Where(u => u.fkProductCategoryID == intCityID && u.IsActive == true)
                             .ToList().Select(
                                 u => new SubCategories
                                 {
-                                    ID = u.SubCategID,
-                                    SubName = u.SubCategDesc,
+                                    ID = u.ID,
+                                    SubName = u.Name,
 
                                 }).ToList();
                 }
@@ -991,34 +1253,28 @@ namespace FOS.Setup
                 {
                     using (FOSDataModel dbContext = new FOSDataModel())
                     {
-                        SubCategory AreaObj = new SubCategory();
+                        Tbl_ProductSubCategory AreaObj = new Tbl_ProductSubCategory();
 
                         if (obj.ID == 0)
                         {
-                            AreaObj.SubCategID = dbContext.SubCategories.OrderByDescending(u => u.SubCategID).Select(u => u.SubCategID).FirstOrDefault() + 1;
-                            AreaObj.MainCategID = obj.MainCategoryID;
-                            AreaObj.SubCategDesc = obj.SubName;
+                            //AreaObj.SubCategID = dbContext.SubCategories.OrderByDescending(u => u.SubCategID).Select(u => u.SubCategID).FirstOrDefault() + 1;
+                            AreaObj.fkProductCategoryID = obj.MainCategoryID;
+                            AreaObj.Name = obj.SubName;
                             AreaObj.IsActive = true ;
-                            AreaObj.IsDeleted = false;
-                            AreaObj.IsActive = true;
+                          
                             AreaObj.CreatedOn = DateTime.Now;
-                            AreaObj.UpdatedOn = DateTime.Now;
-                            AreaObj.CreatedBy = 1;
-                            AreaObj.UpdatedBy = 1;
+                           
 
-                            dbContext.SubCategories.Add(AreaObj);
+                            dbContext.Tbl_ProductSubCategory.Add(AreaObj);
                         }
                         else
                         {
-                            AreaObj = dbContext.SubCategories.Where(u => u.SubCategID == obj.ID).FirstOrDefault();
-                            AreaObj.SubCategDesc = obj.SubName;
+                            AreaObj = dbContext.Tbl_ProductSubCategory.Where(u => u.ID == obj.ID).FirstOrDefault();
+                            AreaObj.Name = obj.SubName;
                             AreaObj.IsActive = true;
-                            AreaObj.IsDeleted = false;
-                            AreaObj.IsActive = true;
+                         
                             AreaObj.CreatedOn = DateTime.Now;
-                            AreaObj.UpdatedOn = DateTime.Now;
-                            AreaObj.CreatedBy = 1;
-                            AreaObj.UpdatedBy = 1;
+                           
                         }
                         dbContext.SaveChanges();
                         Res = 1;
@@ -1048,8 +1304,8 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    SubCategory obj = dbContext.SubCategories.Where(u => u.SubCategID == AreaID).FirstOrDefault();
-                    dbContext.SubCategories.Remove(obj);
+                    Tbl_ProductSubCategory obj = dbContext.Tbl_ProductSubCategory.Where(u => u.ID == AreaID).FirstOrDefault();
+                    dbContext.Tbl_ProductSubCategory.Remove(obj);
                     dbContext.SaveChanges();
                 }
             }
@@ -1303,37 +1559,33 @@ namespace FOS.Setup
                 {
                     using (FOSDataModel dbContext = new FOSDataModel())
                     {
-                        SubCtegoryA AreaObj = new SubCtegoryA();
+                        Tbl_ProductDetail AreaObj = new Tbl_ProductDetail();
 
                         if (obj.SubCategoryAID == 0)
                         {
-                            AreaObj.SubCategIDA = dbContext.SubCtegoryAs.OrderByDescending(u => u.SubCategIDA).Select(u => u.SubCategIDA).FirstOrDefault() + 1;
-                            AreaObj.SubCategADesc = obj.SubCategoryAName;
+                            //AreaObj.SubCategIDA = dbContext.SubCtegoryAs.OrderByDescending(u => u.SubCategIDA).Select(u => u.SubCategIDA).FirstOrDefault() + 1;
+                            //AreaObj.Name = obj.SubCategoryAName;
                           
-                            AreaObj.MainCategID = obj.MainCategoryID;
-                            AreaObj.SubCategID = obj.ID;
-                            AreaObj.IsActive = true;
-                            AreaObj.IsDeleted = false;
-                            AreaObj.CreatedOn = DateTime.Now;
-                            AreaObj.UpdatedOn = DateTime.Now;
-                            AreaObj.CreatedBy = 1;
-                            AreaObj.UpdatedBy = 1;
+                            //AreaObj.FkProductCategoryID = obj.MainCategoryID;
+                            //AreaObj.fkProductSubCategoryID = obj.ID;
+                            //AreaObj.IsActive = true;
+                            //AreaObj.SalesIncentive = obj.LiterPrice;
+                            //AreaObj.CreatedOn = DateTime.Now;
+                            
 
-                            dbContext.SubCtegoryAs.Add(AreaObj);
+                            dbContext.Tbl_ProductDetail.Add(AreaObj);
                         }
                         else
                         {
-                            AreaObj = dbContext.SubCtegoryAs.Where(u => u.SubCategIDA == obj.SubCategoryAID).FirstOrDefault();
-                            AreaObj.SubCategADesc = obj.SubCategoryAName;
+                            //AreaObj = dbContext.Tbl_ProductDetail.Where(u => u.ID == obj.SubCategoryAID).FirstOrDefault();
+                            //AreaObj.Name = obj.SubCategoryAName;
                         
-                            AreaObj.MainCategID = obj.MainCategoryID;
-                            AreaObj.SubCategID = obj.ID;
-                            AreaObj.IsActive = true;
-                            AreaObj.IsDeleted = false;
-                            AreaObj.CreatedOn = DateTime.Now;
-                            AreaObj.UpdatedOn = DateTime.Now;
-                            AreaObj.CreatedBy = 1;
-                            AreaObj.UpdatedBy = 1;
+                            //AreaObj.FkProductCategoryID = obj.MainCategoryID;
+                            //AreaObj.fkProductSubCategoryID = obj.ID;
+                            //AreaObj.IsActive = true;
+                            //AreaObj.SalesIncentive = obj.LiterPrice;
+                            //AreaObj.CreatedOn = DateTime.Now;
+                           
                         }
                         dbContext.SaveChanges();
                         Res = 1;
@@ -1365,16 +1617,17 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    areaData = dbContext.SubCtegoryAs.Where(u => u.MainCategID == intCityID && u.SubCategID == SubCat && u.IsDeleted == false)
-                            .ToList().Select(
-                                u => new SubCategoryA
-                                {
-                                    SubCategoryAID = u.SubCategIDA,
-                                    SubCategoryAName = u.SubCategADesc,
-                                    MainCatName=u.MainCategory.MainCategDesc,
-                                    SubCatName=u.SubCategory.SubCategDesc
+                    //areaData = dbContext.Tbl_ProductDetail.Where(u => u.FkProductCategoryID == intCityID && u.fkProductSubCategoryID == SubCat && u.IsActive == true)
+                    //        .ToList().Select(
+                    //            u => new SubCategoryA
+                    //            {
+                    //                SubCategoryAID = u.ID,
+                    //                SubCategoryAName = u.Name,
+                    //                MainCatName= dbContext.Tbl_ProuctCategory.Where(y => y.ID == intCityID).Select(y=>y.Name).FirstOrDefault(),
+                    //        SubCatName = dbContext.Tbl_ProductSubCategory.Where(x => x.ID == SubCat).Select(x => x.Name).FirstOrDefault(),
+                    //        LiterPrice=u.SalesIncentive
 
-                                }).ToList();
+                    //            }).ToList();
                 }
             }
             catch (Exception exp)
@@ -1394,8 +1647,8 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    SubCtegoryA obj = dbContext.SubCtegoryAs.Where(u => u.SubCategIDA == AreaID).FirstOrDefault();
-                    dbContext.SubCtegoryAs.Remove(obj);
+                    Tbl_ProductDetail obj = dbContext.Tbl_ProductDetail.Where(u => u.ID == AreaID).FirstOrDefault();
+                    dbContext.Tbl_ProductDetail.Remove(obj);
                     dbContext.SaveChanges();
                 }
             }

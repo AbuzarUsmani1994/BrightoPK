@@ -1202,6 +1202,17 @@ namespace FOS.Web.UI.Controllers
             return Json(result);
         }
 
+        public JsonResult GetClaimsData(int JobID)
+        {
+            var result = FOS.Setup.ManageSaleOffice.GetClaimsAcctoID(JobID);
+            return Json(result);
+        }
+        public JsonResult GetClaimsApprovalData(int JobID)
+        {
+            var result = FOS.Setup.ManageSaleOffice.GetClaimsApprovalsAcctoID(JobID);
+            return Json(result);
+        }
+
 
         [HttpPost]
         public JsonResult GetDistributorOrdersToJobID(int JobID)
@@ -1291,6 +1302,28 @@ namespace FOS.Web.UI.Controllers
 
 
         #endregion
+
+        [HttpPost]
+        public JsonResult UpdateClaimStatus(int claimId, string status, string remarks)
+        {
+            try
+            {
+                var data = db.Tbl_SalesClaimMaster.Where(u => u.ID == claimId).SingleOrDefault();
+                data.ClaimManagerLatestStatus = status;
+                data.ClaimManagerLatestRemarks = remarks;
+                data.ClaimManagerDate = DateTime.UtcNow.AddHours(5);
+          
+                 db.SaveChanges();
+
+                // Also add to approval history if needed
+
+                return Json(new { success = true, message = "Status updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
         #region Job Uploader
 

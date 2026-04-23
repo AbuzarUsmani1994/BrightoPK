@@ -13,25 +13,21 @@ namespace FOS.DataLayer
     
     public partial class Sp_Total_RetailerInformation1_5_Result
     {
-        public string ShopName { get; set; }
-        public string RetailerName { get; set; }
-        public string DealerName { get; set; }
-        public string SaleOfficerName { get; set; }
-        public string RegionName { get; set; }
-        public string City { get; set; }
-        public string Address { get; set; }
-        public string Contact1 { get; set; }
-        public string Contact2 { get; set; }
-        public string CNIC { get; set; }
-        public string RetailerType { get; set; }
-        public string Shoptype { get; set; }
-        public Nullable<int> Quota { get; set; }
-        public string NewOrOld { get; set; }
-        public string NewArea { get; set; }
-        public System.DateTime lastupdate { get; set; }
         public int ShopID { get; set; }
-        public string address1 { get; set; }
+        public string shopname { get; set; }
+        public string phone1 { get; set; }
+        public string phone2 { get; set; }
+        public string address { get; set; }
+        public string City { get; set; }
+        public string Region { get; set; }
+        public string customerType { get; set; }
+        public string CustomerName { get; set; }
+        public string Segment { get; set; }
+        public string BusinessType { get; set; }
+        public string BusinessStatus { get; set; }
+        public string Compitators { get; set; }
+        public string SaleofficerName { get; set; }
+        public System.DateTime CreatedOn { get; set; }
         public string location { get; set; }
-        public string ActiveInactive { get; set; }
     }
 }

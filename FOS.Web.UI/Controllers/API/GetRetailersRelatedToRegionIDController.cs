@@ -15,13 +15,13 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int RegionID, int SOID)
+        public IHttpActionResult Get(int RegionID, int SOID,int CityID)
         {
             try
             {
                 if (RegionID > 0)
                 {
-                    var SubCat = new CommonController().CustomersRrelatedRegionIDForCheckin(RegionID, SOID);
+                    var SubCat = new CommonController().CustomersRrelatedRegionIDForCheckin(RegionID, SOID, CityID);
                     if (SubCat != null && SubCat.Count > 0)
                     {
                         return Ok(new

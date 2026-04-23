@@ -104,13 +104,15 @@
                                         </div>
                                     </div>
 
-                                    @*<div class="control-group" style="margin-bottom: 10px">
-                                        <label class="control-label">Select Distributor *</label>
+
+
+                                    <div class="control-group" style="margin-bottom: 10px">
+                                        <label class="control-label">Select Region *</label>
                                         <div class="controls" style="margin-left: 0px">
-                                            @Html.DropDownListFor(model => model.DealerID, new SelectList(Model.Dealers, "ID", "Name"), new { @class = "" })
-                                            @Html.ValidationMessageFor(model => model.DealerID)
+                                            @Html.DropDownListFor(model => model.RegionID, new SelectList(Model.Regions, "RegionID", "Name"), new { @class = "" })
+                                            @Html.ValidationMessageFor(model => model.RegionID)
                                         </div>
-                                    </div>*@
+                                    </div>
 
                                     <div class="control-group" style="margin-bottom: 10px">
                                         <label class="control-label">Select Zone *</label>
@@ -128,7 +130,15 @@
                                         </div>
                                     </div>
 
-                                    
+                                    <div class="control-group" style="margin-bottom: 10px">
+                                        <label class="control-label">Select Distributor *</label>
+                                        <div class="controls" style="margin-left: 0px">
+                                            @Html.DropDownListFor(model => model.DealerID, new SelectList(Model.Dealers, "ID", "Name"), new { @class = "" })
+                                            @Html.ValidationMessageFor(model => model.DealerID)
+                                        </div>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="span3" style="margin-top: 0px;">
@@ -307,12 +317,12 @@
 
     function LoadDealer() {
 
-        var regionID = $("#SaleOfficerID").val();
+        var regionID = $("#RegionID").val();
 
         $.ajax({
             type: "POST",
             data: { id: regionID },
-            url: "@Url.Action("GetDealerListBySaleOfficerID", "Retailer")",
+            url: "@Url.Action("GetDealerListBySaleOfficerIDR", "Retailer")",
             dataType: 'json',
             success: function (json) {
                 var $el = $("#DealerID");
@@ -326,27 +336,7 @@
 
     }
 
-    function LoadCities(RegionalHeadID) {
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("GetCityListByRegionHeadID", "Dealer")",
-            data: { RegionalHeadID: RegionalHeadID },
-            success: function (json) {
-
-                var $el = $("#CityID");
-                $el.empty(); // remove old options
-                $.each(json, function (value, key) {
-                    $el.append($("<option></option>").val(key.ID).text(key.Name));
-                });
-
-                var $el = $("#AreaID");
-                $el.empty(); // remove old options
-
-                $("#CityID option:first").trigger("change");
-                // GetAreaList($("#CityID option:first").val());
-            }
-        });
-    }
+    
 
     function LoadAreas(CityID) {
         $.ajax({
@@ -381,8 +371,8 @@
         $("#RegionalHeadID").change(function () {
 
             LoadSalesOfficer($(this).val());
-            LoadDealers($(this).val());
-            LoadCities($(this).val());
+           
+        
 
         });
 
@@ -413,12 +403,12 @@
 
         }
 
-        function LoadDealers(RegionalHeadID) {
-
+        function LoadDealers() {
+            var regionID = $("#RegionID").val();
             try {
                 $.ajax({
                     type: "POST",
-                    data: { RegionalHeadID: RegionalHeadID },
+                    data: { RegionalHeadID: regionID },
                     url: "@Url.Action("GetAllDealersListRelatedToRegionalHead", "Dealer")",
                     success: function (json) {
 
@@ -435,6 +425,44 @@
             }
 
         }
+        function LoadCities() {
+            try {
+                var regionID = $("#RegionID").val();
+
+                $.ajax({
+                    type: "POST",
+                    data: { RegionID: regionID },
+                    url: "@Url.Action("GetCityListByRegionID", "Setup")",
+                    dataType: 'json',
+                    success: function (json) {
+
+                        var $el = $("#CityID");
+                        $el.empty(); // remove old options
+                        $.each(json, function (value, key) {
+
+                            $el.append($("<option></option>")
+                                    .val(key.ID).text(key.Name));
+                        });
+
+                       
+
+                    }
+
+                });
+            } catch (e) {
+                alert(e);
+                
+            }
+
+        }
+
+
+        $("#RegionID").change(function () {
+         
+            LoadCities();
+            LoadDealers();
+
+        });
 
         $("#CityID").change(function () {
             LoadAreas($(this).val());

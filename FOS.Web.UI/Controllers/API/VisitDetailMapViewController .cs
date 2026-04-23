@@ -1,5 +1,6 @@
 ﻿using FOS.DataLayer;
 using FOS.Setup;
+using FOS.Shared;
 using Shared.Diagnostics.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,31 +17,99 @@ namespace FOS.Web.UI.Controllers.API
     {
         FOSDataModel db = new FOSDataModel();
 
-        public IHttpActionResult Get(int SOID,string Date)
+        public IHttpActionResult Get(int SOID,string Date, int SegmentType)
         {
             FOSDataModel dbContext = new FOSDataModel();
             try
             {
+                List<VisitDetailMapDto> list = new List<VisitDetailMapDto>();
+
+                VisitDetailMapDto comlist;
+                List<VisitDetailMapDto> lists = new List<VisitDetailMapDto>();
+
+                VisitDetailMapDto comlists;
                 DateTime dtFromTodayUtc = Convert.ToDateTime(Date);
 
                 DateTime dtFromToday = dtFromTodayUtc.Date;
                 DateTime dtToToday = dtFromToday.AddDays(1);
 
-                var RegionID = db.SOAttendances.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday).Select(x => x.RegionID).FirstOrDefault();
+                var RegionID = db.SOAttendances.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday).FirstOrDefault();
 
-                if (SOID > 0 && RegionID > 0)
+                if (SOID > 0)
                 {
                     object[] param = { SOID };
-                    
-                    
-                        var result = dbContext.Sp_MyVisitsMapViewForGPC1_4(SOID,dtFromToday,dtToToday,RegionID).ToList();
-                    
-                    if (result != null && result.Count > 0)
+
+
+                    if (SegmentType == 1)
+                    {
+
+                        var result = db.Tbl_TradeVisitsFinal.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday && x.IsActive==true).ToList();
+
+                        foreach (var item in result)
+
+                        {
+                            comlist = new VisitDetailMapDto();
+                            comlist.CustomerName = item.Retailer.ShopName + "/" + item.CreatedAt;
+                            comlist.Lattitude = item.Latitude;
+                            comlist.Longitude = item.Longitude;
+                            comlist.VisitPurpose = "Ordering";
+                            comlist.VisitDate = item.CreatedAt;
+
+                            list.Add(comlist);
+                        }
+
+                    }
+
+                    if (SegmentType == 2)
+                    {
+
+                        var result = db.Tbl_HousingVisits.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday && x.IsActive == true).ToList();
+
+                        foreach (var item in result)
+
+                        {
+                            comlist = new VisitDetailMapDto();
+                            comlist.CustomerName = item.Retailer.ShopName + "/" + item.CreatedAt;
+                            comlist.Lattitude = item.Latitude;
+                            comlist.Longitude = item.Longitude;
+                            comlist.VisitPurpose = "Ordering";
+                            comlist.VisitDate = item.CreatedAt;
+
+                            list.Add(comlist);
+                        }
+
+                    }
+
+                    if (SegmentType == 3)
+                    {
+
+                        var result = db.Tbl_CorporateVisits.Where(x => x.SOID == SOID && x.CreatedAt >= dtFromTodayUtc && x.CreatedAt <= dtToToday && x.IsActive == true).ToList();
+
+                        foreach (var item in result)
+
+                        {
+                            comlist = new VisitDetailMapDto();
+                            comlist.CustomerName = item.Retailer.ShopName + "/" + item.CreatedAt;
+                            comlist.Lattitude = item.Latitude;
+                            comlist.Longitude = item.Longitude;
+                            comlist.VisitPurpose = "Ordering";
+                            comlist.VisitDate = item.CreatedAt;
+
+                            list.Add(comlist);
+                        }
+
+                    }
+
+                    //var result = dbContext.Sp_MyVisitsMapViewForGPC1_4(SOID,dtFromToday,dtToToday,RegionID.RegionID,RegionID.CityID).ToList();
+
+                 
+
+                    if (list != null)
                     {
                         return Ok(new
                         {
-                            MyVisitsMapView = result
-                            
+                            MyVisitsMapView = list
+
                         });
                     }
                   

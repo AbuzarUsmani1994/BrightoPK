@@ -16,7 +16,37 @@ namespace FOS.Setup
     public class ManageRegion
     {
 
+        public static List<RegionalHeadTypeData> GetSORegionsToAdd()
+        {
+            List<RegionalHeadTypeData> TypeData = new List<RegionalHeadTypeData>();
 
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    TypeData = dbContext.Regions.Where(u => u.IsActive == true)
+                            .Select(
+                                u => new RegionalHeadTypeData
+                                {
+                                    ID = u.ID,
+                                    Type = u.Name,
+                                }).ToList();
+
+                    TypeData.Insert(0, new RegionalHeadTypeData
+                    {
+                        ID = 0,
+                        Type = "All"
+                    });
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return TypeData;
+        }
         public static List<RegionData> GetRegionDataList(int userID)
         {
             List<RegionData> regionData = new List<RegionData>();
@@ -87,6 +117,31 @@ namespace FOS.Setup
                     regionData = dbContext.Cities.Where( u => u.IsActive == true && u.IsDeleted == false &&u.RegionID==ID )
                             .ToList().Select(
                                 u => new CityData
+                                {
+                                    ID = u.ID,
+                                    Name = u.Name,
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return regionData;
+        }
+
+
+        public static List<RegionData> GetHeadListForDSR()
+        {
+            List<RegionData> regionData = new List<RegionData>();
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    regionData = dbContext.RegionalHeads.Where(u => u.IsActive == true && u.IsDeleted == false)
+                            .ToList().Select(
+                                u => new RegionData
                                 {
                                     ID = u.ID,
                                     Name = u.Name,
@@ -877,7 +932,7 @@ namespace FOS.Setup
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
                     RegionData = dbContext.Regions.Where(u => u.IsDeleted == false)
-                            .ToList().Select(
+                            .Select(
                                 u => new RegionData
                                 {
                                     RegionID = u.ID,
@@ -1037,6 +1092,31 @@ namespace FOS.Setup
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
                     TypeData = dbContext.SOTypes
+                            .Select(
+                                u => new RegionalHeadTypeData
+                                {
+                                    ID = u.ID,
+                                    Type = u.Name,
+                                }).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return TypeData;
+        }
+
+        public static List<RegionalHeadTypeData> GetSegmentTypes()
+        {
+            List<RegionalHeadTypeData> TypeData = new List<RegionalHeadTypeData>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    TypeData = dbContext.Tbl_Segmenttype
                             .Select(
                                 u => new RegionalHeadTypeData
                                 {

@@ -17,6 +17,11 @@ namespace FOS.Shared
         [Required(ErrorMessage = "* Required")]
         public string Name { get; set; }
 
+        public int? ReadyMixTarget { get; set; }
+        public int? ACTDTarget { get; set; }
+        public int? CoatingTarget { get; set; }
+        public int? TotalTarget { get; set; }
+
         public string ShopName { get; set; }
 
         public decimal? Latitude { get; set; }
@@ -42,8 +47,8 @@ namespace FOS.Shared
         public string ShortCode { get; set; }
 
         public System.DateTime CreatedDate { get; set; }
-        public System.DateTime LastUpdate { get; set; }
-
+        public System.DateTime? LastUpdate { get; set; }
+        public string FormattedDate { get; set; }
         public List<Region> Regions { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -133,6 +138,7 @@ namespace FOS.Shared
         public string SubCatName { get; set; }
         public string ItemDesc { get; set; }
         public string ItemCode { get; set; }
+        public int? LiterPrice { get; set; }
 
         public decimal ItemPrice { get; set; }
         public int ID { get; set; }

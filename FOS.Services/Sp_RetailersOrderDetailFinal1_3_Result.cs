@@ -28,10 +28,15 @@ namespace FOS.DataLayer
         public string OwnSaleRate { get; set; }
         public string StockQuantity { get; set; }
         public string DealerName { get; set; }
+        public Nullable<int> ShopID { get; set; }
+        public string Phone1 { get; set; }
         public string CompititorProductName { get; set; }
         public string CompititorPurchaseRate { get; set; }
         public string CompititorSaleRate { get; set; }
         public string ReasonForNoSale { get; set; }
         public string OtherReasonFornoSale { get; set; }
+        public string AreaName { get; set; }
+        public Nullable<int> areaId { get; set; }
+        public Nullable<int> CityID { get; set; }
     }
 }

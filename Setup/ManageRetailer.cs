@@ -96,7 +96,7 @@ namespace FOS.Setup
             return RetailerObj;
         }
 
-        public List<Sp_SOVisitsTodayRangeWise_Result> SOVisitsTodayForAdmin(int? ID)
+        public List<Sp_SOVisitsTodayRangeWise_Result> SOVisitsTodayForAdmin(int? ID, DateTime StartingDate, DateTime end)
         {
             List<Sp_SOVisitsTodayRangeWise_Result> RetailerObj = new List<Sp_SOVisitsTodayRangeWise_Result>();
             try
@@ -109,7 +109,7 @@ namespace FOS.Setup
 
                 FOSDataModel dbContext = new FOSDataModel();
 
-                RetailerObj = dbContext.Sp_SOVisitsTodayRangeWise(dtFromToday, dtToToday,ID).ToList();
+                RetailerObj = dbContext.Sp_SOVisitsTodayRangeWise(StartingDate, end,ID).ToList();
 
 
             }
@@ -246,6 +246,31 @@ namespace FOS.Setup
             }
             return RetailerObj;
         }
+
+        public List<spGetEmployeeAttendanceTimings_Result> TodayPresentSalesOfficerSync(int TID, DateTime startDate, DateTime endDate)
+        {
+            List<spGetEmployeeAttendanceTimings_Result> RetailerObj = new List<spGetEmployeeAttendanceTimings_Result>();
+            //   var RetailerObj;
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.spGetEmployeeAttendanceTimings(TID, startDate, endDate).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
         public static List<RetailerData> GetRetailerBySOID(int soId)
         {
             List<RetailerData> retailerData = new List<RetailerData>();
@@ -256,6 +281,24 @@ namespace FOS.Setup
                     ID = r.ID,
                     Name = r.ShopName
                 }).ToList();
+            }
+            return retailerData;
+        }
+        public static List<RetailerData> GetRetailerBySOIDAndCity(int soId, int cityId, int areaId)
+        {
+            List<RetailerData> retailerData = new List<RetailerData>();
+            using (FOSDataModel dbContext = new FOSDataModel())
+            {
+                retailerData = dbContext.Retailers.Where(p => p.SaleOfficerID == soId && p.CityID == cityId && p.AreaID == areaId).Select(r => new RetailerData
+                {
+                    ID = r.ID,
+                    Name = r.ShopName
+                }).ToList();
+                retailerData.Insert(0, new RetailerData
+                {
+                    ID = 0,
+                    Name = "All"
+                });
             }
             return retailerData;
         }
@@ -534,8 +577,9 @@ namespace FOS.Setup
                         && u.SaleOfficerID == (SaleOfficerID > 0 ? SaleOfficerID : u.SaleOfficerID)
                         && u.SaleOfficer.City.RegionID == (RegionID > 0 ? RegionID : u.SaleOfficer.City.RegionID)
                         && u.CityID == (CityID > 0 ? CityID : u.CityID)
-                        && u.ZoneID == (ZoneID > 0 ? ZoneID : u.ZoneID)
-                        && u.Location != null)
+                        && u.RegionID == (RegionID > 0 ? RegionID : u.RegionID)
+                        && u.Location != null
+                        )
                             .Select(
                                 u => new RetailerData
                                 {
@@ -563,13 +607,14 @@ namespace FOS.Setup
                     {
                         retailerData = dbContext.Retailers.Where(u => u.IsDeleted == false
                             && u.Status == true
-                            && u.SaleOfficer.RegionalHeadID == (RegionalHeadID > 0 ? RegionalHeadID : u.SaleOfficer.RegionalHeadID)
-                           // && u.Dealer.ID == (DealerID > 0 ? DealerID : u.Dealer.ID)
+                           && u.SaleOfficer.RegionalHeadID == (RegionalHeadID > 0 ? RegionalHeadID : u.SaleOfficer.RegionalHeadID)
+                           //// && u.Dealer.ID == (DealerID > 0 ? DealerID : u.Dealer.ID)
                             && u.SaleOfficerID == (SaleOfficerID > 0 ? SaleOfficerID : u.SaleOfficerID)
                             && u.SaleOfficer.City.RegionID == (RegionID > 0 ? RegionID : u.SaleOfficer.City.RegionID)
                             && u.CityID == (CityID > 0 ? CityID : u.CityID)
-                            && u.ZoneID == (ZoneID > 0 ? ZoneID : u.ZoneID)
-                            && u.Location == null)
+                        && u.RegionID == (RegionID > 0 ? RegionID : u.RegionID)
+                            && u.Location == null
+                            )
                             .Select(
                                 u => new RetailerData
                                 {
@@ -876,7 +921,8 @@ namespace FOS.Setup
                             retailerObj.StudentStrength = obj.StudentStrength;
                            // retailerObj.CardNumber = obj.CardNumber;
                             retailerObj.SaleOfficerID = obj.SaleOfficerID;
-                           // retailerObj.DealerID = obj.DealerID;
+                            retailerObj.DealerID = obj.DealerID;
+                            retailerObj.RegionID = obj.RegionID;
                             retailerObj.CityID = obj.CityID;
                             retailerObj.AreaID = obj.AreaID;
 
@@ -965,6 +1011,75 @@ namespace FOS.Setup
             return Res;
         }
 
+        public static int AddUpdateFannanRetailer(RetailerData obj)
+        {
+            int Res = 0;
+
+            try
+            {
+                using (TransactionScope scope = new TransactionScope())
+                {
+                    using (FOSDataModel dbContext = new FOSDataModel())
+                    {
+                        Tbl_FannanCustomer retailerObj = new Tbl_FannanCustomer();
+
+                      
+                            retailerObj.ContactPerson = obj.Name;
+                            retailerObj.SiteCode = obj.RetailerCode;
+                            retailerObj.CNIC = obj.CNIC;
+                            retailerObj.Email = obj.Email;
+                            retailerObj.SiteName = obj.ShopName;
+                         
+                            
+                            retailerObj.Address = obj.Address;
+                           
+                            retailerObj.Phone1 = obj.Phone1 == "" ? null : obj.Phone1;
+                            retailerObj.Phone2 = obj.Phone2 == "" ? null : obj.Phone2;
+                          
+                            //retailerObj.Market = obj.Market;
+                            retailerObj.IsActive = true;
+                          
+                            retailerObj.CreatedOn = DateTime.Now;
+                            
+                            dbContext.Tbl_FannanCustomer.Add(retailerObj);
+                        
+                       
+
+                        dbContext.SaveChanges();
+                        Res = 1;
+                        scope.Complete();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add Customer Failed");
+                if (exp.InnerException.InnerException.Message.Contains("CNIC"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 3;
+                    return Res;
+                }
+
+                if (exp.InnerException.InnerException.Message.Contains("AccountNo"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 4;
+                    return Res;
+                }
+
+                if (exp.InnerException.InnerException.Message.Contains("CardNo"))
+                {
+                    // Res = 2 Is For Unique Constraint Error...
+                    Res = 5;
+                    return Res;
+                }
+                Res = 0;
+            }
+            return Res;
+        }
+
+
         public static int UndoRetailer(int RetailerID)
         {
             int Resp = 0;
@@ -1028,6 +1143,31 @@ namespace FOS.Setup
                     var obj2 = dbContext.Jobs.Where(u => u.ID == OrderID).FirstOrDefault();
                     obj2.IsActive = false;
                     obj2.IsDeleted = true;
+
+                    dbContext.SaveChanges();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Delete Retailer Failed");
+                Resp = 1;
+            }
+            return Resp;
+        }
+
+
+        public static int DeleteKPI(int KPIID)
+        {
+            int Resp = 0;
+
+            try
+            {
+
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    Tbl_MasterKPIS obj = dbContext.Tbl_MasterKPIS.Where(u => u.ID == KPIID).FirstOrDefault();
+                    obj.IsActive = false;
+                  
 
                     dbContext.SaveChanges();
                 }
@@ -1932,6 +2072,9 @@ namespace FOS.Setup
             }
         }
 
+
+
+
         public static Boolean ResetRetailerLatLong(int intRetailerID)
         {
             Boolean boolFlag = false;
@@ -2127,7 +2270,7 @@ namespace FOS.Setup
 
 
 
-        public List<Sp_RetailersOrderDetailFinal1_3_Result> RetailerVisitSummeryOneLine(DateTime StartingDate, DateTime EndingDate, int TID, int fosid,int RangeID)
+        public List<Sp_RetailersOrderDetailFinal1_3_Result> RetailerVisitSummeryOneLine(DateTime StartingDate, DateTime EndingDate, int TID, int fosid, int cityId, int areaId, int retailerId)
         {
             List<Sp_RetailersOrderDetailFinal1_3_Result> RetailerObj = new List<Sp_RetailersOrderDetailFinal1_3_Result>();
             try
@@ -2136,7 +2279,7 @@ namespace FOS.Setup
 
                 FOSDataModel dbContext = new FOSDataModel();
 
-                RetailerObj = dbContext.Sp_RetailersOrderDetailFinal1_3(StartingDate, EndingDate, TID, fosid,RangeID).ToList();
+                RetailerObj = dbContext.Sp_RetailersOrderDetailFinal1_3(StartingDate, EndingDate, TID, fosid,cityId,areaId,retailerId).ToList();
 
 
             }
@@ -2582,7 +2725,254 @@ namespace FOS.Setup
         }
 
 
-        public List<Sp_Top30ItemsSoldMonthWise_Result> Top30Items(DateTime StartingDate, DateTime end)
+        public List<Sp_TotalVisitsForAll_Result> Top30Items(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<Sp_TotalVisitsForAll_Result> RetailerObj = new List<Sp_TotalVisitsForAll_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.Sp_TotalVisitsForAll(StartingDate,end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<usp_ApplicationCategorywisegraph_Result> AppcategoryWise(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_ApplicationCategorywisegraph_Result> RetailerObj = new List<usp_ApplicationCategorywisegraph_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_ApplicationCategorywisegraph(RegionID,StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<usp_TopProductsByRegion_Result> Top3ProductWise(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_TopProductsByRegion_Result> RetailerObj = new List<usp_TopProductsByRegion_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_TopProductsByRegion(RegionID, StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
+        public List<Sp_AllRegionWiseData_Result> AllRegionsdata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<Sp_AllRegionWiseData_Result> RetailerObj = new List<Sp_AllRegionWiseData_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.Sp_AllRegionWiseData(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
+        public List<usp_IncentiveCategorywisegraph_Result> Incentivedata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_IncentiveCategorywisegraph_Result> RetailerObj = new List<usp_IncentiveCategorywisegraph_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_IncentiveCategorywisegraph(RegionID,StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
+        public List<GetHousingVisitsByScopeOfWork_Result> AllScopedata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<GetHousingVisitsByScopeOfWork_Result> RetailerObj = new List<GetHousingVisitsByScopeOfWork_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.GetHousingVisitsByScopeOfWork(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<usp_ProductTypeCategorywisegraph_Result> ProductTypeCategory(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_ProductTypeCategorywisegraph_Result> RetailerObj = new List<usp_ProductTypeCategorywisegraph_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_ProductTypeCategorywisegraph(RegionID,StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
+        public List<GetHousingVisitsByNatureOfWork_Result> AllNaturedata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<GetHousingVisitsByNatureOfWork_Result> RetailerObj = new List<GetHousingVisitsByNatureOfWork_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.GetHousingVisitsByNatureOfWork(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<usp_RegionSaleswisegraph_Result> AllSalesdata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_RegionSaleswisegraph_Result> RetailerObj = new List<usp_RegionSaleswisegraph_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_RegionSaleswisegraph(RegionID,StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<Sp_GetHousingVisitsByConstructionStage_Result> AllConstructiondata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<Sp_GetHousingVisitsByConstructionStage_Result> RetailerObj = new List<Sp_GetHousingVisitsByConstructionStage_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.Sp_GetHousingVisitsByConstructionStage(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+
+        public List<usp_TopSalesOfficersGraph_Result> Top3SOSdata(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<usp_TopSalesOfficersGraph_Result> RetailerObj = new List<usp_TopSalesOfficersGraph_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.usp_TopSalesOfficersGraph(RegionID,StartingDate, end).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<Sp_Top30ItemsSoldMonthWise_Result> Top30Items1(DateTime StartingDate, DateTime end, int? RegionID)
         {
             List<Sp_Top30ItemsSoldMonthWise_Result> RetailerObj = new List<Sp_Top30ItemsSoldMonthWise_Result>();
             try
@@ -2591,7 +2981,51 @@ namespace FOS.Setup
 
                 FOSDataModel dbContext = new FOSDataModel();
 
-                RetailerObj = dbContext.Sp_Top30ItemsSoldMonthWise(StartingDate,end).ToList();
+                RetailerObj = dbContext.Sp_Top30ItemsSoldMonthWise(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<Sp_SegmentWiseOnlineOflline_Result> SegmentWiseOnlineOflline(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<Sp_SegmentWiseOnlineOflline_Result> RetailerObj = new List<Sp_SegmentWiseOnlineOflline_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.Sp_SegmentWiseOnlineOflline(StartingDate, end, RegionID).ToList();
+
+
+            }
+
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Data not Found");
+                throw;
+            }
+            return RetailerObj;
+        }
+
+        public List<Sp_SegmentWiseOnlineOflline_Result> SegmentWiseOnlineOflline1(DateTime StartingDate, DateTime end, int? RegionID)
+        {
+            List<Sp_SegmentWiseOnlineOflline_Result> RetailerObj = new List<Sp_SegmentWiseOnlineOflline_Result>();
+            try
+            {
+
+
+                FOSDataModel dbContext = new FOSDataModel();
+
+                RetailerObj = dbContext.Sp_SegmentWiseOnlineOflline(StartingDate, end, RegionID).ToList();
 
 
             }

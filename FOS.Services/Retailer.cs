@@ -27,6 +27,11 @@ namespace FOS.DataLayer
             this.Tbl_MasterStock = new HashSet<Tbl_MasterStock>();
             this.TblReminders = new HashSet<TblReminder>();
             this.DispatchInVans = new HashSet<DispatchInVan>();
+            this.Tbl_CorporateVisits = new HashSet<Tbl_CorporateVisits>();
+            this.Tbl_HousingTradeCustomers = new HashSet<Tbl_HousingTradeCustomers>();
+            this.Tbl_HousingVisits = new HashSet<Tbl_HousingVisits>();
+            this.TradeVisits = new HashSet<TradeVisit>();
+            this.Tbl_TradeVisitsFinal = new HashSet<Tbl_TradeVisitsFinal>();
         }
     
         public int TID { get; set; }
@@ -97,6 +102,12 @@ namespace FOS.DataLayer
         public string Shoptype { get; set; }
         public string NewOrOld { get; set; }
         public Nullable<int> Quota { get; set; }
+        public Nullable<int> SegmentTypeID { get; set; }
+        public string CustomerType { get; set; }
+        public Nullable<int> BusinessTypeID { get; set; }
+        public Nullable<int> BusinessStatusID { get; set; }
+        public string CompititorIDS { get; set; }
+        public string BusinessStatusRemarks { get; set; }
     
         public virtual Area Area { get; set; }
         public virtual City City { get; set; }
@@ -127,5 +138,15 @@ namespace FOS.DataLayer
         public virtual ICollection<TblReminder> TblReminders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DispatchInVan> DispatchInVans { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_CorporateVisits> Tbl_CorporateVisits { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_HousingTradeCustomers> Tbl_HousingTradeCustomers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_HousingVisits> Tbl_HousingVisits { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TradeVisit> TradeVisits { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_TradeVisitsFinal> Tbl_TradeVisitsFinal { get; set; }
     }
 }

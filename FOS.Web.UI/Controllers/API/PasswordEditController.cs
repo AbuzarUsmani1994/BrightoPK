@@ -24,8 +24,7 @@ namespace FOS.Web.UI.Controllers.API
             SaleOfficer retailerObj = new SaleOfficer();
             try
             {
-                if (FOS.Web.UI.Common.Token.TokenAttribute.IsTokenValid(rm.Token))
-                {
+               
                     //ADD New Retailer 
                     retailerObj = db.SaleOfficers.Where(u => u.ID == rm.SOID).FirstOrDefault();
 
@@ -41,16 +40,7 @@ namespace FOS.Web.UI.Controllers.API
 
 
 
-                    //db.Retailers.Add(retailerObj);
-                    //END
-
-                    // Add Token Detail ...
-                    TokenDetail tokenDetail = new TokenDetail();
-                    tokenDetail.TokenName = rm.Token;
-                    tokenDetail.Action = "Add New Retailer";
-                    tokenDetail.ProcessedDateTime = DateTime.Now;
-                    db.TokenDetails.Add(tokenDetail);
-                    //END
+                  
 
                     db.SaveChanges();
 
@@ -62,19 +52,8 @@ namespace FOS.Web.UI.Controllers.API
                         Exception = null,
                         ValidationErrors = null
                     };
-                }
-                else
-                {
-                    return new Result<SuccessResponse>
-                    {
-                        Data = null,
-                        Message = "Authentication failed in Password Edit API",
-                        ResultType = ResultType.Failure,
-                        Exception = null,
-                        ValidationErrors = null
-                    };
-
-                }
+              
+               
 
             }
             catch (Exception ex)

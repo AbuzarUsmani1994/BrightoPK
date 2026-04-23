@@ -17,7 +17,5 @@ namespace FOS.DataLayer
         public Nullable<int> TotalRetailers { get; set; }
         public Nullable<int> TotalRetailersThisMonth { get; set; }
         public Nullable<int> TotalRetailersPreviousMonth { get; set; }
-        public Nullable<decimal> OrderValueThisMonth { get; set; }
-        public Nullable<decimal> OrderValuePreviousMonth { get; set; }
     }
 }

@@ -44,40 +44,41 @@ namespace FOS.Web.UI.Controllers.API
 
                 foreach (var itm in list)
                 {
-                    DateTime? xx = dbContext.JobsDetails.Where(x => x.JobDate >= dtFromToday && x.SalesOficerID==itm.SaleOfficerID).Select(u => u.JobDate).Min();
-                    List<AccessLog> itmC = dbContext.AccessLogs.Where(x => x.LoginDate >= dtFromToday && x.LoginDate <= dtToToday && x.SaleOfficerID == itm.SaleOfficerID).ToList();
-                    if (itmC.Count >= 1 && xx!=null)
+                    var data = db.SOAttendances.Where(x => x.SOID == itm.SaleOfficerID && x.Type == "Market start" && x.CreatedAt >= dtFromToday && x.CreatedAt <= dtToToday).FirstOrDefault();
+
+                    //DateTime? xx = dbContext.JobsDetails.Where(x => x.JobDate >= dtFromToday && x.SalesOficerID==itm.SaleOfficerID).Select(u => u.JobDate).Min();
+                    //List<AccessLog> itmC = dbContext.AccessLogs.Where(x => x.LoginDate >= dtFromToday && x.LoginDate <= dtToToday && x.SaleOfficerID == itm.SaleOfficerID).ToList();
+                    //if (itmC.Count >= 1 && xx!=null)
+                    //{
+                    //    foreach (var ele in itmC)
+                    //    {
+                    //        var data = dbContext.Sp__FirstVistCity(dtFromToday, dtToToday, ele.SaleOfficerID).SingleOrDefault();
+                    //        if(data!=null)
+                    //        {
+                    obj.Add(new PresentData()
                     {
-                        foreach (var ele in itmC)
-                        {
-                            var data = dbContext.Sp__FirstVistCity(dtFromToday, dtToToday, ele.SaleOfficerID).SingleOrDefault();
-                            if(data!=null)
-                            {
-                                obj.Add(new PresentData()
-                                {
-                                    SaleOfficerName = ele.SaleOfficer.Name + " |" + data.Name,
-                                    ID = ele.ID,
-                                    LoginDate = xx,
-                                    SaleOfficerID = ele.SaleOfficerID,
-                                    Status = ele.Status
-                                });
-                            }
-                            else
+                        SaleOfficerName = data.SaleOfficer.Name,
+                        ID = data.SaleOfficer.ID,
+                        LoginDate = data.CreatedAt,
+                        RetailerName = db.Retailers.Where(x => x.ID == data.RetailerID).Select(x => x.ShopName).FirstOrDefault()
+                    }) ;
+                    //        }
+                    //        else
 
-                            {
-                                obj.Add(new PresentData()
-                                {
-                                    SaleOfficerName = ele.SaleOfficer.Name,
-                                    ID = ele.ID,
-                                    LoginDate = xx,
-                                    SaleOfficerID = ele.SaleOfficerID,
-                                    Status = ele.Status
-                                });
+                    //        {
+                    //            obj.Add(new PresentData()
+                    //            {
+                    //                SaleOfficerName = ele.SaleOfficer.Name,
+                    //                ID = ele.ID,
+                    //                LoginDate = xx,
+                    //                SaleOfficerID = ele.SaleOfficerID,
+                    //                Status = ele.Status
+                    //            });
 
-                            }
-                           
-                        }
-                    }
+                    //        }
+
+                    //    }
+                    //}
                 }
 
               
@@ -115,5 +116,7 @@ public class PresentData
     public int SaleOfficerID { get; set; }
     public System.DateTime? LoginDate { get; set; }
     public Nullable<int> Status { get; set; }
+    public string RetailerName { get; set; }
+
     public string SaleOfficerName { get; set; }
 }

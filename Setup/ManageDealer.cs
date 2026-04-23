@@ -298,6 +298,62 @@ namespace FOS.Setup
             return RetailerObj;
         }
 
+
+        public static List<RetailerData> GetSegmentType()
+        {
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    RetailerObj = dbContext.Tbl_Segmenttype.OrderBy(u => u.Name).Where(u => u.IsActive == true)
+                            .Select(
+                                u => new RetailerData
+                                {
+                                    ID = u.ID,
+                                    // DealerID = u.DealerID,
+                                    DealerName = u.Name,
+                                    
+                                    //
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "EXPORT Reatailer In Excel Not Work");
+                throw;
+            }
+
+            return RetailerObj;
+        }
+
+
+        public static List<RetailerData> GetReportType()
+        {
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+            try
+            {
+                RetailerObj.Add(new RetailerData
+                {
+                    ID = 1,
+                    DealerName = "Summary"
+                });
+
+                RetailerObj.Add(new RetailerData
+                {
+                    ID = 2,
+                    DealerName = "Detail"
+                });
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "EXPORT Reatailer In Excel Not Work");
+                throw;
+            }
+
+            return RetailerObj;
+        }
+
         //  Get Single Dealer By DealerID...
         public static DealerData GetDealerByDealerID(int intDealerID)
         {
@@ -657,12 +713,12 @@ namespace FOS.Setup
             {
                 using (FOSDataModel dbContext = new FOSDataModel())
                 {
-                    dealerData = dbContext.Dealers.Where(u => u.RegionalHeadID == RegionalHeadID && u.IsDeleted == false)
+                    dealerData = dbContext.Dealers.Where(u => u.RegionID == RegionalHeadID && u.IsDeleted == false)
                             .Select(
                                 u => new DealerData
                                 {
                                     ID = u.ID,
-                                    Name = u.Name,
+                                    Name = u.ShopName,
                                 }).OrderBy(x => x.Name).ToList();
 
                 }

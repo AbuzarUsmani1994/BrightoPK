@@ -442,6 +442,7 @@ namespace FOS.Setup
                                     Phone1 = u.Phone1 == null ? "" : u.Phone1,
                                     Phone2 = u.Phone2 == null ? "" : u.Phone2,
                                     RegionID = u.RegionID,
+                                    ECode=u.ECode,
                                     RangeName = dbContext.MainCategories.Where(x => x.MainCategID == u.RangeID).Select(z => z.MainCategDesc).FirstOrDefault(),
                                     RegionName = dbContext.Regions.Where(x => x.ID == u.RegionID).Select(z => z.Name).FirstOrDefault(),
                                     CityName = u.City != null ? u.City.Name : "",
@@ -454,6 +455,53 @@ namespace FOS.Setup
                                     CreatedAT=u.CreatedDate,
                                     Leaveon=u.LeaveOn
                                  
+                                }).ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Get SalesOfficer List Failed");
+                throw;
+            }
+
+            return saleOfficerData;
+        }
+
+
+        public static List<SaleOfficerTargets> GetSOTargetsListForGrid( int RegionalHeadID)
+        {
+            List<SaleOfficerTargets> saleOfficerData = new List<SaleOfficerTargets>();
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    saleOfficerData = dbContext.Tbl_Targets.Where(u => u.HeadID == RegionalHeadID ).ToList()
+                            .Select(
+                                u => new SaleOfficerTargets
+                                {
+                                    //ID = u.ID,
+                                    //RegionalHeadID = u.HeadID,
+                                    //Name = u.Name,
+                                    //UserName = u.UserName,
+                                    //Password = u.Password,
+                                    //RegionalHeadName = u.RegionalHead.Name,
+                                    //Phone1 = u.Phone1 == null ? "" : u.Phone1,
+                                    //Phone2 = u.Phone2 == null ? "" : u.Phone2,
+                                    //RegionID = u.RegionID,
+                                    //ECode = u.ECode,
+                                    //RangeName = dbContext.MainCategories.Where(x => x.MainCategID == u.RangeID).Select(z => z.MainCategDesc).FirstOrDefault(),
+                                    //RegionName = dbContext.Regions.Where(x => x.ID == u.RegionID).Select(z => z.Name).FirstOrDefault(),
+                                    //CityName = u.City != null ? u.City.Name : "",
+                                    //CityID = u.CityID != null ? u.CityID : 0,
+                                    //IsActiveYes = u.IsActive == true ? "Yes" : "No",
+                                    //AreaName = GetSaleOfficerAreaName(u.ID),
+                                    //AreaID = GetSaleOfficerAreaID(u.ID),
+                                    //DesignationName = dbContext.SODesignations.Where(x => x.ID == u.DesignationID).Select(z => z.Name).FirstOrDefault(),
+                                    //LastUpdate = u.LastUpdate,
+                                    //CreatedAT = u.CreatedDate,
+                                    //Leaveon = u.LeaveOn
+
                                 }).ToList();
                 }
             }
@@ -514,6 +562,39 @@ namespace FOS.Setup
             return saleOfficerData;
         }
 
+        public static List<Tbl_Segmenttype> GetAllSegments()
+        {
+            using (FOSDataModel dbContext = new FOSDataModel())
+            {
+                return dbContext.Tbl_Segmenttype
+                                .Where(s => s.IsActive == true)
+                                .OrderBy(p => p.Name)
+                                .ToList();
+            }
+        }
+
+        public static List<SOType> GetAllRoles()
+        {
+            using (FOSDataModel dbContext = new FOSDataModel())
+            {
+                return dbContext.SOTypes
+                                .Where(s => s.Status == true)
+                                .OrderBy(p => p.Name)
+                                .ToList();
+            }
+        }
+
+        public static List<Tbl_FocusArea> GetAllFocusAreas()
+        {
+            using (FOSDataModel dbContext = new FOSDataModel())
+            {
+                return dbContext.Tbl_FocusArea
+                                .Where(s => s.IsActive == true)
+                                
+                                .ToList();
+            }
+        }
+
 
         public static List<SaleOfficerData> GetAllSaleOfficerListRelatedtoDealerDSR(int RHID, int? RangeID)
         {
@@ -572,7 +653,98 @@ namespace FOS.Setup
             return saleOfficerData;
         }
 
-   
+
+        public static Boolean AddUpdateSOTargets(SaleOfficerTargets obj, string StartingDate2)
+        {
+            Boolean boolFlag = false;
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    Tbl_Targets saleofficerObj = new Tbl_Targets();
+                    DateTime start = Convert.ToDateTime(string.IsNullOrEmpty(StartingDate2) ? DateTime.Now.ToString() : StartingDate2);
+                    if (obj.ID == 0)
+                    {
+                        var SOList = dbContext.SaleOfficers.Where(x => x.RegionalHeadID == obj.RegionalHeadID && x.IsActive == true).Select(x => x.ID).ToList();
+
+                        foreach (var item in SOList)
+                        {
+
+                            saleofficerObj.HeadID = obj.RegionalHeadID;
+                            saleofficerObj.SOID = item;
+                            saleofficerObj.FinancialYear = start;
+                            saleofficerObj.VisitsTargetsTrade = obj.VisitTargetTrade;
+                            saleofficerObj.VisitsTargetsHousing = obj.VisitTargetHousing;
+                            saleofficerObj.VisitsTargetsCorporate = obj.VisitTargetCorporate;
+
+                            saleofficerObj.NewCustomerTrade = obj.NewCustomerTrade;
+                            saleofficerObj.NewCustomerHousing = obj.NewCustomerHousing;
+                            saleofficerObj.NewCustomerCorporate = obj.NewCustomerCorporate;
+
+
+                            saleofficerObj.SaleTrade = obj.SaleTrade;
+                            saleofficerObj.SaleHousing = obj.SaleHousing;
+                            saleofficerObj.SaleCorporate = obj.SaleCorporate;
+
+
+                            saleofficerObj.RecoveriesCorporate = obj.RecoveriesCorporate;
+                            saleofficerObj.RecoveriesHousing = obj.RecoveriesHousing;
+                            saleofficerObj.RecoveriesTrade = obj.RecoveriesTrade;
+
+                            saleofficerObj.UpdatedON = DateTime.UtcNow.AddHours(5);
+                            saleofficerObj.CreatedOn= DateTime.UtcNow.AddHours(5);
+
+
+                            dbContext.Tbl_Targets.Add(saleofficerObj);
+                            dbContext.SaveChanges();
+
+                        }
+
+                        
+
+                       
+                    }
+                    else
+                    {
+                       
+                        saleofficerObj = dbContext.Tbl_Targets.Where(u => u.SOID == obj.SOID).FirstOrDefault();
+                        
+                       
+                        saleofficerObj.VisitsTargetsTrade = obj.VisitTargetTrade;
+                        saleofficerObj.VisitsTargetsHousing = obj.VisitTargetHousing;
+                        saleofficerObj.VisitsTargetsCorporate = obj.VisitTargetCorporate;
+
+                        saleofficerObj.NewCustomerTrade = obj.NewCustomerTrade;
+                        saleofficerObj.NewCustomerHousing = obj.NewCustomerHousing;
+                        saleofficerObj.NewCustomerCorporate = obj.NewCustomerCorporate;
+
+
+                        saleofficerObj.SaleTrade = obj.SaleTrade;
+                        saleofficerObj.SaleHousing = obj.SaleHousing;
+                        saleofficerObj.SaleCorporate = obj.SaleCorporate;
+
+
+                        saleofficerObj.RecoveriesCorporate = obj.RecoveriesCorporate;
+                        saleofficerObj.RecoveriesHousing = obj.RecoveriesHousing;
+                        saleofficerObj.RecoveriesTrade = obj.RecoveriesTrade;
+
+                        saleofficerObj.UpdatedON = DateTime.UtcNow.AddHours(5);
+                     
+                        dbContext.SaveChanges();
+                    }
+
+                    boolFlag = true;
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add SalesOfficer Failed");
+                boolFlag = false;
+            }
+            return boolFlag;
+        }
+
 
 
         //Insert OR Update SalesOfficers ...
@@ -592,18 +764,23 @@ namespace FOS.Setup
                         saleofficerObj.Name = obj.Name;
                         saleofficerObj.UserName = obj.UserName;
                         saleofficerObj.Password = obj.Password;
-                        saleofficerObj.RegionalHeadID = obj.HiddenRegionalHeadID;
-                        saleofficerObj.CityID = 1;
+                        saleofficerObj.RegionalHeadID = obj.RegionalHeadID;
+                        saleofficerObj.CityID = 900;
                         saleofficerObj.RangeID = 6;
+                        saleofficerObj.RegionID = obj.RegionID;
+                        saleofficerObj.PrimaryCityID = obj.PrimaryCityID;
+                        saleofficerObj.SecondaryCityID = obj.SecondaryCityID;
+                        saleofficerObj.SegmentID = obj.SegmentTypeID;
                         saleofficerObj.Phone1 = obj.Phone1 == "" ? null : obj.Phone1;
                         saleofficerObj.Phone2 = obj.Phone2 == "" ? null : obj.Phone2;
                         saleofficerObj.IsActive = true;
                         saleofficerObj.IsDeleted = false;
                         saleofficerObj.SORoleID = obj.SOTypeID;
+                        saleofficerObj.ECode = obj.ECode;
                         saleofficerObj.DesignationID = obj.DesignationID;
                         saleofficerObj.RegionID = obj.RegionID;
-                        saleofficerObj.CreatedDate = DateTime.UtcNow.AddHours(5);
-                        saleofficerObj.LastUpdate = DateTime.UtcNow.AddHours(5);
+                        saleofficerObj.CreatedDate = DateTime.Now;
+                        saleofficerObj.LastUpdate = DateTime.Now;
                         saleofficerObj.LeaveOn= null;
                         //Created By Work Pending...
                         saleofficerObj.CreatedBy = 1;
@@ -619,10 +796,15 @@ namespace FOS.Setup
                         saleofficerObj.UserName = obj.UserName;
                         saleofficerObj.Password = obj.Password;
                         saleofficerObj.RangeID = 6;
-                        saleofficerObj.RegionalHeadID = obj.HiddenRegionalHeadID;
-                        saleofficerObj.CityID = 1;
+                        saleofficerObj.RegionalHeadID = obj.RegionalHeadID;
+                        saleofficerObj.CityID = obj.RegionID;
+                        saleofficerObj.RegionID = obj.RegionID;
+                        saleofficerObj.PrimaryCityID = obj.PrimaryCityID;
+                        saleofficerObj.SecondaryCityID = obj.SecondaryCityID;
+                        saleofficerObj.SegmentID = obj.SegmentTypeID;
                         saleofficerObj.SORoleID = obj.SOTypeID;
                         saleofficerObj.IsActive = obj.IsActive;
+                        saleofficerObj.ECode = obj.ECode;
                         saleofficerObj.DesignationID = obj.DesignationID;
                         saleofficerObj.RegionID = obj.RegionID;
                         saleofficerObj.Phone1 = obj.Phone1 == "" ? null : obj.Phone1;
@@ -645,6 +827,44 @@ namespace FOS.Setup
             }
             return boolFlag;
         }
+
+
+
+        //Insert OR Update SalesOfficers ...
+        public static Boolean SaleOfficerTransfer(JobsData obj)
+        {
+            Boolean boolFlag = false;
+
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    var Sodata = dbContext.Retailers.Where(x => x.SaleOfficerID == obj.SaleOfficerID).Select(x => x.ID).ToList();
+
+                    foreach (var item in Sodata)
+                    {
+                        Retailer saleofficerObj = new Retailer();
+                        saleofficerObj = dbContext.Retailers.Where(u => u.ID == item).FirstOrDefault();
+
+                        saleofficerObj.SaleOfficerID = (int)obj.SaleOfficerToID;
+                        dbContext.SaveChanges();
+
+
+                    }
+
+
+
+                    boolFlag = true;
+                }
+            }
+            catch (Exception exp)
+            {
+                Log.Instance.Error(exp, "Add SalesOfficer Failed");
+                boolFlag = false;
+            }
+            return boolFlag;
+        }
+
 
         // Delete SalesOfficer ...
         public static int DeleteSaleOfficer(int SaleOfficerID)
@@ -702,6 +922,39 @@ namespace FOS.Setup
             return results;
         }
 
+
+
+        public static List<SaleOfficerTargets> GetResult12(string search, string sortOrder, int start, int length, List<SaleOfficerTargets> dtResult, List<string> columnFilters)
+        {
+            return FilterResult12(search, dtResult, columnFilters).SortBy(sortOrder).Skip(start).Take(length).ToList();
+        }
+
+        public static int Count12(string search, List<SaleOfficerTargets> dtResult, List<string> columnFilters)
+        {
+            return FilterResult12(search, dtResult, columnFilters).Count();
+        }
+
+        private static IQueryable<SaleOfficerTargets> FilterResult12(string search, List<SaleOfficerTargets> dtResult, List<string> columnFilters)
+        {
+            IQueryable<SaleOfficerTargets> results = dtResult.AsQueryable();
+
+            //results = results.Where(p => (search == null || (p.Name != null && p.Name.ToLower().Contains(search.ToLower()) || p.RegionalHeadName != null && p.RegionalHeadName.ToLower().Contains(search.ToLower()) || p.CityName != null && p.CityName.ToLower().Contains(search.ToLower()) || p.AreaName != null && p.AreaName.ToLower().Contains(search.ToLower()) || p.Phone1 != null && p.Phone1.ToLower().Contains(search.ToLower())
+            //    || p.Phone2 != null && p.Phone2.ToLower().Contains(search.ToLower())))
+            //    && (columnFilters[2] == null || (p.Name != null && p.Name.ToLower().Contains(columnFilters[3].ToLower())))
+            //    && (columnFilters[3] == null || (p.RegionalHeadName != null && p.RegionalHeadName.ToLower().Contains(columnFilters[3].ToLower())))
+            //     && (columnFilters[4] == null || (p.CityName != null && p.CityName.ToLower().Contains(columnFilters[3].ToLower())))
+            //      && (columnFilters[5] == null || (p.AreaName != null && p.AreaName.ToLower().Contains(columnFilters[3].ToLower())))
+            //    && (columnFilters[6] == null || (p.Phone1 != null && p.Phone1.ToLower().Contains(columnFilters[4].ToLower())))
+            //    && (columnFilters[7] == null || (p.Phone2 != null && p.Phone2.ToLower().Contains(columnFilters[5].ToLower())))
+            //    );
+
+            return results;
+        }
+
+
+
+
+
         public static List<RegionalHeadData> GetRegionalHeadAccordingToType(int RegionalHeadType)
         {
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
@@ -725,7 +978,43 @@ namespace FOS.Setup
             return regionalHeadData;
         }
 
-
+        public static List<RegionalHeadData> GetRegionalHeadAccordingToTypeNew(int RegionalHeadType)
+        {
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            try
+            {
+               
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    if (RegionalHeadType == 2)
+                    {
+                        regionalHeadData = dbContext.RegionalHeads.Where(u =>u.IsDeleted==false).ToList()
+                         .Select(
+                             u => new RegionalHeadData
+                             {
+                                 ID = u.ID,
+                                 Name = u.Name,
+                             }).ToList();
+                    }
+                    else
+                    {
+                        regionalHeadData = dbContext.RegionalHeads.Where(u => u.Type == RegionalHeadType && u.IsDeleted == false).ToList()
+                                              .Select(
+                                                  u => new RegionalHeadData
+                                                  {
+                                                      ID = u.ID,
+                                                      Name = u.Name,
+                                                  }).ToList();
+                    }
+              
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return regionalHeadData;
+        }
         public static List<RegionalHeadData> GetRegionsofSO(int RegionalHeadType)
         {
             List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
@@ -808,6 +1097,45 @@ namespace FOS.Setup
             return regionalHeadData;
         }
 
+        public static List<usp_GetClaimSummaryByClaimId_Result> GetClaimsAcctoID(int JobID)
+        {
+            List<usp_GetClaimSummaryByClaimId_Result> regionalHeadData = new List<usp_GetClaimSummaryByClaimId_Result>();
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    regionalHeadData = dbContext.usp_GetClaimSummaryByClaimId(JobID).ToList();
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return regionalHeadData;
+        }
+
+
+        public static List<GetClaimApprovals_Result> GetClaimsApprovalsAcctoID(int JobID)
+        {
+            List<GetClaimApprovals_Result> regionalHeadData = new List<GetClaimApprovals_Result>();
+            try
+            {
+                using (FOSDataModel dbContext = new FOSDataModel())
+                {
+                    regionalHeadData = dbContext.GetClaimApprovals(JobID).ToList();
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return regionalHeadData;
+        }
+
+
+
 
         public static List<Sp_GetDistributorOrdersAccToJobIDFinal1_0_Result> GetDistriburorOrdersAcctoID(int JobID)
         {
@@ -848,6 +1176,7 @@ namespace FOS.Setup
         }
 
 
+       
         public static List<Sp_GetItemsRelatedtoStock_Result> GetStockAcctoID(int JobID)
         {
             List<Sp_GetItemsRelatedtoStock_Result> regionalHeadData = new List<Sp_GetItemsRelatedtoStock_Result>();

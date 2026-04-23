@@ -14,6 +14,7 @@ using System.IO;
 using System.Data.SqlClient;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace FOS.Web.UI.Controllers
 {
@@ -1126,6 +1127,62 @@ namespace FOS.Web.UI.Controllers
          }
 
 
+        [CustomAuthorize]
+        public ActionResult GetClaimsForManager()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+
+            int regId = 0;
+            if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
+            {
+                regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            }
+            else
+            {
+                regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            }
+            //List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(0);
+            List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(regId, true);
+
+
+
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+
+            if (SaleOfficerObj == null)
+            {
+                return View();
+            }
+
+            else
+            {
+                RetailerObj = FOS.Setup.ManageRetailer.GetAllRetailerSaleOfficerList(SaleOfficerObj.Select(s => s.ID).FirstOrDefault());
+                ViewData["RetailerObj"] = RetailerObj;
+            }
+
+
+
+            //List<VisitPlanData> visitData = new List<VisitPlanData>();
+            //visitData = FOS.Setup.ManageJobs.GetAllVisitList();
+
+            var objJob = new JobsData();
+
+            objJob.RegionalHeadTypeData = FOS.Setup.ManageRegion.GetRegionalHeadsType();
+            objJob.SaleOfficer = SaleOfficerObj;
+            objJob.Retailers = RetailerObj;
+            objJob.RegionalHead = regionalHeadData;
+
+            objJob.Range = ranges;
+
+
+            return View(objJob);
+        }
+
+
         // Get One City For Edit
         public JsonResult GetJobsDetailView(int JobDetaiID)
         {
@@ -1165,6 +1222,7 @@ namespace FOS.Web.UI.Controllers
                     {
 
                         itm.VisitDateFormatted = Convert.ToDateTime(itm.AssignDate).ToString("dd-MM-yyyy");
+                        itm.ClaimDateFormatted = Convert.ToDateTime(itm.ClaimDate).ToString("dd-MM-yyyy");
                     }
 
 
@@ -2206,11 +2264,623 @@ namespace FOS.Web.UI.Controllers
         #endregion
 
 
+        #region AgentCalling
+
+        [CustomAuthorize]
+        public ActionResult AgentCalling()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+
+            int regId = 0;
+            if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
+            {
+                regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            }
+            else
+            {
+                regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            }
+            //List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(0);
+            //List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(regId, true);
+
+            List<SaleOfficerData> SaleOfficerObj = new List<SaleOfficerData>
+            {
+                new SaleOfficerData { ID = 1, Name = "First Visit" },
+                new SaleOfficerData { ID = 2, Name = "Sale Feedback" },
+                new SaleOfficerData { ID = 3, Name = "Lost Feedback" }
+            };
+
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+
+            if (SaleOfficerObj == null)
+            {
+                return View();
+            }
+
+            else
+            {
+                RetailerObj = FOS.Setup.ManageRetailer.GetAllRetailerSaleOfficerList(SaleOfficerObj.Select(s => s.ID).FirstOrDefault());
+                ViewData["RetailerObj"] = RetailerObj;
+            }
 
 
 
+            //List<VisitPlanData> visitData = new List<VisitPlanData>();
+            //visitData = FOS.Setup.ManageJobs.GetAllVisitList();
+
+            var objJob = new JobsData();
+
+            objJob.RegionalHeadTypeData = FOS.Setup.ManageRegion.GetRegionalHeadsType();
+            objJob.SaleOfficers = SaleOfficerObj;
+            objJob.Retailers = RetailerObj;
+            objJob.RegionalHead = regionalHeadData;
+
+            objJob.Range = ranges;
 
 
+            return View(objJob);
+        }
+
+
+
+        //Get All Region Method...
+        public JsonResult AgentCallingDataHandler(DTParameters param)
+        {
+            try
+            {
+                var dtsource = new List<JobsDetailData>();
+
+                //int regionalheadID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+
+                //if (regionalheadID == 0)
+                //{
+                dtsource = ManageJobs.GetAgentCallingDetailForGrid(param.StartingDate1, param.StartingDate2, param.ZoneID, param.SOID);
+                //}
+                //else
+                //{
+                //dtsource = ManageJobs.GetJobsDetailForGrid(regionalheadID);
+                //}
+
+                List<String> columnSearch = new List<String>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<JobsDetailData> data = ManageJobs.GetResult12(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch/*param.SaleOfficer,param.StartingDate1,param.StartingDate2*/);
+                foreach (var itm in data)
+                {
+                    if (itm.AssignDate.HasValue || itm.ClaimDate.HasValue || itm.CallDate.HasValue)
+                    {
+                        
+
+                        itm.VisitDateFormatted = Convert.ToDateTime(itm.AssignDate).ToString("dd-MM-yyyy");
+                        itm.ClaimDateFormatted = Convert.ToDateTime(itm.ClaimDate).ToString("dd-MM-yyyy");
+                        itm.CallDateFormatted = Convert.ToDateTime(itm.CallDate).ToString("dd-MM-yyyy");
+                    }
+
+
+                }
+                int count = ManageJobs.Count12(param.Search.Value, dtsource, columnSearch /*param.SaleOfficer, param.StartingDate1, param.StartingDate2*/);
+                DTResult<JobsDetailData> result = new DTResult<JobsDetailData>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+
+
+        [HttpPost]
+        public ActionResult SaveCallData( CallDataModel model)
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+
+            var userName = db.Users.Where(x => x.ID == userID).Select(x => x.UserName).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Your session has expired. Please login again.",
+                    redirectToLogin = true // Optional flag for frontend to handle redirect
+                });
+            }
+
+            try
+            {
+                // Validate model
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToList();
+
+                    return Json(new { success = false, message = string.Join(", ", errors) });
+                }
+
+                // Validate required fields
+                if (string.IsNullOrEmpty(model.CallDate) ||
+                    string.IsNullOrEmpty(model.CustomerType) ||
+                    string.IsNullOrEmpty(model.Category) )
+                {
+                    return Json(new { success = false, message = "Please fill all required fields" });
+                }
+
+                // Parse date
+                DateTime parsedCallDate;
+                if (!DateTime.TryParse(model.CallDate, out parsedCallDate))
+                {
+                    return Json(new { success = false, message = "Invalid date format" });
+                }
+
+                // Create new call data object
+                var callData = new Tbl_SaveCall
+                {
+                    VisitID = model.JobID,
+                    CallDate = parsedCallDate,
+                    CustomerType = model.CustomerType,
+                    ConstructionStage = model.ConstructionStage,
+                    SiteStatus = model.SiteStatus,
+                    Category = model.Category,
+                    NextExpectedVisit = model.NextExpectedVisit,
+                    CallerName = userName,
+                    NatureOfCall = model.NatureOfCall,
+                    CallRating = model.CallRating,
+                    Objections = model.Objections,
+                    CallerRemarks = model.CallerRemarks,
+                    IsActive=true,
+                    CreatedOn = DateTime.UtcNow.AddHours(5) // Similar to AddKPI function
+                };
+
+                // Save to database
+                db.Tbl_SaveCall.Add(callData);
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Call data saved successfully!",
+                   // id = callData.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                // Log exception if you have logging configured
+                // _logger.LogError(ex, "Error saving call data");
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Error: " + ex.Message // Similar to AddKPI function
+                });
+            }
+        }
+
+
+        public JsonResult CustomerVisitDetail(int JobID)
+        {
+            try
+            {
+                var CustomerID = db.Tbl_HousingVisits.Where(x => x.ID == JobID).Select(x => x.CustomerID).FirstOrDefault();
+
+                // Query your database for customer visit details
+                var customerData = (from j in db.Tbl_HousingVisits
+                                    join r in db.Retailers on j.CustomerID equals r.ID
+                                    join so in db.SaleOfficers on j.SOID equals so.ID
+                                    where j.CustomerID == CustomerID
+                                    orderby j.CreatedAt descending
+                                    select new
+                                    {
+                                        VisitID = j.ID,
+                                        CustomerID = r.ID,
+                                        CreatedAt = j.CreatedAt,
+                                        NextVisitDate = j.NextVisitDate,
+                                        OwnerName = r.Name,
+                                        CustomerName = r.ShopName,
+                                        MobileNo = r.Phone1,
+                                        SaleOfficerName = so.Name,
+                                        Address = r.Address,
+                                        Competitors = r.CompititorIDS,
+                                        BusinessStatus = "Active",
+                                        EstimatedValue = j.EstimatedValue,
+                                        SiteWon = j.SiteWon,
+                                        PlotSize = j.PlotSize,
+                                        ScopeID = j.ScopeOfWorkID,
+                                        NatureID = j.NatureOfWorkID,
+                                        ConstructionStageID = j.ConstructionStageID,
+                                        ColorScheme = j.ColorScheme,
+                                        OrderVolume = j.OrderVolume,
+                                        OfftakeFrom = j.OffTakeFromOthers,
+                                        RegionalHeadName = so.RegionalHead.Name
+                                    }).FirstOrDefault();
+
+                if (customerData == null)
+                {
+                    return Json(new[] { new { error = "No data found" } }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Get lookup values after the query execution
+                var scopeName = db.Tbl_ScopeOfWork.Where(y => y.ID == customerData.ScopeID).Select(y => y.Name).FirstOrDefault();
+                var natureName = db.Tbl_NatureOfWork.Where(y => y.ID == customerData.NatureID).Select(y => y.Name).FirstOrDefault();
+                var constructionStageName = db.Tbl_ConstructionStage.Where(y => y.ID == customerData.ConstructionStageID).Select(y => y.Name).FirstOrDefault();
+
+                // Format dates after the query execution
+                string createdDateFormatted = customerData.CreatedAt.HasValue ?
+                    customerData.CreatedAt.Value.ToString("yyyy-MM-dd") : "-";
+                string visitDateFormatted = customerData.NextVisitDate.HasValue ?
+                    customerData.NextVisitDate.Value.ToString("yyyy-MM-dd") : "-";
+
+                // Format EstimatedValue after query execution
+                string estimatedValueFormatted = customerData.EstimatedValue.HasValue ?
+                    customerData.EstimatedValue.Value.ToString("#,##0") : "-";
+
+                // Create response object
+                var response = new
+                {
+                    VisitID = customerData.VisitID.ToString(),
+                    CustomerID = customerData.CustomerID.ToString(),
+                    CreatedDate = createdDateFormatted,
+                    VisitDate = visitDateFormatted,
+                    OwnerName = customerData.OwnerName ?? "-",
+                    CustomerName = customerData.CustomerName ?? "-",
+                    MobileNo = customerData.MobileNo ?? "-",
+                    SaleOfficerName = customerData.SaleOfficerName ?? "-",
+                    Address = customerData.Address ?? "-",
+                    Competitors = customerData.Competitors ?? "-",
+                    BusinessStatus = customerData.BusinessStatus ?? "-",
+                    EstimatedValue = estimatedValueFormatted,
+                    SiteWon = customerData.SiteWon.HasValue && customerData.SiteWon.Value ? "Yes" : "No",
+                    PlotSize = customerData.PlotSize?.ToString() ?? "-",
+                    Scope = scopeName ?? "-",
+                    Nature = natureName ?? "-",
+                    ConstructionStage = constructionStageName ?? "-",
+                    ColorScheme = customerData.ColorScheme?.ToString() ?? "-",
+                    OrderVolume = customerData.OrderVolume?.ToString() ?? "-",
+                    OfftakeFrom = customerData.OfftakeFrom ?? "-",
+                    RegionalHeadName = customerData.RegionalHeadName ?? "-"
+                };
+
+                return Json(new[] { response }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult CustomerCallDetail(int JobID)
+        {
+            try
+            {
+                // Get CustomerID from the VisitID
+                var CustomerID = db.Tbl_HousingVisits
+                    .Where(x => x.ID == JobID)
+                    .Select(x => x.CustomerID)
+                    .FirstOrDefault();
+
+                if (CustomerID == null)
+                {
+                    return Json(new { error = "No customer found for this visit" }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Query for call history records
+                var callHistory = (from j in db.Tbl_SaveCall
+                                   join hv in db.Tbl_HousingVisits on j.VisitID equals hv.ID
+                                   where hv.CustomerID == CustomerID
+                                   orderby j.CreatedOn descending
+                                   select new
+                                   {
+                                       CallID = j.ID,
+                                       VisitID = j.VisitID,
+                                       CallDate = j.CreatedOn,
+                                       CallRemarks = j.CallerRemarks,
+                                       Rating = j.CallRating,
+                                       CallerName = j.CallerName
+                                   }).ToList();
+
+                // Create response with call history only
+                var response = new
+                {
+                    CallHistory = callHistory.Select(c => new
+                    {
+                        CallID = c.CallID,
+                        VisitID = c.VisitID,
+                        CallDate = c.CallDate.HasValue
+                            ? c.CallDate.Value.ToString("yyyy-MM-dd HH:mm")
+                            : "-",
+                        CallRemarks = c.CallRemarks ?? "-",
+                        Rating = c.Rating ?? "-",
+                        CallerName = c.CallerName ?? "-"
+                    }).ToList(),
+                  
+                };
+
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        #endregion
+
+
+        public ActionResult GetSOWiseKPIS()
+        {
+            var userID = Convert.ToInt32(Session["UserID"]);
+            int RHID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            var ranges = FOS.Setup.ManageRegion.GetRangesRelatedToZSM(userID);
+            var rangeid = ranges.Select(r => r.ID).FirstOrDefault();
+            List<RegionalHeadData> regionalHeadData = new List<RegionalHeadData>();
+            regionalHeadData = FOS.Setup.ManageRegionalHead.GetTerritorialRegionalHeadList(userID);
+
+            int regId = 0;
+            if (FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser() == 0)
+            {
+                regId = regionalHeadData.Select(r => r.ID).FirstOrDefault();
+            }
+            else
+            {
+                regId = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+            }
+            //List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(0);
+            List<SaleOfficer> SaleOfficerObj = FOS.Setup.ManageSaleOffice.GetAllSaleOfficerListRelatedtoregionalHeadID(regId, true);
+
+            List<Tbl_Segmenttype> Tbl_SegmenttypeObj = FOS.Setup.ManageSaleOffice.GetAllSegments();
+            List<SOType> Tbl_RoleObj = FOS.Setup.ManageSaleOffice.GetAllRoles();
+            List<Tbl_FocusArea> Tbl_FocusAreaObj = FOS.Setup.ManageSaleOffice.GetAllFocusAreas();
+
+            List<RetailerData> RetailerObj = new List<RetailerData>();
+
+            if (SaleOfficerObj == null)
+            {
+                return View();
+            }
+
+            else
+            {
+                RetailerObj = FOS.Setup.ManageRetailer.GetAllRetailerSaleOfficerList(SaleOfficerObj.Select(s => s.ID).FirstOrDefault());
+                ViewData["RetailerObj"] = RetailerObj;
+            }
+
+
+
+            //List<VisitPlanData> visitData = new List<VisitPlanData>();
+            //visitData = FOS.Setup.ManageJobs.GetAllVisitList();
+
+            var objJob = new JobsData();
+
+            objJob.RegionalHeadTypeData = FOS.Setup.ManageRegion.GetRegionalHeadsType();
+            objJob.SaleOfficer = SaleOfficerObj;
+            objJob.BusinessSegments = Tbl_SegmenttypeObj;
+            objJob.Roles = Tbl_RoleObj;
+            objJob.focusArea = Tbl_FocusAreaObj;
+            objJob.Retailers = RetailerObj;
+            objJob.RegionalHead = regionalHeadData;
+
+            objJob.Range = ranges;
+
+
+            return View(objJob);
+        }
+
+
+        [HttpPost]
+       
+        public ActionResult AddKPI(KPISubmissionModel model)
+        {
+            try
+            {
+               
+                   //Create KPI record
+                   var kpi = new Tbl_MasterKPIS
+                   {
+                       DateFrom = DateTime.Parse(model.StartingDate1),
+                       DateTo = DateTime.Parse(model.StartingDate2),
+                       HeadID = model.RegionalHeadID,
+                       SOID = model.SaleOfficerID,
+                       BusinessSegmentID = model.SegmentID,
+                       RoleID = model.SORoleID,
+                       CreatedOn = DateTime.UtcNow.AddHours(5)
+                       
+                   };
+
+                   // Save KPI to get ID
+                     db.Tbl_MasterKPIS.Add(kpi);
+                    db.SaveChanges();
+
+                    //Save focus area targets
+                    foreach (var focusArea in model.FocusAreas)
+                    {
+                        var target = new Tbl_DetailKPI
+                        {
+                            KPIMasterID = kpi.ID,
+                            FocusArea = focusArea.FocusAreaName,
+                            TargetValue = decimal.Parse(focusArea.TargetValue),
+                            TargetPercentage = decimal.Parse(focusArea.TargetPercentage)
+                             
+                        };
+
+                         db.Tbl_DetailKPI.Add(target);
+                    }
+
+                    db.SaveChanges();
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = "KPI added successfully!",
+                        kpiId = kpi.ID
+                    });
+               
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Please check all required fields."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Error: " + ex.Message
+                });
+            }
+        }
+
+
+        public JsonResult KPISDataHandler(DTParameters param)
+        {
+            try
+            {
+                var dtsource = new List<JobsDetailData>();
+
+                //int regionalheadID = FOS.Web.UI.Controllers.AdminPanelController.GetRegionalHeadIDRelatedToUser();
+
+                //if (regionalheadID == 0)
+                //{
+                dtsource = ManageJobs.GetKPISDetailForGrid(param.StartingDate1, param.StartingDate2, param.ZoneID, param.SOID);
+                //}
+                //else
+                //{
+                //dtsource = ManageJobs.GetJobsDetailForGrid(regionalheadID);
+                //}
+
+                List<String> columnSearch = new List<String>();
+
+                foreach (var col in param.Columns)
+                {
+                    columnSearch.Add(col.Search.Value);
+                }
+
+                List<JobsDetailData> data = ManageJobs.GetResult12(param.Search.Value, param.SortOrder, param.Start, param.Length, dtsource, columnSearch/*param.SaleOfficer,param.StartingDate1,param.StartingDate2*/);
+                foreach (var itm in data)
+                {
+                    if (itm.AssignDate.HasValue)
+                    {
+
+                        itm.VisitDateFormatted = Convert.ToDateTime(itm.AssignDate).ToString("dd-MM-yyyy");
+                        itm.ClaimDateFormatted = Convert.ToDateTime(itm.ClaimDate).ToString("dd-MM-yyyy");
+                    }
+
+
+                }
+                int count = ManageJobs.Count12(param.Search.Value, dtsource, columnSearch /*param.SaleOfficer, param.StartingDate1, param.StartingDate2*/);
+                DTResult<JobsDetailData> result = new DTResult<JobsDetailData>
+                {
+                    draw = param.Draw,
+                    data = data,
+                    recordsFiltered = count,
+                    recordsTotal = count
+                };
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message });
+            }
+        }
+
+
+        // ViewModel classes
+        public class KPISubmissionModel
+        {
+            public string StartingDate1 { get; set; }
+            public string StartingDate2 { get; set; }
+            public int RegionalHeadID { get; set; }
+            public int SaleOfficerID { get; set; }
+            public int SegmentID { get; set; }
+            public int SORoleID { get; set; }
+            public List<FocusAreaTargetModel> FocusAreas { get; set; }
+        }
+
+        public class FocusAreaTargetModel
+        {
+            public string FocusAreaName { get; set; }
+            public string TargetValue { get; set; }
+            public string TargetPercentage { get; set; }
+        }
+        public class CallDataModel
+        {
+            public int JobID { get; set; } // Add this
+            public string CallDate { get; set; }
+            public string CustomerType { get; set; }
+            public string ConstructionStage { get; set; }
+            public string SiteStatus { get; set; }
+            public string Category { get; set; }
+            public string NextExpectedVisit { get; set; }
+            public string CallerName { get; set; }
+            public string NatureOfCall { get; set; }
+            public string CallRating { get; set; }
+            public string Objections { get; set; }
+            public string CallerRemarks { get; set; }
+        }
+
+        public class CustomerVisitVM
+        {
+            // Visit Info
+            public string VisitID { get; set; }
+            public string CustomerID { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public DateTime VisitDate { get; set; }
+
+            // Customer Info
+            public string OwnerName { get; set; }
+            public string CustomerName { get; set; }
+            public string MobileNo { get; set; }
+            public string SaleOfficerName { get; set; }
+
+            // Business Info
+            public string Competitors { get; set; }
+            public int BusinessStatus { get; set; } // 1 = Active, 0 = InActive
+            public decimal EstimatedValue { get; set; }
+            public string SiteWon { get; set; }
+
+            // Address
+            public string Address { get; set; }
+            public string PlotSize { get; set; }
+
+            // Project Details
+            public string Scope { get; set; }
+            public string Nature { get; set; }
+            public string ConstructionStage { get; set; }
+            public string ColorScheme { get; set; }
+
+            // Order Info
+            public string OrderVolume { get; set; }
+            public string OfftakeFrom { get; set; }
+            public string RegionalHead { get; set; }
+
+            // History
+            public List<HistoryItem> VisitHistory { get; set; }
+            public List<HistoryItem> CallHistory { get; set; }
+        }
+
+        public class HistoryItem
+        {
+            public DateTime Date { get; set; }
+            public string Description { get; set; }
+        }
 
 
 
