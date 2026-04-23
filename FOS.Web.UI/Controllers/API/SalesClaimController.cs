@@ -67,6 +67,18 @@ namespace FOS.Web.UI.Controllers.API
                 //// Check if selected date is in future
               
 
+                // Log incoming request for diagnostics
+                Log.Instance.Info("SalesClaim POST => SOID: " + rm.SaleOfficerId
+                    + ", CustomerID: " + rm.CustomerID
+                    + ", SegmentID: " + rm.SegmentID
+                    + ", ProductDetails count: " + (rm.ProductDetails != null ? rm.ProductDetails.Count.ToString() : "null"));
+
+                if (rm.ProductDetails != null)
+                {
+                    foreach (var p in rm.ProductDetails)
+                        Log.Instance.Info("SalesClaim Product => ProductID: " + p.ProductID + ", Gallon: " + p.Gallon + ", Drum: " + p.Drum + ", Quarter: " + p.Quarter);
+                }
+
                 // Proceed with saving the data
                 JobObj.SOID = rm.SaleOfficerId;
                 JobObj.SegmentID = rm.SegmentID;
@@ -98,6 +110,10 @@ namespace FOS.Web.UI.Controllers.API
                     foreach (var item in rm.ProductDetails)
                     {
                         var productDetail = db.Tbl_ProductDetail.FirstOrDefault(p => p.ID == item.ProductID);
+                                       
+
+                        if (productDetail == null)
+                            Log.Instance.Warn("SalesClaim: No product found for ProductID: " + item.ProductID);
 
                         db.Tbl_ClaimDetail.Add(
                             new Tbl_ClaimDetail
@@ -105,13 +121,13 @@ namespace FOS.Web.UI.Controllers.API
                                 ClaimMasterID = JobObj.ID,
                                 ProductID = item.ProductID,
                                 Gallon = item.Gallon,
-                                GallonRate=productDetail.Gallon_Price,
+                                GallonRate = productDetail != null ? productDetail.Gallon_Price : null,
 
                                 Drum = item.Drum,
-                                DrumRate=productDetail.Drum_Price,
+                                DrumRate = productDetail != null ? productDetail.Drum_Price : null,
 
                                 Quarter = item.Quarter,
-                                QtrRate=productDetail.Qtr_Price,
+                                QtrRate = productDetail != null ? productDetail.Qtr_Price : null,
 
                                 SaleLineValue = item.SaleLineValue,
                                 CreatedOn = DateTime.Now
@@ -197,4 +213,4 @@ namespace FOS.Web.UI.Controllers.API
             public decimal SaleLineValue { get; set; }
         }
     }
-}
+}                                                                            
